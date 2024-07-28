@@ -5,6 +5,7 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Collapse from "@mui/material/Collapse";
 import ExpandLess from "@mui/icons-material/ExpandLess";
+import "../styles/Administrateur.css"
 export default function Administrateur() {
   const [open, setOpen] = useState(false);
 
@@ -13,20 +14,32 @@ export default function Administrateur() {
   };
   return (
     <>
-      <List component="div">
+      <List component="div" className="admin" style={{padding:0}}>
         <ListItemButton
           onClick={handleClick}
-          style={{ backgroundColor: open ? "#F8CECE" : "#FFFFFF" }}
+          className="adminis"
+          sx={{
+            backgroundColor: open ? "#F8CECE" : null ,color: '#121212',
+            padding: '10px',
+            border: '2px solid #f8cece',
+            borderRadius: '10px 10px 10px 10px',
+            fontFamily: "Noto Sans",
+            fontSize: "0.7 em",
+            fontWeight: '600',
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: '1rem',
+            textDecoration: 'none',
+          }}
         >
           <ListItemIcon>
-            {open ? (
-              <ExpandLess />
-            ) : (
+            {open ? ( <ExpandLess style={{ width: "28px", height: "28px" }}/>) : (
               <img
                 className="admin"
                 src="./src/assets/security-user.svg"
                 alt="menu"
-                style={{ width: "30px", height: "30px" }}
+                style={{ width: "28px", height: "28px" }}
               />
             )}
           </ListItemIcon>

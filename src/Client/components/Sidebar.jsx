@@ -1,33 +1,26 @@
-import DehazeOutlinedIcon from "@mui/icons-material/DehazeOutlined";
-import DriveFileMoveOutlinedIcon from "@mui/icons-material/DriveFileMoveOutlined";
-import GroupsOutlinedIcon from "@mui/icons-material/GroupsOutlined";
 import CloudDownloadOutlinedIcon from "@mui/icons-material/CloudDownloadOutlined";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
-import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
-import AutoAwesomeMotionOutlinedIcon from "@mui/icons-material/AutoAwesomeMotionOutlined";
-import FolderCopyOutlinedIcon from "@mui/icons-material/FolderCopyOutlined";
 import { NavLink } from "react-router-dom";
 import "../styles/Sidebar.css";
-import { Collapse } from "antd";
 import Administrateur from "./Administrateur";
 
 function Sidebar() {
   const menuItemUp = [
     {
-      path: "/download",
-      name: "Downloads",
-      icon: (
-        <img
-          className="downloads"
-          src="./src/assets/Folder_send.svg"
-          alt="logo_download"
-        />
-      ),
+      path: "/upload",
+      name: "Uploader un fichier",
+      icon: <img
+      className="downloads"
+      src="./src/assets/Folder_send.svg"
+      alt="logo_download"
+    />,
     },
     {
-      path: "/upload",
-      name: "Uploads",
-      icon: <CloudDownloadOutlinedIcon />,
+      path: "/download",
+      name: "Downloader un fichier",
+      icon: (
+        <CloudDownloadOutlinedIcon style={{ width: "28px", height: "28px" }}/>  
+      ),
     },
     {
       path: "/admin",
@@ -93,23 +86,20 @@ function Sidebar() {
         <div className="options">
           <div className="optionsUp">
             {menuItemUp.map((item, index) => {
-              return (
+                return item.name === "Administrateur" ? (
+                    <Administrateur />
+                  ) : (
                 <NavLink
                   to={item.path}
                   key={index}
                   className="link"
                   activeclassName="active"
                 >
-                  {item.name === "Administrateur" ? (
-                    <Administrateur />
-                  ) : (
-                    <>
                       <div className="iconUp">{item.icon}</div>
                       <div className="link_text">{item.name}</div>
-                    </>
-                  )}
+                  
                 </NavLink>
-              );
+            )
             })}
           </div>
 
