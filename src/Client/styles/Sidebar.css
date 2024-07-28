@@ -1,0 +1,73 @@
+*{
+    margin: 0;
+}
+.container{
+    width: 100vw;
+    height: 100vh;
+}
+.sidebar{
+    background-color: rgba(248, 206, 206, 35%);
+    border-top-right-radius: 10px;
+    width: 20%;
+    height: 100%;
+    padding-top: 1.7%;
+    padding-bottom: 1.7%;
+    padding-left: 2%;
+    padding-right: 2%;
+}
+.top-logo{
+    display: flex;
+    flex-direction: row; 
+    align-items: center;
+    gap: 15px;
+}
+.bars{
+    width: 28px;
+    height: 28px;
+    border-radius: 5px;
+}
+.bars:hover{
+    border: 2px solid #F8CECE;
+}
+.LogoWithName{
+    display: flex;
+    flex-direction: row; 
+    align-items: center;
+    gap:10px;    
+}
+.logo{
+    display: inline-block;
+    width: 4rem;
+    height: 4rem;
+}
+.Nom{
+    font-family: "Secular One", sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    text-align: center;
+}
+#arabe{
+    font-family: "Noto Sans Arabic", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-variation-settings:"wdth" 100;    
+}
+.link{
+    color: #121212;
+    font-family: "Noto Sans", sans-serif;
+    font-weight: 600;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 15px;
+    text-decoration: none;
+}
+.iconUp{
+    padding-left: 1px;
+}
+.notifs,.params{
+    display: inline-block;
+    width: 1.6rem;
+    height: 1.6rem;    
+}
