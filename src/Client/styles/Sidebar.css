@@ -27,7 +27,7 @@
     border-radius: 5px;
 }
 .bars:hover{
-    border: 2px solid #F8CECE;
+    border: 2px solid #ced0f8;
 }
 .LogoWithName{
     display: flex;
