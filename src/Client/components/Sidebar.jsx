@@ -10,6 +10,7 @@ import AdminPage from "../pages/AdminPage";
 import Navbr from "./Navbr";
 
 function Sidebar() {
+
   const [navbar, setNavBar] = useState({
     upload: false,
     download: false,
@@ -187,7 +188,7 @@ function Sidebar() {
     <div className="container">
       <div className="sidebar">
         <div className="top-logo">
-          <div>
+          <div onClick={toogle}>
             <img
               className="bars"
               src="./../../src/assets/Menu.svg"
