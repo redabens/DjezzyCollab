@@ -27,9 +27,9 @@ function Sidebar() {
       name: "Uploader un fichier",
       icon: (
         <img
-          className="downloads"
           src="./../../src/assets/Folder_send.svg"
           alt="logo_download"
+          style={{ width: "24px", height: "24px" }}
         />
       ),
       func: function () {
@@ -54,7 +54,7 @@ function Sidebar() {
       path: "/download",
       name: "Downloader un fichier",
       icon: (
-        <CloudDownloadOutlinedIcon style={{ width: "28px", height: "28px" }} />
+        <CloudDownloadOutlinedIcon style={{ width: "24px", height: "24px" }} />
       ),
       func: function () {
         setNavBar({
@@ -82,6 +82,7 @@ function Sidebar() {
           className="admin"
           src="./../../src/assets/security-user.svg"
           alt="logo_admin"
+          style={{ width: "24px", height: "24px" }}
         />
       ),
       func: function () {
@@ -163,7 +164,7 @@ function Sidebar() {
     {
       path: "/aide",
       name: "Aide",
-      icon: <HelpOutlineOutlinedIcon style={{ paddingLeft: "1px" }} />,
+      icon: <HelpOutlineOutlinedIcon style={{ paddingLeft: "1px",width:'24px',height:'24px' }} />,
       func: function () {
         setNavBar({
           upload: false,
@@ -194,22 +195,11 @@ function Sidebar() {
               alt="menu"
             />
           </div>
-          <div className="LogoWithName">
-            <img
-              className="logo"
-              src="./../../src/assets/logo_djezzy.svg"
-              alt="logo_djezzy"
-            />
-            <div className="Nom">
-              <h2>DJEZZY COLLAB</h2>
-              <h2 id="arabe">جازي كولاب</h2>
-            </div>
-          </div>
         </div>
 
         <div
           className="options"
-          style={{ gap: navbar.admin ? "3.26vh" : "22vh" }}
+          style={{ gap: navbar.admin ? "1.5vh" : "21vh" }}
         >
           <div className="optionsUp">
             {menuItemUp.map((item, index) => {
