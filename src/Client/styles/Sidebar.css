@@ -68,6 +68,14 @@
   gap: 1rem;
   text-decoration: none;
 }
+.linkSpe{
+  color: #121212;
+  border-radius: 10px 10px 10px 10px;
+  font-family: "Noto Sans", sans-serif;
+  font-size: 0.7 em;
+  font-weight: 600;
+  text-decoration: none;  
+}
 .iconUp {
   padding-left: 1px;
   display: flex;
@@ -102,5 +110,4 @@
 .options {
   display: flex;
   flex-direction: column;
-  gap: 20vh;
 }

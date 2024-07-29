@@ -8,6 +8,7 @@ import ParametresPage from "./Client/pages/ParametresPage";
 import NotificationsPage from "./Client/pages/NotificationsPage";
 import UploadPage from "./Client/pages/UploadPage";
 import AidePage from "./Client/pages/AidePage";
+import AdminPage from "./Client/pages/AdminPage";
 
 function App() {
 
@@ -23,6 +24,10 @@ function App() {
               <Route path="/notifications" element={<NotificationsPage />} />
               <Route path="/upload" element={<UploadPage />} />
               <Route path="/aide" element={<AidePage />} />
+              <Route path="/admin" element={<AdminPage />} />
+              <Route path="/admin/gestion-repertoires" element={<AdminPage />} />
+              <Route path="/admin/gestion-utilisateurs" element={<AdminPage />} />
+              <Route path="/admin/creation-comptes" element={<AdminPage />} />
           </Routes>
         </Sidebar>
       </BrowserRouter>
