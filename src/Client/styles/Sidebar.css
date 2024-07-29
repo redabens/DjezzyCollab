@@ -8,7 +8,7 @@
 .sidebar {
   background-color: rgba(248, 206, 206, 35%);
   border-top-right-radius: 10px;
-  width: 20%;
+  width: 23%;
   height: 100%;
   padding-top: 1.7%;
   padding-bottom: 1.7%;
@@ -60,7 +60,7 @@
   border: 2px solid #f8cece;
   border-radius: 10px 10px 10px 10px;
   font-family: "Noto Sans", sans-serif;
-  font-size: 0.7 em;
+  font-size: 1em;
   font-weight: 600;
   display: flex;
   flex-direction: row;
@@ -68,13 +68,13 @@
   gap: 1rem;
   text-decoration: none;
 }
-.linkSpe{
+.linkSpe {
   color: #121212;
   border-radius: 10px 10px 10px 10px;
   font-family: "Noto Sans", sans-serif;
   font-size: 0.7 em;
   font-weight: 600;
-  text-decoration: none;  
+  text-decoration: none;
 }
 .iconUp {
   padding-left: 1px;

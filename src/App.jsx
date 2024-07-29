@@ -9,11 +9,13 @@ import NotificationsPage from "./Client/pages/NotificationsPage";
 import UploadPage from "./Client/pages/UploadPage";
 import AidePage from "./Client/pages/AidePage";
 import AdminPage from "./Client/pages/AdminPage";
+import Navbr from "./Client/components/Navbr";
 
 function App() {
   return (
     <>
       <BrowserRouter>
+        <Navbr />
         <Sidebar>
           <Routes>
             <Route exact path="/" element={<Dashboard />} />
