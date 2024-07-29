@@ -8,7 +8,7 @@ import ExpandLess from "@mui/icons-material/ExpandLess";
 import { NavLink } from "react-router-dom";
 import "../styles/Administrateur.css";
 import { styled } from "@mui/material/styles";
-import { Typography } from "antd";
+import { Typography } from '@mui/material';
 
 const StyledListItemText = styled(ListItemText)({
   all: "unset",
@@ -52,13 +52,13 @@ export default function Administrateur({
         >
           <ListItemIcon sx={{ all: "unset" }}>
             {state.admin ? (
-              <ExpandLess style={{ width: "28px", height: "28px" }} />
+              <ExpandLess style={{ width: "24px", height: "24px" }} />
             ) : (
               <img
                 className="admin"
                 src="./src/assets/security-user.svg"
                 alt="menu"
-                style={{ width: "28px", height: "28px" }}
+                style={{ width: "24px", height: "24px" }}
               />
             )}
           </ListItemIcon>
@@ -66,11 +66,13 @@ export default function Administrateur({
             disableTypography
             primary={
               <Typography
-                variant="body2"
+                variant="div"
                 style={{
-                  fontSize: "2em",
-                  fontWeight: 650,
-                  color: "black",
+                  fontFamily: "Noto Sans, sans-serif",
+                  fontSize: "1.45em",
+                  fontWeight: 600,
+                  color: '#121212',
+                  textDecoration: "none",
                 }}
               >
                 Administrateur
@@ -100,7 +102,7 @@ export default function Administrateur({
               all: "unset",
               display: "flex",
               flexDirection: "column",
-              gap: "1vh",
+              gap: "0.8vh",
               pt: "1vh",
               alignItems: "center",
             }}
@@ -131,10 +133,24 @@ export default function Administrateur({
                     className="gestRep"
                     src="./../../src/assets/layer.svg"
                     alt="gest rep"
-                    style={{ width: "28px", height: "28px" }}
+                    style={{ width: "24px", height: "24px" }}
                   />
                 </ListItemIcon>
-                <StyledListItemText primary="Gestion répertoires" />
+                <StyledListItemText disableTypography
+                  primary={
+                    <Typography
+                      variant="div"
+                      style={{
+                        fontFamily: "Noto Sans, sans-serif",
+                        fontSize: "1.4em",
+                        fontWeight: 500,
+                        color: '#121212',
+                        textDecoration: "none",
+                      }}
+                    >
+                      Gestion Répertoires
+                    </Typography>
+                  } />
               </ListItemButton>
             </NavLink>
             <NavLink
@@ -163,10 +179,24 @@ export default function Administrateur({
                     className="gestUtil"
                     src="./../../src/assets/Group.svg"
                     alt="gest Util"
-                    style={{ width: "28px", height: "28px" }}
+                    style={{ width: "24px", height: "24px" }}
                   />
                 </ListItemIcon>
-                <ListItemText primary="Gestion Utilisateurs" />
+                <StyledListItemText disableTypography
+                  primary={
+                    <Typography
+                      variant="div"
+                      style={{
+                        fontFamily: "Noto Sans, sans-serif",
+                        fontSize: "1.4em",
+                        fontWeight: 500,
+                        color: '#121212',
+                        textDecoration: "none",
+                      }}
+                    >
+                      Gestion Utilisateurs
+                    </Typography>
+                  } />
               </ListItemButton>
             </NavLink>
             <NavLink
@@ -195,10 +225,24 @@ export default function Administrateur({
                     className="creatCompt"
                     src="./../../src/assets/Group_add.svg"
                     alt="creatCompt"
-                    style={{ width: "28px", height: "28px" }}
+                    style={{ width: "24px", height: "24px" }}
                   />
                 </ListItemIcon>
-                <ListItemText primary="Creation Compte" />
+                <StyledListItemText disableTypography
+                  primary={
+                    <Typography
+                      variant="div"
+                      style={{
+                        fontFamily: "Noto Sans, sans-serif",
+                        fontSize: "1.4em",
+                        fontWeight: 500,
+                        color: '#121212',
+                        textDecoration: "none",
+                      }}
+                    >
+                      Creation Compte
+                    </Typography>
+                  } />
               </ListItemButton>
             </NavLink>
           </List>

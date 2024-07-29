@@ -1,8 +1,17 @@
 *{
   margin: 0;
 }
-#root {
-  width: 100vw;
-  height: 100vh;
-  max-width: 1280px;
+.navbar{
+  position: fixed;
+  z-index: 1;
+}
+.Sidebar{
+  position: relative;
+  z-index: 2;
+}
+.LogoDjezzy{
+  position: absolute;
+  top: 0.2vh;
+  left: 4.5vw;
+  z-index: 3;
 }
