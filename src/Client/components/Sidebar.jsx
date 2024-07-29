@@ -1,13 +1,10 @@
 import { useState } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 import CloudDownloadOutlinedIcon from "@mui/icons-material/CloudDownloadOutlined";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import { NavLink } from "react-router-dom";
 import "../styles/Sidebar.css";
 import Administrateur from "./Administrateur";
-import AdminPage from "../pages/AdminPage";
-import Navbr from "./Navbr";
 
 function Sidebar() {
   const [navbar, setNavBar] = useState({
