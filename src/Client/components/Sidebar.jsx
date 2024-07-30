@@ -19,6 +19,10 @@ function Sidebar() {
     params: false,
     aide: false,
   });
+  const [open,setOpen]= useState(true);
+  const handleToggle = (e) => {
+    setOpen(prev=>(!prev));
+  }
   const menuItemUp = [
     {
       path: "/upload",
@@ -27,7 +31,7 @@ function Sidebar() {
         <img
           src="./../../src/assets/Folder_send.svg"
           alt="logo_download"
-          style={{ width: "24px", height: "24px" }}
+          style={open ? { width: "24px", height: "24px" } : { width: "28px", height: "28px" }}
         />
       ),
       func: function () {
@@ -52,7 +56,7 @@ function Sidebar() {
       path: "/download",
       name: "Downloader un fichier",
       icon: (
-        <CloudDownloadOutlinedIcon style={{ width: "24px", height: "24px" }} />
+        <CloudDownloadOutlinedIcon style={open ? { width: "24px", height: "24px" } : { width: "28px", height: "28px" }} />
       ),
       func: function () {
         setNavBar({
@@ -80,7 +84,7 @@ function Sidebar() {
           className="admin"
           src="./../../src/assets/security-user.svg"
           alt="logo_admin"
-          style={{ width: "24px", height: "24px" }}
+          style={open ? { width: "24px", height: "24px" } : { width: "28px", height: "28px" }}
         />
       ),
       func: function () {
@@ -108,9 +112,9 @@ function Sidebar() {
       name: "Notifications",
       icon: (
         <img
-          className="notifs"
           src="./../../src/assets/notification.svg"
           alt="logo_notifs"
+          style={open ? { width: "24px", height: "24px" } : { width: "28px", height: "28px" }}
         />
       ),
       func: function () {
@@ -136,9 +140,9 @@ function Sidebar() {
       name: "Paramétres",
       icon: (
         <img
-          className="params"
           src="./../../src/assets/setting-2.svg"
           alt="logo_params"
+          style={open ? { width: "24px", height: "24px" } : { width: "28px", height: "28px" }}
         />
       ),
       func: function () {
@@ -162,7 +166,7 @@ function Sidebar() {
     {
       path: "/aide",
       name: "Aide",
-      icon: <HelpOutlineOutlinedIcon style={{ paddingLeft: "1px",width:'24px',height:'24px' }} />,
+      icon: <HelpOutlineOutlinedIcon style={open ? { paddingLeft:'1px',width: "24px", height: "24px" } : { paddingLeft:'1px', width: "28px", height: "28px" }} />,
       func: function () {
         setNavBar({
           upload: false,
@@ -184,31 +188,36 @@ function Sidebar() {
   ];
   return (
     <div className="container">
-      <div className="sidebar">
-        <div className="top-logo">
-          <div onClick={toogle}>
+      <div className={open ? "sidebar-open" : "sidebar-close"} >
+        <div className="top-logo" style={!open ? {display: 'flex',flexDirection: 'row',justifyContent: 'center',} : null}>
+          <div onClick={handleToggle}>
             <img
-              className="bars"
+              className={open ? "bars-open" : "bars-close"}
               src="./../../src/assets/Menu.svg"
               alt="menu"
+              style={open ? {width:'28px',height:'28px'} : {width:'26px',height:'26px'}}
             />
           </div>
         </div>
 
         <div
           className="options"
-          style={{ gap: navbar.admin ? "1.5vh" : "21vh" }}
+          style={{ gap: !open ? "26vh" : navbar.admin ? '1.5vh': '21vh' }}
         >
-          <div className="optionsUp">
-            {menuItemUp.map((item, index) => {
+          <div className="optionsUp" style={{ gap: open ? '1.2vh' : '2vh'}}>
+            {menuItemUp.map((item) => {
               return item.name === "Administrateur" ? (
                 <NavLink
                   to={item.path}
                   key={item.id}
                   sx={{ all: "unset" }}
-                  className="linkSpe"
+                  className={open ? 'linkSpe' : 'link-close'}
+                  onClick={!open ? item.func : null}
+                  style={{
+                    backgroundColor: !open&&item.couleur() ? "#f8cece" : "null",
+                  }}
                 >
-                  <Administrateur
+                  {open ? <Administrateur
                     state={navbar}
                     handleAdmin={item.func}
                     handleGestRep={() => {
@@ -250,13 +259,13 @@ function Sidebar() {
                         aide: false,
                       }));
                     }}
-                  />
+                  /> : <div className="iconUp">{item.icon}</div>}
                 </NavLink>
               ) : (
                 <NavLink
                   to={item.path}
                   key={item.id}
-                  className="link"
+                  className={open ? "link-open" : "link-close"}
                   activeclassname="active"
                   onClick={item.func}
                   style={{
@@ -264,19 +273,19 @@ function Sidebar() {
                   }}
                 >
                   <div className="iconUp">{item.icon}</div>
-                  <div className="link_text">{item.name}</div>
+                  {open ? <div className="link_text">{item.name}</div> : null }
                 </NavLink>
               );
             })}
           </div>
 
-          <div className="optionsDown">
+          <div className="optionsDown" style={{ gap: open ? '1.2vh' : '2vh'}}>
             {menuItemDown.map((item, index) => {
               return (
                 <NavLink
                   to={item.path}
                   key={item.id}
-                  className="link"
+                  className={open ? "link-open" : "link-close"}
                   activeclassname="active"
                   onClick={item.func}
                   style={{
@@ -284,7 +293,7 @@ function Sidebar() {
                   }}
                 >
                   <div className="iconDown">{item.icon}</div>
-                  <div className="link_text">{item.name}</div>
+                  {open ? <div className="link_text">{item.name}</div> : null }
                 </NavLink>
               );
             })}
