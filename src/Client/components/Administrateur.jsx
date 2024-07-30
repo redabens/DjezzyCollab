@@ -38,6 +38,7 @@ export default function Administrateur({
           onClick={handleAdmin}
           className="adminis"
           sx={{
+            minHeight:'52px',
             backgroundColor: state.admin ? "#F8CECE" : null,
             color: "#121212",
             padding: "10px",
@@ -50,8 +51,8 @@ export default function Administrateur({
             },
           }}
         >
-          <ListItemIcon sx={{ all: "unset" }}>
-            {state.admin ? (
+          <ListItemIcon sx={{ all: "unset",padding:0 }} disablePadding>
+            { state.admin ? (
               <ExpandLess style={{ width: "24px", height: "24px" }} />
             ) : (
               <img
@@ -62,7 +63,7 @@ export default function Administrateur({
               />
             )}
           </ListItemIcon>
-          <StyledListItemText
+          {open ? <StyledListItemText
             disableTypography
             primary={
               <Typography
@@ -78,7 +79,7 @@ export default function Administrateur({
                 Administrateur
               </Typography>
             }
-          />
+          /> : null}
         </ListItemButton>
         <Collapse
           in={state.admin}

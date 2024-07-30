@@ -5,7 +5,9 @@
   width: 100vw;
   height: 100vh;
 }
-.sidebar {
+.sidebar-open {
+  border-top: 1px solid rgba(161, 60, 60, 10%);
+  border-right: 1px solid rgba(161, 60, 60, 10%);
   background-color: #FFF7F7;
   /* background-color: rgba(248, 206, 206, 35%); */
   border-top-right-radius: 10px;
@@ -16,22 +18,35 @@
   padding-left: 2%;
   padding-right: 2%;
 }
-.top-logo {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 15px;
+.sidebar-close{
+  border-top: 1px solid rgba(161, 60, 60, 10%);
+  border-right: 1px solid rgba(161, 60, 60, 10%);
+  background-color: #FFF7F7;
+  /* background-color: rgba(248, 206, 206, 35%); */
+  border-top-right-radius: 10px;
+  width: 4%;
+  height: 100%;
+  padding-top: 1.7%;
+  padding-bottom: 1.7%;
+  padding-left: 0.5%;
+  padding-right: 0.5%;  
+}
+.top-logo { 
   padding-bottom: 4vh;
 }
-.bars {
+.bars-open {
   width: 28px;
   height: 28px;
   border-radius: 5px;
 }
-.bars:hover {
+.bars-close{
+  border-radius: 5px;
+  border: 2px solid #f8cece;  
+}
+.bars-open:hover {
   border: 2px solid #f8cece;
 }
-.link {
+.link-open {
   color: #121212;
   padding: 10px;
   border: 2px solid #f8cece;
@@ -44,6 +59,22 @@
   align-items: center;
   gap: 1rem;
   text-decoration: none;
+  transition: all 0.5s;
+}
+.link-close{
+  color: #121212;
+  padding: 4px;
+  border: 2px solid #f8cece;
+  border-radius: 10px 10px 10px 10px;
+  font-family: "Noto Sans", sans-serif;
+  font-size: 1em;
+  font-weight: 600;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0;
+  text-decoration: none;
+  transition: all 0.5s;  
 }
 .linkSpe {
   color: #121212;
@@ -52,6 +83,7 @@
   font-size: 0.7 em;
   font-weight: 600;
   text-decoration: none;
+  transition: all 0.5s;
 }
 .iconUp {
   padding-left: 1px;
@@ -64,25 +96,17 @@
   flex-direction: column;
   justify-content: space-between;
 }
-.notifs,
-.params {
-  display: inline-block;
-  width: 24px;
-  height: 24px;
-}
 .optionsUp {
   border-top: 2px solid rgba(161, 60, 60, 40%);
   padding-top: 5vh;
   display: flex;
   flex-direction: column;
-  gap: 1.2vh;
 }
 .optionsDown {
   border-top: 2px solid rgba(161, 60, 60, 40%);
   padding-top: 3vh;
   display: flex;
   flex-direction: column;
-  gap: 1.2vh;
 }
 .options {
   display: flex;
