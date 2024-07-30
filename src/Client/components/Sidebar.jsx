@@ -7,6 +7,7 @@ import "../styles/Sidebar.css";
 import Administrateur from "./Administrateur";
 
 function Sidebar() {
+
   const [navbar, setNavBar] = useState({
     upload: false,
     download: false,

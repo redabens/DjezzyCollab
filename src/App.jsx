@@ -1,6 +1,15 @@
 import { useState } from "react";
 import "./App.css";
-import { createBrowserRouter,BrowserRouter, Route, Routes, Link, NavLink, createRoutesFromElements, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  BrowserRouter,
+  Route,
+  Routes,
+  Link,
+  NavLink,
+  createRoutesFromElements,
+  RouterProvider,
+} from "react-router-dom";
 // pages
 import Dashboard from "./Client/pages/Dashboard";
 import DownloadPage from "./Client/pages/DownloadPage";
@@ -31,7 +40,7 @@ const router = createBrowserRouter(
       <Route path="*" element={<NotFound />}/>
     </Route>
   )
-)
+);
 
 function App() {
   return (
