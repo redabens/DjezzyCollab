@@ -31,7 +31,7 @@ export default function Administrateur({
       <List
         component="div"
         className="admin"
-        disablePadding
+        disablepadding="true"
         sx={{ all: "unset" }}
       >
         <ListItemButton
@@ -51,7 +51,7 @@ export default function Administrateur({
             },
           }}
         >
-          <ListItemIcon sx={{ all: "unset",padding:0 }} disablePadding>
+          <ListItemIcon sx={{ all: "unset",padding:0 }} disablepadding="true">
             { state.admin ? (
               <ExpandLess style={{ width: "24px", height: "24px" }} />
             ) : (
@@ -98,7 +98,7 @@ export default function Administrateur({
         >
           <List
             component="div"
-            disablePadding
+            disablepadding="true"
             sx={{
               all: "unset",
               display: "flex",
