@@ -1,6 +1,15 @@
 import { useState } from "react";
 import "./App.css";
-import { createBrowserRouter,BrowserRouter, Route, Routes, Link, NavLink, createRoutesFromElements, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  BrowserRouter,
+  Route,
+  Routes,
+  Link,
+  NavLink,
+  createRoutesFromElements,
+  RouterProvider,
+} from "react-router-dom";
 // pages
 import Dashboard from "./Client/pages/Dashboard";
 import DownloadPage from "./Client/pages/DownloadPage";
@@ -14,7 +23,7 @@ import RootLayout from "./Client/pages/RootLayout";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<RootLayout />} >
+    <Route path="/" element={<RootLayout />}>
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/download" element={<DownloadPage />} />
       <Route path="/parametres" element={<ParametresPage />} />
@@ -24,10 +33,10 @@ const router = createBrowserRouter(
       <Route path="/admin" element={<AdminPage />} />
       <Route path="/admin/gestion-repertoires" element={<AdminPage />} />
       <Route path="/admin/gestion-utilisateurs" element={<AdminPage />} />
-      <Route path="/admin/creation-comptes" element={<AdminPage />} />  
+      <Route path="/admin/creation-comptes" element={<AdminPage />} />
     </Route>
   )
-)
+);
 
 function App() {
   return (
