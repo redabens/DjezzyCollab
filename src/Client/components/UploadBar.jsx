@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+
 export default function UploadBar(props){
     const [progress, setProgress] = useState(0);
 

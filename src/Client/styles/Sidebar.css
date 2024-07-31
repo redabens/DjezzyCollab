@@ -8,7 +8,7 @@
 .sidebar-open {
   border-top: 1px solid rgba(161, 60, 60, 10%);
   border-right: 1px solid rgba(161, 60, 60, 10%);
-  background-color: #FFF7F7;
+  background-color: #fff7f7;
   /* background-color: rgba(248, 206, 206, 35%); */
   border-top-right-radius: 10px;
   width: 23%;
@@ -18,10 +18,10 @@
   padding-left: 0.9%;
   padding-right: 2%;
 }
-.sidebar-close{
+.sidebar-close {
   border-top: 1px solid rgba(161, 60, 60, 10%);
   border-right: 1px solid rgba(161, 60, 60, 10%);
-  background-color: #FFF7F7;
+  background-color: #fff7f7;
   /* background-color: rgba(248, 206, 206, 35%); */
   border-top-right-radius: 10px;
   width: 4%;
@@ -29,9 +29,9 @@
   padding-top: 0.7%;
   padding-bottom: 1.7%;
   padding-left: 0.5%;
-  padding-right: 0.5%;  
+  padding-right: 0.5%;
 }
-.top-logo { 
+.top-logo {
   padding-bottom: 4vh;
 }
 .bars-open {
@@ -39,20 +39,20 @@
   height: 28px;
   border-radius: 5px;
 }
-.bars-close{
+.bars-close {
   border-radius: 5px;
-  border: 2px solid #f8cece;  
+  border: 2px solid #f8cece;
 }
 .bars-open:hover {
   border: 2px solid #f8cece;
 }
 .link-open {
   color: #121212;
-  padding: 10px;
+  padding: 6px;
   border: 2px solid #f8cece;
   border-radius: 10px 10px 10px 10px;
   font-family: "Noto Sans", sans-serif;
-  font-size: 1em;
+  font-size: 0.8em;
   font-weight: 600;
   display: flex;
   flex-direction: row;
@@ -61,26 +61,23 @@
   text-decoration: none;
   transition: all 0.5s;
 }
-.link-close{
+.link-close {
   color: #121212;
-  padding: 4px;
+  padding: 1px;
   border: 2px solid #f8cece;
   border-radius: 10px 10px 10px 10px;
-  font-family: "Noto Sans", sans-serif;
-  font-size: 1em;
-  font-weight: 600;
   display: flex;
-  flex-direction: row;
   align-items: center;
-  gap: 0;
   text-decoration: none;
-  transition: all 0.5s;  
+  transition: all 0.5s;
+  width: 2rem;
+  height: 2rem;
 }
 .linkSpe {
   color: #121212;
   border-radius: 10px 10px 10px 10px;
   font-family: "Noto Sans", sans-serif;
-  font-size: 0.7 em;
+  font-size: 0.8em;
   font-weight: 600;
   text-decoration: none;
   transition: all 0.5s;

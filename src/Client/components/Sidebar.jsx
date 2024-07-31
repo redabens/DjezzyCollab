@@ -6,18 +6,8 @@ import { NavLink } from "react-router-dom";
 import "../styles/Sidebar.css";
 import Administrateur from "./Administrateur";
 
-function Sidebar({open, handleToggle}) {
-  const [navbar, setNavBar] = useState({
-    upload: false,
-    download: false,
-    admin: false,
-    gestRep: false,
-    gestUtils: false,
-    creatCompt: false,
-    notifs: false,
-    params: false,
-    aide: false,
-  });
+function Sidebar({ open, handleToggle,params }) {
+  const [navbar, setNavBar] = useState(params);
   const menuItemUp = [
     {
       path: "/upload",
@@ -26,7 +16,11 @@ function Sidebar({open, handleToggle}) {
         <img
           src="./../../src/assets/Folder_send.svg"
           alt="logo_download"
-          style={open ? { width: "24px", height: "24px" } : { width: "28px", height: "28px" }}
+          style={
+            open
+              ? { width: "20px", height: "20px" }
+              : { width: "23px", height: "23px", paddingLeft: "2px" }
+          }
         />
       ),
       func: function () {
@@ -51,7 +45,13 @@ function Sidebar({open, handleToggle}) {
       path: "/download",
       name: "Downloader un fichier",
       icon: (
-        <CloudDownloadOutlinedIcon style={open ? { width: "24px", height: "24px" } : { width: "28px", height: "28px" }} />
+        <CloudDownloadOutlinedIcon
+          style={
+            open
+              ? { width: "20px", height: "20px" }
+              : { width: "23px", height: "23px", paddingLeft: "2px" }
+          }
+        />
       ),
       func: function () {
         setNavBar({
@@ -79,7 +79,11 @@ function Sidebar({open, handleToggle}) {
           className="admin"
           src="./../../src/assets/security-user.svg"
           alt="logo_admin"
-          style={open ? { width: "24px", height: "24px" } : { width: "28px", height: "28px" }}
+          style={
+            open
+              ? { width: "20px", height: "20px" }
+              : { width: "23px", height: "23px", paddingLeft: "2px" }
+          }
         />
       ),
       func: function () {
@@ -109,7 +113,11 @@ function Sidebar({open, handleToggle}) {
         <img
           src="./../../src/assets/notification.svg"
           alt="logo_notifs"
-          style={open ? { width: "24px", height: "24px" } : { width: "28px", height: "28px" }}
+          style={
+            open
+              ? { width: "20px", height: "20px" }
+              : { width: "23px", height: "23px", paddingLeft: "2px" }
+          }
         />
       ),
       func: function () {
@@ -137,7 +145,11 @@ function Sidebar({open, handleToggle}) {
         <img
           src="./../../src/assets/setting-2.svg"
           alt="logo_params"
-          style={open ? { width: "24px", height: "24px" } : { width: "28px", height: "28px" }}
+          style={
+            open
+              ? { width: "20px", height: "20px" }
+              : { width: "23px", height: "23px", paddingLeft: "2px" }
+          }
         />
       ),
       func: function () {
@@ -161,7 +173,15 @@ function Sidebar({open, handleToggle}) {
     {
       path: "/aide",
       name: "Aide",
-      icon: <HelpOutlineOutlinedIcon style={open ? { paddingLeft:'1px',width: "24px", height: "24px" } : { paddingLeft:'1px', width: "28px", height: "28px" }} />,
+      icon: (
+        <HelpOutlineOutlinedIcon
+          style={
+            open
+              ? { width: "20px", height: "20px" }
+              : { width: "23px", height: "23px", paddingLeft: "2px" }
+          }
+        />
+      ),
       func: function () {
         setNavBar({
           upload: false,
@@ -183,78 +203,98 @@ function Sidebar({open, handleToggle}) {
   ];
   return (
     <div className="container">
-      <div className={open ? "sidebar-open" : "sidebar-close"} >
-        <div className="top-logo" style={!open ? {display: 'flex',flexDirection: 'row',justifyContent: 'center',} : null}>
+      <div className={open ? "sidebar-open" : "sidebar-close"}>
+        <div
+          className="top-logo"
+          style={
+            !open
+              ? {
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "center",
+                }
+              : null
+          }
+        >
           <div onClick={handleToggle}>
             <img
               className={open ? "bars-open" : "bars-close"}
               src="./../../src/assets/Menu.svg"
               alt="menu"
-              style={open ? {width:'28px',height:'28px'} : {width:'26px',height:'26px'}}
+              style={
+                open
+                  ? { width: "25px", height: "25px" }
+                  : { width: "25px", height: "25px" }
+              }
             />
           </div>
         </div>
 
         <div
           className="options"
-          style={{ gap: !open ? "26vh" : navbar.admin ? '1.5vh': '21vh' }}
+          style={{ gap: !open ? "26vh" : navbar.admin ? "1.5vh" : "21vh" }}
         >
-          <div className="optionsUp" style={{ gap: open ? '1.2vh' : '2vh'}}>
+          <div className="optionsUp" style={{ gap: open ? "1.2vh" : "2vh" }}>
             {menuItemUp.map((item) => {
               return item.name === "Administrateur" ? (
                 <NavLink
                   to={item.path}
                   key={item.id}
                   sx={{ all: "unset" }}
-                  className={open ? 'linkSpe' : 'link-close'}
+                  className={open ? "linkSpe" : "link-close"}
                   onClick={!open ? item.func : null}
                   style={{
-                    backgroundColor: !open&&item.couleur() ? "#f8cece" : "null",
+                    backgroundColor:
+                      !open && item.couleur() ? "#f8cece" : "null",
                   }}
                 >
-                  {open ? <Administrateur
-                    state={navbar}
-                    handleAdmin={item.func}
-                    handleGestRep={() => {
-                      setNavBar((prev) => ({
-                        upload: false,
-                        download: false,
-                        admin: true,
-                        gestRep: true,
-                        gestUtils: false,
-                        creatCompt: false,
-                        notifs: false,
-                        params: false,
-                        aide: false,
-                      }));
-                    }}
-                    handleGestUtils={() => {
-                      setNavBar((prev) => ({
-                        upload: false,
-                        download: false,
-                        admin: true,
-                        gestRep: false,
-                        gestUtils: true,
-                        creatCompt: false,
-                        notifs: false,
-                        params: false,
-                        aide: false,
-                      }));
-                    }}
-                    handleCreatCompte={() => {
-                      setNavBar((prev) => ({
-                        upload: false,
-                        download: false,
-                        admin: true,
-                        gestRep: false,
-                        gestUtils: false,
-                        creatCompt: true,
-                        notifs: false,
-                        params: false,
-                        aide: false,
-                      }));
-                    }}
-                  /> : <div className="iconUp">{item.icon}</div>}
+                  {open ? (
+                    <Administrateur
+                      state={navbar}
+                      handleAdmin={item.func}
+                      handleGestRep={() => {
+                        setNavBar((prev) => ({
+                          upload: false,
+                          download: false,
+                          admin: true,
+                          gestRep: true,
+                          gestUtils: false,
+                          creatCompt: false,
+                          notifs: false,
+                          params: false,
+                          aide: false,
+                        }));
+                      }}
+                      handleGestUtils={() => {
+                        setNavBar((prev) => ({
+                          upload: false,
+                          download: false,
+                          admin: true,
+                          gestRep: false,
+                          gestUtils: true,
+                          creatCompt: false,
+                          notifs: false,
+                          params: false,
+                          aide: false,
+                        }));
+                      }}
+                      handleCreatCompte={() => {
+                        setNavBar((prev) => ({
+                          upload: false,
+                          download: false,
+                          admin: true,
+                          gestRep: false,
+                          gestUtils: false,
+                          creatCompt: true,
+                          notifs: false,
+                          params: false,
+                          aide: false,
+                        }));
+                      }}
+                    />
+                  ) : (
+                    <div className="iconUp">{item.icon}</div>
+                  )}
                 </NavLink>
               ) : (
                 <NavLink
@@ -268,13 +308,13 @@ function Sidebar({open, handleToggle}) {
                   }}
                 >
                   <div className="iconUp">{item.icon}</div>
-                  {open ? <div className="link_text">{item.name}</div> : null }
+                  {open ? <div className="link_text">{item.name}</div> : null}
                 </NavLink>
               );
             })}
           </div>
 
-          <div className="optionsDown" style={{ gap: open ? '1.2vh' : '2vh'}}>
+          <div className="optionsDown" style={{ gap: open ? "1.2vh" : "2vh" }}>
             {menuItemDown.map((item, index) => {
               return (
                 <NavLink
@@ -288,7 +328,7 @@ function Sidebar({open, handleToggle}) {
                   }}
                 >
                   <div className="iconDown">{item.icon}</div>
-                  {open ? <div className="link_text">{item.name}</div> : null }
+                  {open ? <div className="link_text">{item.name}</div> : null}
                 </NavLink>
               );
             })}

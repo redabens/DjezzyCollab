@@ -1,5 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap");
-
+@import url("https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c&display=swap");
 .navbr {
   display: flex;
   flex-direction: row;
@@ -19,10 +19,11 @@
   flex-direction: row;
   align-items: center;
   gap: 2vw;
+  font-family: "M PLUS Rounded 1c";
 }
 .pdp {
-  width: 6vh;
-  height: 6vh;
+  width: 5vh;
+  height: 5vh;
   border-radius: 50%;
 }
 .infoBox {
@@ -34,15 +35,17 @@
   display: flex;
   justify-content: center;
   flex-direction: column;
-  width: 18vw;
+  width: 20vw;
   align-items: flex-start;
   gap: 15px;
   padding: 15px;
-  font-family: "Mulish", sans-serif;
+
   font-size: 80%;
   background-color: white;
+  z-index: 1;
 }
 .infoElt {
+  font-family: "M PLUS Rounded 1c";
   display: flex;
   flex-direction: row;
   justify-content: space-between;

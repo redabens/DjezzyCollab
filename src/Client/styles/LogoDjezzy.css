@@ -1,24 +1,24 @@
 .LogoWithName {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 10px;
-  }
-  .logo {
-    display: inline-block;
-    width: 2.6rem;
-    height: 2.6rem;
-  }
-  .Nom {
-    font-family: "Secular One", sans-serif;
-    font-weight: 400;
-    font-size: 11px;
-    line-height: 13px;
-    text-align: center;
-  }
-  #arabe {
-    font-family: "Noto Sans Arabic", sans-serif;
-    font-weight: 400;
-    font-style: normal;
-    font-variation-settings: "wdth" 100;
-  }
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+.logo {
+  display: inline-block;
+  width: 2.3rem;
+  height: 2.3rem;
+}
+.Nom {
+  font-family: "Secular One", sans-serif;
+  font-weight: 400;
+  font-size: 9px;
+  line-height: 13px;
+  text-align: center;
+}
+#arabe {
+  font-family: "Noto Sans Arabic", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings: "wdth" 100;
+}

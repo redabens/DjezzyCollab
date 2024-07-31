@@ -8,7 +8,7 @@ import ExpandLess from "@mui/icons-material/ExpandLess";
 import { NavLink } from "react-router-dom";
 import "../styles/Administrateur.css";
 import { styled } from "@mui/material/styles";
-import { Typography } from '@mui/material';
+import { Typography } from "@mui/material";
 
 const StyledListItemText = styled(ListItemText)({
   all: "unset",
@@ -38,10 +38,10 @@ export default function Administrateur({
           onClick={handleAdmin}
           className="adminis"
           sx={{
-            minHeight:'52px',
+            minHeight: "20px",
             backgroundColor: state.admin ? "#F8CECE" : null,
             color: "#121212",
-            padding: "10px",
+            padding: "6px",
             border: "2px solid #f8cece",
             borderRadius: "10px 10px 10px 10px",
             gap: "1rem",
@@ -51,8 +51,8 @@ export default function Administrateur({
             },
           }}
         >
-          <ListItemIcon sx={{ all: "unset",padding:0 }} disablepadding="true">
-            { state.admin ? (
+          <ListItemIcon sx={{ all: "unset", padding: 0 }} disablepadding="true">
+            {state.admin ? (
               <ExpandLess style={{ width: "24px", height: "24px" }} />
             ) : (
               <img
@@ -63,23 +63,25 @@ export default function Administrateur({
               />
             )}
           </ListItemIcon>
-          {open ? <StyledListItemText
-            disableTypography
-            primary={
-              <Typography
-                variant="div"
-                style={{
-                  fontFamily: "Noto Sans, sans-serif",
-                  fontSize: "1.45em",
-                  fontWeight: 600,
-                  color: '#121212',
-                  textDecoration: "none",
-                }}
-              >
-                Administrateur
-              </Typography>
-            }
-          /> : null}
+          {open ? (
+            <StyledListItemText
+              disableTypography
+              primary={
+                <Typography
+                  variant="div"
+                  style={{
+                    fontFamily: "Noto Sans, sans-serif",
+                    fontSize: "1.45em",
+                    fontWeight: 600,
+                    color: "#121212",
+                    textDecoration: "none",
+                  }}
+                >
+                  Administrateur
+                </Typography>
+              }
+            />
+          ) : null}
         </ListItemButton>
         <Collapse
           in={state.admin}
@@ -137,21 +139,23 @@ export default function Administrateur({
                     style={{ width: "24px", height: "24px" }}
                   />
                 </ListItemIcon>
-                <StyledListItemText disableTypography
+                <StyledListItemText
+                  disableTypography
                   primary={
                     <Typography
                       variant="div"
                       style={{
                         fontFamily: "Noto Sans, sans-serif",
-                        fontSize: "1.4em",
+                        fontSize: "1.8em",
                         fontWeight: 500,
-                        color: '#121212',
+                        color: "#121212",
                         textDecoration: "none",
                       }}
                     >
                       Gestion Répertoires
                     </Typography>
-                  } />
+                  }
+                />
               </ListItemButton>
             </NavLink>
             <NavLink
@@ -183,21 +187,23 @@ export default function Administrateur({
                     style={{ width: "24px", height: "24px" }}
                   />
                 </ListItemIcon>
-                <StyledListItemText disableTypography
+                <StyledListItemText
+                  disableTypography
                   primary={
                     <Typography
                       variant="div"
                       style={{
                         fontFamily: "Noto Sans, sans-serif",
-                        fontSize: "1.4em",
+                        fontSize: "1.8em",
                         fontWeight: 500,
-                        color: '#121212',
+                        color: "#121212",
                         textDecoration: "none",
                       }}
                     >
                       Gestion Utilisateurs
                     </Typography>
-                  } />
+                  }
+                />
               </ListItemButton>
             </NavLink>
             <NavLink
@@ -229,21 +235,23 @@ export default function Administrateur({
                     style={{ width: "24px", height: "24px" }}
                   />
                 </ListItemIcon>
-                <StyledListItemText disableTypography
+                <StyledListItemText
+                  disableTypography
                   primary={
                     <Typography
                       variant="div"
                       style={{
                         fontFamily: "Noto Sans, sans-serif",
-                        fontSize: "1.4em",
+                        fontSize: "1.8em",
                         fontWeight: 500,
-                        color: '#121212',
+                        color: "#121212",
                         textDecoration: "none",
                       }}
                     >
                       Creation Compte
                     </Typography>
-                  } />
+                  }
+                />
               </ListItemButton>
             </NavLink>
           </List>

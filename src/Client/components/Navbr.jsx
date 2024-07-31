@@ -21,10 +21,8 @@ export default function Navbar() {
 
   return (
     <nav className="navbr">
-      <div
-        className="navbarElt"
-      >
-        <h3>{user.name}</h3>
+      <div className="navbarElt">
+        <h3 style={{ fontSize: "0.9em" }}>{user.name}</h3>
         <div onClick={togglePopover}>
           <img
             className="pdp"
@@ -35,13 +33,10 @@ export default function Navbar() {
       </div>
 
       {isOpen && (
-        <Box
-          className="infoBox"
-         
-        >
+        <Box className="infoBox">
           <div className="infoBoxImg">
             <img
-              className="pdp"
+              style={{ width: "6.5vh", height: "6.5vh", borderRadius: "50%" }}
               src="../src/assets/anonyme.png"
               alt="photo_profil"
             />
