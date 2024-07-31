@@ -2,6 +2,8 @@ import "../styles/Navbar.css";
 import { useState } from "react";
 import Popover from "@mui/material/Popover";
 import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
 
 export default function Navbar() {
   const [user, setUser] = useState({
@@ -9,24 +11,21 @@ export default function Navbar() {
     email: "k_abdelhak@djeezy.dz",
     tel: "07792345606",
   });
-  //------------------
-  const [anchorEl, setAnchorEl] = useState(null);
 
-  const openPopover = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
+  const [isOpen, setIsOpen] = useState(false);
 
-  const closePopover = () => {
-    setAnchorEl(null);
-  };
-
-  const open = Boolean(anchorEl);
+  function togglePopover() {
+    console.log("Popover toggled");
+    setIsOpen(!isOpen);
+  }
 
   return (
     <nav className="navbar">
-      <div className="navbarElt">
+      <div
+        className="navbarElt"
+      >
         <h3>{user.name}</h3>
-        <div onClick={openPopover}>
+        <div onClick={togglePopover}>
           <img
             className="pdp"
             src="../src/assets/anonyme.png"
@@ -35,17 +34,11 @@ export default function Navbar() {
         </div>
       </div>
 
-      <Popover
-        style={{ borderRadius: 30 }}
-        open={open}
-        anchorEl={anchorEl}
-        onClose={closePopover}
-        anchorOrigin={{
-          vertical: "top",
-          horizontal: "right",
-        }}
-      >
-        <div className="infoBox">
+      {isOpen && (
+        <Box
+          className="infoBox"
+         
+        >
           <div className="infoBoxImg">
             <img
               className="pdp"
@@ -55,7 +48,7 @@ export default function Navbar() {
           </div>
           <div className="infoElt">
             <h3>Nom:</h3>
-            <h3 className="var"> {user.name}</h3>
+            <h3 className="var">{user.name}</h3>
           </div>
           <div className="infoElt">
             <h3>Email:</h3>
@@ -65,8 +58,8 @@ export default function Navbar() {
             <h3>Télephone:</h3>
             <h3 className="var">{user.tel}</h3>
           </div>
-        </div>
-      </Popover>
+        </Box>
+      )}
     </nav>
   );
 }

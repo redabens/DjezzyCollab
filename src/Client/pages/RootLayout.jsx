@@ -6,23 +6,28 @@ import Navbr from "./../components/Navbr";
 import LogoDjezzy from "./../components/LogoDjezzy";
 import { Outlet } from "react-router-dom";
 export default function RootLayout() {
-  const [open,setOpen]= useState(true);
+  const [open, setOpen] = useState(true);
   const handleToggle = (e) => {
-    setOpen(prev=>(!prev));
-  }
+    setOpen((prev) => !prev);
+  };
   return (
     <div className="rootlayout">
       <div className="navbar">
-        <Navbr />
+        <Navbr open={open} />
       </div>
       <div className="Sidebar">
-        <Sidebar open={open} handleToggle={handleToggle}/>
+        <Sidebar open={open} handleToggle={handleToggle} />
       </div>
       <div className="LogoDjezzy">
         <LogoDjezzy />
       </div>
-      <div className="containers" style={open ? {width:'77%',left:'23%'} : {width:'96%',left:'4%'}}>
-        <Outlet context={open}/>
+      <div
+        className="containers"
+        style={
+          open ? { width: "77%", left: "23%" } : { width: "96%", left: "4%" }
+        }
+      >
+        <Outlet context={open} />
       </div>
     </div>
   );

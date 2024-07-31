@@ -1,25 +1,27 @@
-.rootlayout{
-    width: 100vw;
-    height: 100vh;
-  }
-  .navbar{
-    position: fixed;
-    z-index: 2;
-  }
-  .Sidebar{
-    position: relative;
-    z-index: 3;
-  }
-  .LogoDjezzy{
-    position: absolute;
-    top: 0.2vh;
-    left: 4.5vw;
-    z-index: 4;
-  }
-  .containers{
-    height: 89vh;
-    position: absolute;
-    top: 11vh;
-    z-index: 1;
-    background-color: rgb(255, 255, 255);
-  }
+.rootlayout {
+  width: 100vw;
+  height: 100vh;
+}
+
+.navbar {
+  position: fixed;
+  z-index: 4;
+}
+.Sidebar {
+  position: relative;
+  z-index: 3;
+}
+.LogoDjezzy {
+  position: absolute;
+  top: 0.2vh;
+  left: 4.5vw;
+  z-index: 4;
+}
+.containers {
+  height: 89vh;
+  position: absolute;
+  top: 11vh;
+  z-index: 1;
+  background-color: rgb(255, 255, 255);
+  pointer-events: auto;
+}

@@ -3,6 +3,7 @@ import {v4 as uuid} from 'uuid';
 import "../styles/DropFileInput.css";
 import { useEffect, useRef, useState } from "react";
 import UploadBar from "./UploadBar";
+
 const DropFileInput = (props) => {
   const wrapperRef = useRef(null);
   const onDragEnter = () => wrapperRef.current.classList.add("dragover");
