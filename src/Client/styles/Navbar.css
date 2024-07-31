@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap");
+
 .navbar {
   display: flex;
   flex-direction: row;
@@ -23,3 +25,50 @@
   height: 6vh;
   border-radius: 50%;
 }
+.infoBox {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  width: 20vw;
+  align-items: flex-start;
+  gap: 15px;
+  padding: 20px;
+  font-family: "Mulish", sans-serif;
+  font-size: 80%;
+}
+.infoBoxImg {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+.infoElt {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #c6c6c6;
+  padding-bottom: 10px;
+  padding-top: 10px;
+}
+.var {
+  font-weight: 500;
+  color: #a0a0a0;
+}
+
+/* .infoBox {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  border-radius: 20px;
+  padding: 20px;
+  font-family: "Mulish", sans-serif;
+  font-size: 80%;
+}
+
+.infoBox h3:not(:last-of-type)::after {
+  justify-content: center;
+  display: block;
+  border-bottom: 1px solid #6d6d6d;
+  margin: 10px 0;
+} */

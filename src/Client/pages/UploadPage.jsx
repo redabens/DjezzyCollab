@@ -1,6 +1,5 @@
 import { useDropzone } from "react-dropzone";
 import { useState, useCallback } from "react";
-import DragDropZone from "../components/DragDropZone";
 import DropFileInput from "../components/DropFileInput";
 import "../styles/UploadPage.css";
 
@@ -11,7 +10,7 @@ function UploadPage() {
 
   return (
     <div>
-      <DropFileInput onFileChange={(files)=>onFileChange(files)}/>
+      <DropFileInput onFileChange={(files) => onFileChange(files)} />
     </div>
   );
 }
