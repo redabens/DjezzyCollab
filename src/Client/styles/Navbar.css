@@ -1,7 +1,10 @@
-.navbar {
+@import url("https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap");
+
+.navbr {
   display: flex;
   flex-direction: row;
-  height: 100%;
+  justify-content: flex-end;
+  height: 85%;
   width: 100%;
   font-family: "Noto Sans", sans-serif;
   font-weight: 100;
@@ -11,15 +14,60 @@
 }
 .navbarElt {
   position: relative;
-  left: 85%;
+  right: 30px;
   display: flex;
   flex-direction: row;
   align-items: center;
-  background-color: white;
   gap: 2vw;
 }
 .pdp {
-  width: 23%;
-  height: 70%;
+  width: 6vh;
+  height: 6vh;
   border-radius: 50%;
+}
+.infoBox {
+  position: absolute;
+  top: 8vh;
+  right: 1vw;
+  border: #cecece solid 1px;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  width: 18vw;
+  align-items: flex-start;
+  gap: 15px;
+  padding: 15px;
+  font-family: "Mulish", sans-serif;
+  font-size: 80%;
+  background-color: white;
+}
+.infoElt {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 10px;
+  gap: 1vw;
+}
+.infoElt h3 {
+  margin: 0;
+  padding: 0;
+}
+.infoElt:not(:last-child) {
+  border-bottom: 1px solid #c6c6c6;
+  padding-bottom: 15px;
+}
+
+.infoBoxImg {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+.var {
+  font-weight: 500;
+  color: #a0a0a0;
 }

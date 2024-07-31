@@ -2,12 +2,15 @@
     width: 100%;
     height: 100%;
     display: grid;
-    grid-template-rows: 8.5vh 1fr;
+    grid-template-rows: 9% 1fr;
   }
   .navbar{
     grid-column: 2;
     grid-row: 1;
-    box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);
+    /* display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: flex-start; */
   }
   .Sidebar{
     grid-row: 1 / 3;
@@ -20,6 +23,5 @@
   .containers{
     grid-column: 2 ;
     grid-row: 2;
-    height: 89vh;
     background-color: rgb(255, 255, 255);
   }
