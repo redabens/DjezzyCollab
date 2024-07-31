@@ -3,6 +3,7 @@ import {v4 as uuid} from 'uuid';
 import "../styles/DropFileInput.css";
 import { useEffect, useRef, useState } from "react";
 import UploadBar from "./UploadBar";
+
 const DropFileInput = (props) => {
   const wrapperRef = useRef(null);
   const onDragEnter = () => wrapperRef.current.classList.add("dragover");
@@ -42,9 +43,9 @@ const DropFileInput = (props) => {
     <>
       <div
         ref={wrapperRef}
-        onDragEnter={onDragEnter}
-        onDragLeave={onDragLeave}
-        onDrop={onDrop}
+        onDragEnter={(event)=>{event.preventDefault;onDragEnter();}}
+        onDragLeave={(event)=>{event.preventDefault;onDragLeave()}}
+        onDrop={(event)=>{event.preventDefault;onDrop()}}
         className="drop-file-input"
       >
         <div className="drop-file-input_label">
