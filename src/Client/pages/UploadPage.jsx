@@ -14,7 +14,7 @@ function UploadPage() {
     <div className="upload-page">
       <div className="box">
         <h2 className="header">Uploader vos fichiers</h2>
-        <DropFileInput onFileChange={(files)=>onFileChange(files)}/>
+        <DropFileInput onFileChange={onFileChange}/>
       </div>
     </div>
   );

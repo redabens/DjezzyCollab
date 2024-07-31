@@ -11,7 +11,7 @@ export default function RootLayout() {
     setOpen((prev) => !prev);
   };
   return (
-    <div className="rootlayout">
+    <div className="rootlayout" style={open? {gridTemplateColumns:'23% 1fr'}:{gridTemplateColumns:'4% 1fr'}}>
       <div className="navbar">
         <Navbr open={open} />
       </div>
@@ -21,13 +21,8 @@ export default function RootLayout() {
       <div className="LogoDjezzy">
         <LogoDjezzy />
       </div>
-      <div
-        className="containers"
-        style={
-          open ? { width: "77%", left: "23%" } : { width: "96%", left: "4%" }
-        }
-      >
-        <Outlet context={open} />
+      <div className="containers" >
+        <Outlet context={open}/>
       </div>
     </div>
   );

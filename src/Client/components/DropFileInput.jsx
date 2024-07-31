@@ -43,9 +43,9 @@ const DropFileInput = (props) => {
     <>
       <div
         ref={wrapperRef}
-        onDragEnter={onDragEnter}
-        onDragLeave={onDragLeave}
-        onDrop={onDrop}
+        onDragEnter={(event)=>{event.preventDefault;onDragEnter();}}
+        onDragLeave={(event)=>{event.preventDefault;onDragLeave()}}
+        onDrop={(event)=>{event.preventDefault;onDrop()}}
         className="drop-file-input"
       >
         <div className="drop-file-input_label">

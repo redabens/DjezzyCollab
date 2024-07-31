@@ -1,10 +1,11 @@
 @import url("https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap");
 
-.navbar {
+.navbr {
   display: flex;
   flex-direction: row;
-  height: 11vh;
-  width: 100vw;
+  justify-content: flex-end;
+  height: 85%;
+  width: 100%;
   font-family: "Noto Sans", sans-serif;
   font-weight: 100;
   font-size: 0.85em;
@@ -13,11 +14,10 @@
 }
 .navbarElt {
   position: relative;
-  left: 85vw;
+  right: 30px;
   display: flex;
   flex-direction: row;
   align-items: center;
-  background-color: white;
   gap: 2vw;
 }
 .pdp {

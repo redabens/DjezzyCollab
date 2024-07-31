@@ -1,27 +1,27 @@
-.rootlayout {
-  width: 100vw;
-  height: 100vh;
-}
-
-.navbar {
-  position: fixed;
-  z-index: 4;
-}
-.Sidebar {
-  position: relative;
-  z-index: 3;
-}
-.LogoDjezzy {
-  position: absolute;
-  top: 0.2vh;
-  left: 4.5vw;
-  z-index: 4;
-}
-.containers {
-  height: 89vh;
-  position: absolute;
-  top: 11vh;
-  z-index: 1;
-  background-color: rgb(255, 255, 255);
-  pointer-events: auto;
-}
+.rootlayout{
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-rows: 9% 1fr;
+  }
+  .navbar{
+    grid-column: 2;
+    grid-row: 1;
+    /* display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: flex-start; */
+  }
+  .Sidebar{
+    grid-row: 1 / 3;
+  }
+  .LogoDjezzy{
+    position: absolute;
+    top: 0.2vh;
+    left: 4.5vw;
+  }
+  .containers{
+    grid-column: 2 ;
+    grid-row: 2;
+    background-color: rgb(255, 255, 255);
+  }
