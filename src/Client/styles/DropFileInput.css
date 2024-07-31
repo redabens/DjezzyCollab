@@ -4,8 +4,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 266px;
-  width: 818px;
+  height: 31%;
+  width: 70%;
   position: relative;
   border-radius: 4px;
   border: #1e1e1e dashed;
@@ -36,4 +36,94 @@
   color: #3ea13c;
   text-decoration: underline;
 }
+.drop-file-preview{
+  width: 70%;
+}
 
+/* Uploading*/
+
+.drop-file-uploading{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: center;
+}
+.drop-file-uploading_title{
+  font-size: 18px;
+}
+.drop-file-uploading_items{
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.drop-file-uploading_item{
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border: 1px solid rgba(227, 227, 227, 100%);
+  border-radius: 4px 4px 4px 4px;
+}
+.drop-file-uploading_item_details{
+  padding: 3px 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+.drop-file-uploading_item_details_left{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 20px;
+}
+.drop-file-uploading_item_details_right{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.drop-file-uploading_item_bar{
+  display: block;
+  background-color: rgba(161, 60, 60, 100%);
+  border-radius: 4px;
+  height: 3px;
+}
+
+/* Uploaded */
+
+.drop-file-uploaded{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: center;
+}
+.drop-file-uploaded_title{
+  font-size: 18px;
+}
+.drop-file-uploaded_items{
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.drop-file-uploaded_item{
+  padding: 3px 15px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid rgba(227, 227, 227, 100%);
+  border-radius: 4px 4px 4px 4px;
+}
+.drop-file-uploaded_item_left{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap:20px;
+}
+.drop-file-uploaded_item_right{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}

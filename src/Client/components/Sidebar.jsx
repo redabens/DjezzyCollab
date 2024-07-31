@@ -6,8 +6,7 @@ import { NavLink } from "react-router-dom";
 import "../styles/Sidebar.css";
 import Administrateur from "./Administrateur";
 
-function Sidebar() {
-
+function Sidebar({open, handleToggle}) {
   const [navbar, setNavBar] = useState({
     upload: false,
     download: false,
@@ -19,10 +18,6 @@ function Sidebar() {
     params: false,
     aide: false,
   });
-  const [open,setOpen]= useState(true);
-  const handleToggle = (e) => {
-    setOpen(prev=>(!prev));
-  }
   const menuItemUp = [
     {
       path: "/upload",
