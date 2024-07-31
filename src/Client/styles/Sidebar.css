@@ -11,12 +11,14 @@
   background-color: #fff7f7;
   /* background-color: rgba(248, 206, 206, 35%); */
   border-top-right-radius: 10px;
-  width: 23%;
+  width: 18%;
   height: 100%;
   padding-top: 0.7%;
   padding-bottom: 1.7%;
   padding-left: 0.9%;
   padding-right: 2%;
+  display: grid;
+  grid-template-rows: auto 1fr;
 }
 .sidebar-close {
   border-top: 1px solid rgba(161, 60, 60, 10%);
@@ -30,6 +32,8 @@
   padding-bottom: 1.7%;
   padding-left: 0.5%;
   padding-right: 0.5%;
+  display: grid;
+  grid-template-rows: auto 1fr;
 }
 .top-logo {
   padding-bottom: 4vh;
@@ -108,4 +112,5 @@
 .options {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
 }

@@ -232,7 +232,7 @@ function Sidebar({ open, handleToggle,params }) {
 
         <div
           className="options"
-          style={{ gap: !open ? "26vh" : navbar.admin ? "1.5vh" : "21vh" }}
+          style={!open ? {alignItems:'center'}:{}}
         >
           <div className="optionsUp" style={{ gap: open ? "1.2vh" : "2vh" }}>
             {menuItemUp.map((item) => {

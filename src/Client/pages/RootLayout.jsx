@@ -55,7 +55,7 @@ export default function RootLayout() {
       className="rootlayout"
       style={
         open
-          ? { gridTemplateColumns: "23% 1fr" }
+          ? { gridTemplateColumns: "18% 1fr" }
           : { gridTemplateColumns: "4% 1fr" }
       }
     >

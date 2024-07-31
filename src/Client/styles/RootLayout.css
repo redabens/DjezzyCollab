@@ -17,8 +17,8 @@
   }
   .LogoDjezzy{
     position: absolute;
-    top: 0.2vh;
-    left: 4.5vw;
+    top: 0.95%;
+    left: 4%;
   }
   .containers{
     grid-column: 2 ;
