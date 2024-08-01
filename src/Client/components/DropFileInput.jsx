@@ -3,6 +3,7 @@ import { v4 as uuid } from "uuid";
 import "../styles/DropFileInput.css";
 import { useEffect, useRef, useState } from "react";
 import UploadBar from "./UploadBar";
+import Button from "@mui/material/Button";
 
 const DropFileInput = (props) => {
   const wrapperRef = useRef(null);
@@ -64,7 +65,7 @@ const DropFileInput = (props) => {
           <img
             src="./../../src/assets/dragdrop_icon.svg"
             alt="dragdrop_icon"
-            style={{ width: "60px", height: "50px" }}
+            style={{ width: "50px", height: "40px" }}
           />
           <p>
             Drag & Drop files or <span>Browse</span>
@@ -137,14 +138,17 @@ const DropFileInput = (props) => {
             <p className="file-uploaded_titles" style={{ paddingTop: "10px" }}>
               Uploaded
             </p>
-            <div className="drop-file-uploaded_items"  style={
+            <div
+              className="drop-file-uploaded_items"
+              style={
                 uploadedFileList.length > 1
                   ? {
                       border: "#dbdbdb solid 1px",
                       borderRadius: "8px",
                     }
                   : {}
-              }>
+              }
+            >
               {uploadedFileList.map((file) => (
                 <div key={file.id} className="drop-file-uploaded_item">
                   <div className="drop-file-uploaded_item_left">
@@ -175,6 +179,14 @@ const DropFileInput = (props) => {
           </div>
         ) : null}
       </div>
+      {uploadedFileList.length > 0 && (
+        <div className="btnContainer">
+          <button className="envoyerBtn">
+            <p>Envoyer</p>
+            <img src="./../../src/assets/send.svg" alt="send_icon" />
+          </button>
+        </div>
+      )}
     </>
   );
 };

@@ -4,7 +4,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 31%;
+  height: 29%;
   width: 70%;
   position: relative;
   border-radius: 4px;
@@ -30,7 +30,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   text-align: center;
   color: #0f0f0f;
   font-weight: 700;
@@ -52,7 +52,7 @@
 .drop-file-uploading {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 6px;
   justify-content: center;
 }
 
@@ -61,7 +61,7 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
-  max-height: 80px;
+  max-height: 75px;
   overflow-y: auto;
   padding: 8px;
 }
@@ -80,7 +80,6 @@ display: flex;
 flex-direction: row;
 justify-content: space-between;
 align-items: center;
-
  */
 .drop-file-uploading_item_details {
   padding: 3px 8px;
@@ -112,7 +111,7 @@ align-items: center;
 .drop-file-uploaded {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 5px;
   justify-content: center;
 }
 .file-uploaded_titles {
@@ -127,7 +126,7 @@ align-items: center;
   display: flex;
   flex-direction: column;
   gap: 8px;
-  max-height: 80px;
+  max-height: 75px;
   overflow-y: auto;
   padding: 8px;
 }
@@ -152,4 +151,29 @@ align-items: center;
   display: flex;
   flex-direction: row;
   align-items: center;
+}
+.btnContainer {
+  display: flex;
+}
+.envoyerBtn {
+  position: relative;
+  left: 18vw;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 6px;
+  border-radius: 5px;
+  border: none;
+  background-color: #a13c3c;
+}
+.envoyerBtn p {
+  color: white;
+  font-family: "Mulish", sans-serif;
+  font-weight: 600;
+  font-size: 0.95em;
+}
+.envoyerBtn img {
+  width: 18px;
+  height: 18px;
 }

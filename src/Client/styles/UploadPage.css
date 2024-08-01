@@ -10,10 +10,10 @@
   width: 733px;
   height: 94%;
   display: flex;
-  padding-top: 20px;
-  padding-bottom: 20px;
+  padding-top: 13px;
+  padding-bottom: 14px;
   flex-direction: column;
-  gap: 5%;
+  gap: 3%;
   justify-content: flex-start;
   align-items: center;
   background-color: rgba(217, 217, 217, 2%);
