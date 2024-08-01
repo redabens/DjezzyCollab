@@ -66,7 +66,7 @@ export default function RootLayout() {
         <Sidebar open={open} handleToggle={handleToggle} params={params} />
       </div>
       <div className="LogoDjezzy">
-        <LogoDjezzy />
+        <LogoDjezzy/>
       </div>
       <div className="containers">
         <Outlet context={open} />

@@ -18,6 +18,7 @@ import NotificationsPage from "./Client/pages/NotificationsPage";
 import UploadPage from "./Client/pages/UploadPage";
 import AidePage from "./Client/pages/AidePage";
 import AdminPage from "./Client/pages/AdminPage";
+import LoginPage from "./Client/pages/LoginPage";
 // fixed element
 import RootLayout from "./Client/pages/RootLayout";
 import NotFound from "./Client/pages/NotFound";
@@ -25,7 +26,7 @@ import NotFound from "./Client/pages/NotFound";
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route>
-      <Route path="/" element={<RootLayout />} >
+      <Route path="/" element={<RootLayout />}>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/download" element={<DownloadPage />} />
         <Route path="/parametres" element={<ParametresPage />} />
@@ -35,9 +36,10 @@ const router = createBrowserRouter(
         <Route path="/admin" element={<AdminPage />} />
         <Route path="/admin/gestion-repertoires" element={<AdminPage />} />
         <Route path="/admin/gestion-utilisateurs" element={<AdminPage />} />
-        <Route path="/admin/creation-comptes" element={<AdminPage />} />  
+        <Route path="/admin/creation-comptes" element={<AdminPage />} />
       </Route>
-      <Route path="*" element={<NotFound />}/>
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="*" element={<NotFound />} />
     </Route>
   )
 );
