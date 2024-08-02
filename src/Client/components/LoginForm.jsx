@@ -8,16 +8,15 @@ export default function LoginForm() {
     formState: { errors },
   } = useForm();
   const onSubmit = (data) => console.log(data);
-  console.log(watch("email"));
-  console.log(watch("password"));
   const handleError = (errors) => {};
-  const handleLogin = () => {};
+  const handleLogin = () => {
+    console.log("login");
+  };
   //------ validations -------
   const registerOptions = {
-    email: {
-      required: "Entrer une adresse email",
+    email: { required: "Entrer une adresse email" ,
       pattern: {
-        value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+        value: /^[^\s@]+@[^\s@]+.[^\s@]+$/,
         message: "Adresse email invalide",
       },
     },
@@ -32,7 +31,7 @@ export default function LoginForm() {
         <h1>Se connecter</h1>
         <h6>Connectez-vous à votre compte</h6>
       </div>
-      <form onSubmit={handleSubmit(handleLogin, handleError)}>
+      <form action="/login/register" method="POST" onSubmit={handleSubmit(handleLogin, handleError)}>
         <div className="input-component">
           <label htmlFor="email">Email:</label>
           <input
