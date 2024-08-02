@@ -9,7 +9,6 @@ function UploadPage() {
   const onFileChange = (files) => {
     console.log(files);
   };
-
   return (
     <div className="upload-page" >
       <div className="box">

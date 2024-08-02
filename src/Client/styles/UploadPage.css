@@ -9,13 +9,13 @@
 .box {
   width: 733px;
   height: 94%;
-  display: flex;
   padding-top: 13px;
-  padding-bottom: 14px;
+  padding-bottom: 60px;
+  display: flex;
   flex-direction: column;
-  gap: 3%;
-  justify-content: flex-start;
   align-items: center;
+  justify-content: center;
+  gap: 3%;
   background-color: rgba(217, 217, 217, 2%);
   border: 3px solid rgba(217, 217, 217, 17%);
   border-radius: 12.5px 12.5px 12.5px 12.5px;
@@ -26,3 +26,4 @@
   font-weight: 700;
   font-style: normal;
 }
+
