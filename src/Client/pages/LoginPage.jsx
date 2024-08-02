@@ -26,6 +26,14 @@ function LoginPage() {
 
         <div className="formArea">
           <LoginForm />
+          <div className="auth">
+            <div className="separateur">
+              <div className="horizontal-line"></div>
+              <p>Ou</p>
+              <div className="horizontal-line"></div>
+            </div>
+            <button>S'authentifier automatiquement</button>
+          </div>
         </div>
       </div>
     </div>

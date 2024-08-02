@@ -9,20 +9,22 @@ export default function LoginForm() {
   } = useForm();
   const onSubmit = (data) => console.log(data);
   console.log(watch("email"));
-  console.log(watch("mdps"));
+  console.log(watch("password"));
   const handleError = (errors) => {};
   const handleLogin = () => {};
   //------ validations -------
   const registerOptions = {
     email: { required: "Entrer une adresse email" },
     password: {
-      required: "Please enter your password",
+      required: "Enrer le mot de passe",
     },
   };
   return (
     <div className="my-form">
-      <h1>Se connecter</h1>
-      <h6>Connectez-vous à votre compte</h6>
+      <div className="titles">
+        <h1>Se connecter</h1>
+        <h6>Connectez-vous à votre compte</h6>
+      </div>
       <form onSubmit={handleSubmit(handleLogin, handleError)}>
         <div className="input-component">
           <label htmlFor="email">Email:</label>
@@ -32,17 +34,24 @@ export default function LoginForm() {
             placeholder="saisir l'email..."
             {...register("email", registerOptions.email)}
           />
-          <small className="text-danger">{errors?.email}</small>
+          <small className="text-danger">
+            {errors?.email && errors.email.message}
+          </small>
         </div>
         <div className="input-component">
-          <label htmlFor="mdps">Mot de passe:</label>
+          <label htmlFor="password">Mot de passe:</label>
           <input
-            name="mdps"
+            name="password"
             type="password"
             placeholder="saisir le mot de passe..."
-            {...register("mdps", registerOptions.password)}
+            {...register("password", registerOptions.password)}
           />
-          <small className="text-danger">{errors?.password}</small>
+          <small className="text-danger">
+            {errors?.password && errors.password.message}
+          </small>
+          <div className="mdps-oublie">
+            <p>Mot de passe oublié?</p>
+          </div>
         </div>
         <button>Connectez-vous maintenant</button>
       </form>

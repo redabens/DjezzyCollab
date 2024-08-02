@@ -5,15 +5,17 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 1%;
+  gap: 20px;
   width: 100%;
   height: 100%;
 }
+
 .my-form h1 {
   font-weight: 700;
   font-size: 1.7em;
   color: #a13c3c;
   font-family: "Montserrat", sans-serif !important;
+  padding-bottom: 15px;
 }
 .my-form h6 {
   font-weight: 500;
@@ -22,12 +24,12 @@
   font-family: "Poppins", sans-serif;
 }
 form {
-  width: 60%;
-  height: 60%;
+  width: 50%;
+  height: 70%;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 10%;
+  gap: 30px;
   font-family: "Poppins", sans-serif;
 }
 form button {
@@ -51,9 +53,27 @@ form button {
   width: 100%;
   padding-left: 10px;
   padding-right: 10px;
+  font-family: "Montserrat", sans-serif !important;
+  font-size: 0.75em;
+}
+.input-component input:focus {
+  outline: none;
 }
 .input-component label {
   font-size: 0.65em;
   color: #6a6a6a;
   font-weight: 500;
+}
+small {
+  color: red;
+  font-size: 0.7em;
+}
+
+.mdps-oublie p {
+  display: flex;
+  justify-content: end;
+  font-size: 0.6em;
+  text-decoration: underline;
+  color: #a13c3c;
+  padding-top: 10px;
 }
