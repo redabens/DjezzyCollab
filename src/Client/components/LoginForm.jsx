@@ -14,11 +14,18 @@ export default function LoginForm() {
   const handleLogin = () => {};
   //------ validations -------
   const registerOptions = {
-    email: { required: "Entrer une adresse email" },
+    email: {
+      required: "Entrer une adresse email",
+      pattern: {
+        value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+        message: "Adresse email invalide",
+      },
+    },
     password: {
       required: "Enrer le mot de passe",
     },
   };
+  //-------------------------------
   return (
     <div className="my-form">
       <div className="titles">
@@ -53,7 +60,7 @@ export default function LoginForm() {
             <p>Mot de passe oublié?</p>
           </div>
         </div>
-        <button>Connectez-vous maintenant</button>
+        <button type="submit">Connectez-vous maintenant</button>
       </form>
     </div>
   );
