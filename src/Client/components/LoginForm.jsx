@@ -14,7 +14,7 @@ export default function LoginForm() {
   const handleLogin = () => {};
   //------ validations -------
   const registerOptions = {
-    email: { required: "Please enter an email adress" },
+    email: { required: "Entrer une adresse email" },
     password: {
       required: "Please enter your password",
     },
@@ -24,20 +24,22 @@ export default function LoginForm() {
       <h1>Se connecter</h1>
       <h6>Connectez-vous à votre compte</h6>
       <form onSubmit={handleSubmit(handleLogin, handleError)}>
-        <div>
+        <div className="input-component">
           <label htmlFor="email">Email:</label>
           <input
             name="email"
             type="text"
+            placeholder="saisir l'email..."
             {...register("email", registerOptions.email)}
           />
-          <small className="text-danger">{errors?.name}</small>
+          <small className="text-danger">{errors?.email}</small>
         </div>
-        <div>
+        <div className="input-component">
           <label htmlFor="mdps">Mot de passe:</label>
           <input
             name="mdps"
             type="password"
+            placeholder="saisir le mot de passe..."
             {...register("mdps", registerOptions.password)}
           />
           <small className="text-danger">{errors?.password}</small>

@@ -25,7 +25,7 @@ function LoginPage() {
         </div>
 
         <div className="formArea">
-          <LoginForm/>
+          <LoginForm />
         </div>
       </div>
     </div>
