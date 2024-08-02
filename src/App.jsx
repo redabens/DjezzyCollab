@@ -26,8 +26,8 @@ import NotFound from "./Client/pages/NotFound";
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route>
+      <Route path="/login" element={<LoginPage />} />
       <Route path="/" element={<RootLayout />}>
-        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/download" element={<DownloadPage />} />
         <Route path="/parametres" element={<ParametresPage />} />
         <Route path="/notifications" element={<NotificationsPage />} />
@@ -38,7 +38,6 @@ const router = createBrowserRouter(
         <Route path="/admin/gestion-utilisateurs" element={<AdminPage />} />
         <Route path="/admin/creation-comptes" element={<AdminPage />} />
       </Route>
-      <Route path="/login" element={<LoginPage />} />
       <Route path="*" element={<NotFound />} />
     </Route>
   )
