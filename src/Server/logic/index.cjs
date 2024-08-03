@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const express = require('express');
 const methodOverride = require('method-override');
 const bodyParser = require('body-parser');
+const multer = require('multer');
 const path = require('path');
 const cors = require('cors');
 const app = express();
@@ -19,6 +20,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 app.use(cors());
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 app.post('/login', async (req,res)=>{
     try{
@@ -42,9 +46,9 @@ app.post('/login', async (req,res)=>{
         console.log(error.message);
     }
 });
-app.post('/upload',async (req,res)=>{
+app.post('/upload',upload.array('files'), async (req,res)=>{
     try{
-        console.log(req.body);
+        console.dir(req.files);
     }
     catch(error){
         console.log(error.message);

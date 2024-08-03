@@ -12,13 +12,15 @@ const DropFileInput = (props) => {
   const onDrop = () => wrapperRef.current.classList.remove("dragover");
   const [fileList, setFileList] = useState([]);
   const [uploadedFileList, setUploadedFileList] = useState([]);
+  console.log('uploaded file list');
+  console.log(uploadedFileList);
   const onFileDrop = (e) => {
-    const newFile = e.target.files[0];
+    const newFile = e.target.files;
     if (newFile) {
-      const updatedList = [
-        ...fileList,
-        { id: uuid(), file: newFile, isUploaded: false },
-      ];
+      const updatedList = [...fileList];
+    for (let i = 0; i < newFile.length; i++) {
+      updatedList.push({ id: uuid(), file: newFile[i], isUploaded: false });
+    }
       setFileList(updatedList);
       props.onFileChange(updatedList);
     }
@@ -41,39 +43,44 @@ const DropFileInput = (props) => {
   };
   useEffect(function () {
     setUploadedFileList(fileList.filter((file) => file.isUploaded));
-  }, fileList);
-  const SendFiles = (event)=>{
+  },  [fileList]);
+  const SendFiles = async (event)=>{
     event.preventDefault();
     const formData = new FormData();
-    for (let i = 0; i < uploadedFileList.length; i++) {
-      formData.append('files', uploadedFileList[i].file);
+    const addFilesToFormData = async ()=>{
+      for (let i = 0; i < uploadedFileList.length; i++) {
+        formData.append('files', uploadedFileList[i].file);
+      }
+      for (let [key, value] of formData.entries()) {
+        console.log(`${key}: ${value}`); // Affiche le nom de chaque fichier ajouté
+      }
     }
-    console.log(formData);
-    axios.post('http://localhost:3000/upload',{
+    await addFilesToFormData();
+    axios.post('http://localhost:3000/upload',
       formData,
-    }).then(res=>{
-      console.log(res);
+    ).then(res=>{
       alert('Files uploaded successfully');
+      console.log(res);
     }).catch(error=>{
       alert('Error uploading files');
       console.log(error);
     })
   }
   return (
-    <div className="dropfile">
+    <form className="dropfile" onSubmit={SendFiles}>
       <div className="drop-file">
         <div
           ref={wrapperRef}
           onDragEnter={(event) => {
-            event.preventDefault;
+            event.preventDefault();
             onDragEnter();
           }}
           onDragLeave={(event) => {
-            event.preventDefault;
+            event.preventDefault();
             onDragLeave();
           }}
           onDrop={(event) => {
-            event.preventDefault;
+            event.preventDefault();
             onDrop();
           }}
           className="drop-file-input"
@@ -198,11 +205,11 @@ const DropFileInput = (props) => {
         </div>
       </div>  
       <div className="btnContainer">
-          <button className="envoyerBtn" onClick={SendFiles} disabled={uploadedFileList.length === 0}>
-            UPLOAD FILES
-          </button>
+        <button className="envoyerBtn" disabled={uploadedFileList.length === 0}>
+          UPLOAD FILES
+        </button>
       </div>
-    </div>
+    </form>
   );
 };
 DropFileInput.propTypes = {
