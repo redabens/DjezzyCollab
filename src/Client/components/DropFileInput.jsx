@@ -1,19 +1,21 @@
 import PropTypes from "prop-types";
 import { v4 as uuid } from "uuid";
 import "../styles/DropFileInput.css";
+import { useAuth } from "./AuthContext";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import UploadBar from "./UploadBar";
 import axios from "axios";
 
 const DropFileInput = (props) => {
+  const { token } = useAuth();
+  const navigate = useNavigate();
   const wrapperRef = useRef(null);
   const onDragEnter = () => wrapperRef.current.classList.add("dragover");
   const onDragLeave = () => wrapperRef.current.classList.remove("dragover");
   const onDrop = () => wrapperRef.current.classList.remove("dragover");
   const [fileList, setFileList] = useState([]);
   const [uploadedFileList, setUploadedFileList] = useState([]);
-  console.log('uploaded file list');
-  console.log(uploadedFileList);
   const onFileDrop = (e) => {
     const newFile = e.target.files;
     if (newFile) {
@@ -57,12 +59,17 @@ const DropFileInput = (props) => {
     }
     await addFilesToFormData();
     axios.post('http://localhost:3000/upload',
-      formData,
+      formData,{headers: { 'Authorization': token }}
     ).then(res=>{
-      alert('Files uploaded successfully');
-      console.log(res);
+        if(res.status === 200) { 
+          navigate('/upload');
+        }
+        else if(res.status === 401) return alert('User Id not Found');
+        else if(res.status === 404) return alert('User not found');
+        else if(res.status === 500) return alert('Failed to upload due to server');
     }).catch(error=>{
       alert('Error uploading files');
+      navigate('/login');
       console.log(error);
     })
   }

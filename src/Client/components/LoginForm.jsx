@@ -4,7 +4,9 @@ import { useForm } from "react-hook-form";
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import { message, Result } from "antd";
+import { useAuth } from "./AuthContext";
 export default function LoginForm() {
+  const { token,setToken } = useAuth();
   const {
     register,
     handleSubmit,
@@ -16,14 +18,15 @@ export default function LoginForm() {
   const onSubmit = (data) => console.log(data);
   const handleError = (errors) => {};
   const handleLogin = () => {
-    axios.post('http://localhost:3000/login', {
+    axios.post('http://localhost:3000/login',{
       email: watch("email"),
       password: watch("password"),
     }).then(result=>{
       console.log(result);
-      if(result.data === 'success'){
+      if(result.status === 200){
+        setToken(result.data.token);
         navigate('/');
-      }else if(result.data === 'the password is incorrect'){
+      }else if(result.status === 401){
         setLoginError({value:true,message:"Le mot de passe est Incorrect"});
       }
       else{
