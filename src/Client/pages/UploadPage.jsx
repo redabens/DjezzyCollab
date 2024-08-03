@@ -12,7 +12,7 @@ function UploadPage() {
   return (
     <div className="upload-page" >
       <div className="box">
-        <h2 className="header">Uploader vos fichiers</h2>
+        <h2 className="header">Envoyer vos fichiers</h2>
         <DropFileInput onFileChange={onFileChange} />
       </div>
     </div>

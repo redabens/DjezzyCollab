@@ -13,7 +13,6 @@ const DropFileInput = (props) => {
   const [fileList, setFileList] = useState([]);
   const [uploadedFileList, setUploadedFileList] = useState([]);
   const onFileDrop = (e) => {
-    console.dir(e.target);
     const newFile = e.target.files[0];
     if (newFile) {
       const updatedList = [
@@ -40,19 +39,26 @@ const DropFileInput = (props) => {
       });
     });
   };
-  const SendFiles = (event)=>{
-    event.preventDefault();
-    const formData = new FormData();
-    uploadedFileList.forEach((file)=>{
-      formData.append('files',file.file);
-    });
-    axios.post('http://localhost:3000/upload',{
-      files:formData,
-    })
-  }
   useEffect(function () {
     setUploadedFileList(fileList.filter((file) => file.isUploaded));
   }, fileList);
+  const SendFiles = (event)=>{
+    event.preventDefault();
+    const formData = new FormData();
+    for (let i = 0; i < uploadedFileList.length; i++) {
+      formData.append('files', uploadedFileList[i].file);
+    }
+    console.log(formData);
+    axios.post('http://localhost:3000/upload',{
+      formData,
+    }).then(res=>{
+      console.log(res);
+      alert('Files uploaded successfully');
+    }).catch(error=>{
+      alert('Error uploading files');
+      console.log(error);
+    })
+  }
   return (
     <div className="dropfile">
       <div className="drop-file">
@@ -86,7 +92,7 @@ const DropFileInput = (props) => {
             </p>
           </div>
 
-          <input type="file" value="" onChange={onFileDrop} />
+          <input type="file" value="" onChange={onFileDrop} multiple/>
         </div>
         <div className="drop-file-preview">
           {fileList.length > 0 ? (
@@ -192,9 +198,8 @@ const DropFileInput = (props) => {
         </div>
       </div>  
       <div className="btnContainer">
-          <button className="envoyerBtn" onSubmit={SendFiles} disabled={uploadedFileList === 0}>
-            <p>Envoyer</p>
-            <img src="./../../src/assets/send.svg" alt="send_icon" />
+          <button className="envoyerBtn" onClick={SendFiles} disabled={uploadedFileList.length === 0}>
+            UPLOAD FILES
           </button>
       </div>
     </div>
