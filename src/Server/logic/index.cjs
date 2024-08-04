@@ -108,9 +108,44 @@ app.post('/upload',[verifyToken,upload.array('files')], async (req,res)=>{
       console.error(error);
       res.status(500).send('Server error');
     } finally {
-      sftp.end();
+      await sftp.end();
     }
 });
+app.get('/download',verifyToken,async (req,res)=>{
+    try{
+        let restPath = '';
+        await sftp.connect(sftpconfig).then(res=>{
+            console.log('connected');
+            return sftp.cwd();
+        }).then(p=>{
+            restPath = p;
+            console.log('Current dir:',p);
+        });
+        // Check if req.userId is set correctly
+        console.log('User ID:', req.userId);
+        if (!req.userId) {
+          return res.status(401).send('User ID not found');
+        }
+        const user = await User.findById(req.userId);
+        console.log('User:', user);
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+        restPath = restPath.slice(1,restPath.length);
+        console.log(restPath);
+        const userDir = path.join(restPath, user.DirPath);
+        const dirExists = await sftp.exists(userDir);
+        console.log('Directory exists:', dirExists);
+        if (!dirExists) return res.status(415).send('Directory not found');
+        const files = await sftp.list(userDir);
+        console.log('Files:', files);
+        res.status(200).send({files});
+    }catch(err){
+
+    }finally{
+        await sftp.end();
+    }
+})
 app.listen('3000',()=>{
     console.log('Server is running on port 3000...');
 });
