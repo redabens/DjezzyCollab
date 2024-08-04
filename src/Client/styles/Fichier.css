@@ -1,0 +1,22 @@
+.box-file{
+    width: 80%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid grey;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+.right{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+.left{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+}

@@ -2,11 +2,7 @@ import { useState } from "react";
 import "./App.css";
 import {
   createBrowserRouter,
-  BrowserRouter,
   Route,
-  Routes,
-  Link,
-  NavLink,
   createRoutesFromElements,
   RouterProvider,
 } from "react-router-dom";
@@ -20,6 +16,7 @@ import AidePage from "./Client/pages/AidePage";
 import AdminPage from "./Client/pages/AdminPage";
 import LoginPage from "./Client/pages/LoginPage";
 // fixed element
+import { AuthProvider } from './Client/components/AuthContext';  // Importez le fournisseur de contexte
 import RootLayout from "./Client/pages/RootLayout";
 import NotFound from "./Client/pages/NotFound";
 
@@ -44,10 +41,13 @@ const router = createBrowserRouter(
 );
 
 function App() {
+  const [token,setToken] = useState(null);
   return (
-    <div className="App">
-      <RouterProvider router={router} />
-    </div>
+    <AuthProvider>
+      <div className="App">
+        <RouterProvider router={router} />
+      </div>
+    </AuthProvider>
   );
 }
 

@@ -1,11 +1,15 @@
 import PropTypes from "prop-types";
 import { v4 as uuid } from "uuid";
 import "../styles/DropFileInput.css";
+import { useAuth } from "./AuthContext";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import UploadBar from "./UploadBar";
 import axios from "axios";
 
 const DropFileInput = (props) => {
+  const { token } = useAuth();
+  const navigate = useNavigate();
   const wrapperRef = useRef(null);
   const onDragEnter = () => {
     wrapperRef.current.classList.add("dragover");
@@ -19,12 +23,12 @@ const DropFileInput = (props) => {
   const [fileList, setFileList] = useState([]);
   const [uploadedFileList, setUploadedFileList] = useState([]);
   const onFileDrop = (e) => {
-    const newFile = e.target.files[0];
+    const newFile = e.target.files;
     if (newFile) {
-      const updatedList = [
-        ...fileList,
-        { id: uuid(), file: newFile, isUploaded: false },
-      ];
+      const updatedList = [...fileList];
+    for (let i = 0; i < newFile.length; i++) {
+      updatedList.push({ id: uuid(), file: newFile[i], isUploaded: false });
+    }
       setFileList(updatedList);
       props.onFileChange(updatedList);
     }
@@ -47,44 +51,49 @@ const DropFileInput = (props) => {
   };
   useEffect(function () {
     setUploadedFileList(fileList.filter((file) => file.isUploaded));
-  }, fileList);
-  const SendFiles = (event) => {
+  },  [fileList]);
+  const SendFiles = async (event)=>{
     event.preventDefault();
     const formData = new FormData();
-    for (let i = 0; i < uploadedFileList.length; i++) {
-      formData.append("files", uploadedFileList[i].file);
+    const addFilesToFormData = async ()=>{
+      for (let i = 0; i < uploadedFileList.length; i++) {
+        formData.append('files', uploadedFileList[i].file);
+      }
+      for (let [key, value] of formData.entries()) {
+        console.log(`${key}: ${value}`); // Affiche le nom de chaque fichier ajouté
+      }
     }
-    for (let pair of formData.entries()) {
-      console.log(`${pair[0]}: ${pair[1].name}`);
-    }
-    axios
-      .post("http://localhost:3000/upload", {
-        formData,
-      })
-      .then((res) => {
-        console.log("ffff" + res);
-        alert("Files uploaded successfully");
-      })
-      .catch((error) => {
-        alert("Error uploading files");
-        console.log(error);
-      });
-  };
+    await addFilesToFormData();
+    axios.post('http://localhost:3000/upload',
+      formData,{headers: { 'Authorization': token }}
+    ).then(res=>{
+        if(res.status === 200) { 
+          navigate('/upload');
+        }
+        else if(res.status === 401) return alert('User Id not Found');
+        else if(res.status === 404) return alert('User not found');
+        else if(res.status === 500) return alert('Failed to upload due to server');
+    }).catch(error=>{
+      alert('Error uploading files');
+      navigate('/login');
+      console.log(error);
+    })
+  }
   return (
-    <div className="dropfile">
+    <form className="dropfile" onSubmit={SendFiles}>
       <div className="drop-file">
         <div
           ref={wrapperRef}
           onDragEnter={(event) => {
-            event.preventDefault;
+            event.preventDefault();
             onDragEnter();
           }}
           onDragLeave={(event) => {
-            event.preventDefault;
+            event.preventDefault();
             onDragLeave();
           }}
           onDrop={(event) => {
-            event.preventDefault;
+            event.preventDefault();
             onDrop();
           }}
           className="drop-file-input"
@@ -212,15 +221,11 @@ const DropFileInput = (props) => {
         </div>
       </div>
       <div className="btnContainer">
-        <button
-          className="envoyerBtn"
-          onClick={SendFiles}
-          disabled={uploadedFileList.length === 0}
-        >
+        <button className="envoyerBtn" disabled={uploadedFileList.length === 0}>
           UPLOAD FILES
         </button>
       </div>
-    </div>
+    </form>
   );
 };
 DropFileInput.propTypes = {
