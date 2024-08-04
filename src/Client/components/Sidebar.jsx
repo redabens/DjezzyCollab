@@ -11,7 +11,7 @@ function Sidebar({ open, handleToggle,params }) {
   const menuItemUp = [
     {
       path: "/upload",
-      name: "Uploader un fichier",
+      name: "Envoyer un fichier",
       icon: (
         <img
           src="./../../src/assets/Folder_send.svg"
@@ -43,7 +43,7 @@ function Sidebar({ open, handleToggle,params }) {
     },
     {
       path: "/download",
-      name: "Downloader un fichier",
+      name: "Télecharger un fichier",
       icon: (
         <CloudDownloadOutlinedIcon
           style={

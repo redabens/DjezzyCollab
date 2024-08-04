@@ -7,6 +7,5 @@ const User = require('../models/users.cjs');
 mongoose.connect('mongodb://localhost:27017/Djezzy-Collab',{
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    useCreateIndex: true,
 }).then(() => console.log('Connected to MongoDB...'))
 .catch(error => console.log(error.message));

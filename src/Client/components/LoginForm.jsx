@@ -1,5 +1,9 @@
 import "./../styles/LoginForm.css";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import axios from 'axios';
+import { useNavigate } from "react-router-dom";
+import { message, Result } from "antd";
 export default function LoginForm() {
   const {
     register,
@@ -7,10 +11,27 @@ export default function LoginForm() {
     watch,
     formState: { errors },
   } = useForm();
+  const navigate = useNavigate();
+  const [loginError, setLoginError] = useState({value:false,message:""});
   const onSubmit = (data) => console.log(data);
   const handleError = (errors) => {};
   const handleLogin = () => {
-    console.log("login");
+    axios.post('http://localhost:3000/login', {
+      email: watch("email"),
+      password: watch("password"),
+    }).then(result=>{
+      console.log(result);
+      if(result.data === 'success'){
+        navigate('/');
+      }else if(result.data === 'the password is incorrect'){
+        setLoginError({value:true,message:"Le mot de passe est Incorrect"});
+      }
+      else{
+       setLoginError({value:true,message:"Utilisateur non enregistré"});
+      }
+    }).catch(errors=>{
+      console.log(errors);
+    })
   };
   //------ validations -------
   const registerOptions = {
@@ -31,7 +52,7 @@ export default function LoginForm() {
         <h1>Se connecter</h1>
         <h6>Connectez-vous à votre compte</h6>
       </div>
-      <form action="/login/register" method="POST" onSubmit={handleSubmit(handleLogin, handleError)}>
+      <form onSubmit={handleSubmit(handleLogin, handleError)}>
         <div className="input-component">
           <label htmlFor="email">Email:</label>
           <input
@@ -54,6 +75,9 @@ export default function LoginForm() {
           />
           <small className="text-danger">
             {errors?.password && errors.password.message}
+          </small>
+          <small className="text-danger">
+            {!errors?.password && loginError.value && loginError.message}
           </small>
           <div className="mdps-oublie">
             <p>Mot de passe oublié?</p>

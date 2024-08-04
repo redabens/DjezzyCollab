@@ -1,10 +1,26 @@
 @import url("https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c&display=swap");
+.dropfile{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+}
+.drop-file{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
 .drop-file-input {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 29%;
+  height: 33%;
   width: 70%;
   position: relative;
   border-radius: 4px;
@@ -45,6 +61,9 @@
 }
 .drop-file-preview {
   width: 70%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 /* Uploading*/
@@ -152,28 +171,27 @@ align-items: center;
   flex-direction: row;
   align-items: center;
 }
-.btnContainer {
-  display: flex;
+.btnContainer{
+  height: 45px;
+  width: 50%;
 }
 .envoyerBtn {
-  position: relative;
-  left: 18vw;
+  height: 100%;
+  width: 100%;
   display: flex;
   flex-direction: row;
+  justify-content: center;
   align-items: center;
-  gap: 10px;
-  padding: 4px 6px;
+  gap: 20px;
+  padding: 4px 10px;
   border-radius: 5px;
   border: none;
   background-color: #a13c3c;
-}
-.envoyerBtn p {
   color: white;
   font-family: "Mulish", sans-serif;
   font-weight: 600;
-  font-size: 0.95em;
+  font-size: 1.2em;
 }
-.envoyerBtn img {
-  width: 18px;
-  height: 18px;
+.envoyerBtn:disabled{
+  opacity: 0.5;
 }
