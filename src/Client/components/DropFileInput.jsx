@@ -48,6 +48,7 @@ const DropFileInput = (props) => {
   },  [fileList]);
   const SendFiles = async (event)=>{
     event.preventDefault();
+    setFileList([]);
     const formData = new FormData();
     const addFilesToFormData = async ()=>{
       for (let i = 0; i < uploadedFileList.length; i++) {
@@ -56,6 +57,7 @@ const DropFileInput = (props) => {
       for (let [key, value] of formData.entries()) {
         console.log(`${key}: ${value}`); // Affiche le nom de chaque fichier ajouté
       }
+      setUploadedFileList([]);
     }
     await addFilesToFormData();
     axios.post('http://localhost:3000/upload',

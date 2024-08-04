@@ -1,4 +1,3 @@
-import { useState } from "react";
 import "./App.css";
 import {
   createBrowserRouter,
@@ -41,7 +40,6 @@ const router = createBrowserRouter(
 );
 
 function App() {
-  const [token,setToken] = useState(null);
   return (
     <AuthProvider>
       <div className="App">

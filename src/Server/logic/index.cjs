@@ -7,6 +7,7 @@ const bcrypt = require('bcryptjs');
 const multer = require('multer');
 const secret = 'Abdelhak_kaid_El_Hadj_Andjechairi'; // Change to a strong secret
 const path = require('path');
+const os = require('os');
 const cors = require('cors');
 const fs = require('fs');
 const SFTPClient = require('ssh2-sftp-client');
@@ -69,6 +70,26 @@ function verifyToken(req, res, next) {
       next();
     });
   }
+async function verifyExistance(file,userDir,remotePath,i){
+    try{
+        let fichier = file;
+        const filExists = await sftp.exists(remotePath);
+        if(!filExists) return await sftp.put(fichier.buffer, remotePath);
+        else {
+            const indexDot = fichier.originalname.lastIndexOf('.');
+            if(fichier.originalname[indexDot-3]=== '(' && fichier.originalname[indexDot-1]=== ')' && fichier.originalname[indexDot-2]=== `${i-1}`){
+                fichier.originalname= fichier.originalname.slice(0,indexDot-3)+`(${i})`+fichier.originalname.slice(indexDot,fichier.originalname.length);
+            }else{
+                fichier.originalname = fichier.originalname.slice(0,indexDot)+`(${i})`+fichier.originalname.slice(indexDot,fichier.originalname.length);
+            }
+            const newRemotePath = path.posix.join(userDir, file.originalname);
+            console.log('Remote path:', newRemotePath);
+            await verifyExistance(file,userDir,newRemotePath,i+1);
+        }
+    }catch(err){
+        console.log(err);
+    }
+}
 app.post('/upload',[verifyToken,upload.array('files')], async (req,res)=>{
     try{
         let restPath = '';
@@ -97,11 +118,12 @@ app.post('/upload',[verifyToken,upload.array('files')], async (req,res)=>{
         console.log('Directory exists:', dirExists);
         if (!dirExists) await sftp.mkdir(userDir, true);
         for (let i = 0; i < req.files.length; i++) {
-            const file = req.files[i];
+            let j=1;
+            let file = req.files[i];
             console.log(file);
-            const remotePath = path.join(userDir, file.originalname);
+            const remotePath = path.posix.join(userDir, file.originalname);
             console.log('Remote path:', remotePath);
-            await sftp.put(file.buffer, remotePath);
+            await verifyExistance(file,userDir,remotePath,j);
         }
         res.status(200).send('Upload successful');
     } catch (error) {
@@ -110,6 +132,62 @@ app.post('/upload',[verifyToken,upload.array('files')], async (req,res)=>{
     } finally {
       await sftp.end();
     }
+});
+app.get('/download/:filename',verifyToken,async (req,res)=>{
+    try{
+        const {filename} = req.params;
+        let restPath = '';
+        await sftp.connect(sftpconfig).then(res=>{
+            console.log('connected');
+            return sftp.cwd();
+        }).then(p=>{
+            restPath = p;
+            console.log('Current dir:',p);
+        });
+        // Check if req.userId is set correctly
+        console.log('User ID:', req.userId);
+        if (!req.userId) {
+          return res.status(401).send('User ID not found');
+        }
+        const user = await User.findById(req.userId);
+        console.log('User:', user);
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+        restPath = restPath.slice(1,restPath.length);
+        console.log(restPath);
+        const userDir = path.join(restPath, user.DirPath);
+        const dirExists = await sftp.exists(userDir);
+        console.log('Directory exists:', dirExists);
+        if (!dirExists) return res.status(415).send('Directory not found');
+        const filePath = path.join(userDir, filename);
+        const tempFilePath = path.join(os.tmpdir(), filename);
+
+        await sftp.get(filePath, tempFilePath);
+        console.log(`Downloaded file to temp path: ${tempFilePath}`);
+
+        // Set headers for file download
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+    res.setHeader('Content-Type', 'application/octet-stream');
+
+    res.download(tempFilePath, filename, (err) => {
+        if (err) {
+          console.error('Error sending the file:', err);
+          res.status(500).send('Failed to download file');
+        } else {
+          console.log('File sent successfully');
+        }
+  
+        // Delete the temporary file after sending it
+        fs.unlink(tempFilePath, (unlinkErr) => {
+          if (unlinkErr) console.error('Error deleting temp file:', unlinkErr);
+        });
+      });
+    }catch(err){
+
+    }finally{
+        await sftp.end();
+    }            
 });
 app.get('/download',verifyToken,async (req,res)=>{
     try{
