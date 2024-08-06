@@ -1,6 +1,10 @@
 .download-page{
     height: 100%;
     width: 100%;
+    user-select: none; /* Empêche la sélection du texte */
+    -webkit-user-select: none; /* Pour les navigateurs WebKit (Chrome, Safari) */
+    -moz-user-select: none; /* Pour Firefox */
+    -ms-user-select: none; /* Pour Internet Explorer/Edge */
 }
 .preview{
     width: 90%;

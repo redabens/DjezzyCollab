@@ -80,16 +80,13 @@ const DropFileInput = (props) => {
       <div className="drop-file">
         <div
           ref={wrapperRef}
-          onDragEnter={(event) => {
-            event.preventDefault();
+          onDragEnter={() => {
             onDragEnter();
           }}
-          onDragLeave={(event) => {
-            event.preventDefault();
+          onDragLeave={() => {
             onDragLeave();
           }}
-          onDrop={(event) => {
-            event.preventDefault();
+          onDrop={() => {
             onDrop();
           }}
           className="drop-file-input"

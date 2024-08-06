@@ -7,6 +7,10 @@
   flex-direction: column;
   align-items: center;
   justify-content: space-around;
+  user-select: none; /* Empêche la sélection du texte */
+  -webkit-user-select: none; /* Pour les navigateurs WebKit (Chrome, Safari) */
+  -moz-user-select: none; /* Pour Firefox */
+  -ms-user-select: none; /* Pour Internet Explorer/Edge */
 }
 .drop-file{
   width: 100%;
@@ -53,6 +57,10 @@
   font-size: 0.8em;
   font-family: "Mulish", sans-serif;
   padding: 10px;
+  user-select: none; /* Empêche la sélection du texte */
+  -webkit-user-select: none; /* Pour les navigateurs WebKit (Chrome, Safari) */
+  -moz-user-select: none; /* Pour Firefox */
+  -ms-user-select: none; /* Pour Internet Explorer/Edge */
 }
 
 .drop-file-input_label p span {
@@ -64,6 +72,10 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
+  user-select: none; /* Empêche la sélection du texte */
+  -webkit-user-select: none; /* Pour les navigateurs WebKit (Chrome, Safari) */
+  -moz-user-select: none; /* Pour Firefox */
+  -ms-user-select: none; /* Pour Internet Explorer/Edge */
 }
 
 /* Uploading*/

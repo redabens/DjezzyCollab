@@ -25,5 +25,10 @@
   font-family: "M PLUS Rounded 1c", sans-serif;
   font-weight: 700;
   font-style: normal;
+  user-select: none; /* Empêche la sélection du texte */
+  -webkit-user-select: none; /* Pour les navigateurs WebKit (Chrome, Safari) */
+  -moz-user-select: none; /* Pour Firefox */
+  -ms-user-select: none; /* Pour Internet Explorer/Edge */
+  pointer-events: none; /* Empêche tous les événements de pointeur */
 }
 

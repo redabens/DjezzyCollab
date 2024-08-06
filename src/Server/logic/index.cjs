@@ -18,10 +18,7 @@ const app = express();
 // file import
 const User = require('../models/users.cjs');
 
-mongoose.connect('mongodb://localhost:27017/Djezzy-Collab',{
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-}).then(() => console.log('Connected to MongoDB...'))
+mongoose.connect('mongodb://localhost:27017/Djezzy-Collab').then(() => console.log('Connected to MongoDB...'))
 .catch(error => console.log(error.message));
 
 app.use(bodyParser.json());
@@ -35,19 +32,38 @@ const upload = multer({ storage: storage });
 // sftp configuration
 const sftp = new SFTPClient();
 const sftpconfig = {
-    host: '192.168.1.65',
+    host: '192.168.1.85',
     port: '22',
     username: 'redabens',
     password: 'Redabens2004..',
 }
 
+async function connectSFTP() {
+    try {
+        await sftp.connect(sftpconfig);
+        console.log('Connected to SFTP server');
+    } catch (err) {
+        console.log('SFTP connection error:', err);
+    }
+}
+
+// Connect to SFTP once when the server starts
+connectSFTP();
+
+async function disconnectSFTP() {
+    try {
+        await sftp.end();
+        console.log('Disconnected from SFTP server');
+    } catch (err) {
+        console.log('SFTP disconnection error:', err);
+    }
+}
 
 app.post('/login', async (req,res)=>{
     try{
         const user = await User.findOne({
             email: req.body.email,
         });
-        console.log(user);
         if(!user) return res.status(404).send('user not found');
         const validPassword = await bcrypt.compare(req.body.password, user.password);
         if(!validPassword) return res.status(401).send('the password is incorrect');
@@ -66,7 +82,6 @@ function verifyToken(req, res, next) {
     jwt.verify(token, secret, (err, decoded) => {
       if (err) return res.status(500).send('Failed to authenticate token');
       req.userId = decoded._id;
-      console.log(req.userId);
       next();
     });
   }
@@ -92,15 +107,6 @@ async function verifyExistance(file,userDir,remotePath,i){
 }
 app.post('/upload',[verifyToken,upload.array('files')], async (req,res)=>{
     try{
-        let restPath = '';
-        await sftp.connect(sftpconfig).then(res=>{
-            console.log('connected');
-            return sftp.cwd();
-        }).then(p=>{
-            restPath = p;
-            console.log('Current dir:',p);
-        });
-        // Check if req.userId is set correctly
         console.log('User ID:', req.userId);
         if (!req.userId) {
           return res.status(401).send('User ID not found');
@@ -111,8 +117,9 @@ app.post('/upload',[verifyToken,upload.array('files')], async (req,res)=>{
             return res.status(404).send('User not found');
         }
         // Upload files to SFTP server
-        restPath = restPath.slice(1,restPath.length);
+        let restPath = await sftp.cwd();
         console.log(restPath);
+        restPath = restPath.slice(1,restPath.length);
         const userDir = path.join(restPath, user.DirPath);
         const dirExists = await sftp.exists(userDir);
         console.log('Directory exists:', dirExists);
@@ -127,78 +134,114 @@ app.post('/upload',[verifyToken,upload.array('files')], async (req,res)=>{
         }
         res.status(200).send('Upload successful');
     } catch (error) {
-      console.error(error);
-      res.status(500).send('Server error');
-    } finally {
-      await sftp.end();
+        console.error(error);
+        res.status(500).send('Server error');
     }
 });
 app.get('/download/:filename',verifyToken,async (req,res)=>{
     try{
         const {filename} = req.params;
-        let restPath = '';
-        await sftp.connect(sftpconfig).then(res=>{
-            console.log('connected');
-            return sftp.cwd();
-        }).then(p=>{
-            restPath = p;
-            console.log('Current dir:',p);
-        });
         // Check if req.userId is set correctly
-        console.log('User ID:', req.userId);
+        // console.log('User ID:', req.userId);
         if (!req.userId) {
-          return res.status(401).send('User ID not found');
+            return res.status(401).send('User ID not found');
         }
         const user = await User.findById(req.userId);
-        console.log('User:', user);
+        // console.log('User:', user);
         if (!user) {
             return res.status(404).send('User not found');
         }
-        restPath = restPath.slice(1,restPath.length);
+        let restPath = await sftp.cwd();
         console.log(restPath);
+        restPath = restPath.slice(1,restPath.length);
+        // console.log(restPath);
         const userDir = path.join(restPath, user.DirPath);
         const dirExists = await sftp.exists(userDir);
-        console.log('Directory exists:', dirExists);
+        // console.log('Directory exists:', dirExists);
         if (!dirExists) return res.status(415).send('Directory not found');
-        const filePath = path.join(userDir, filename);
-        const tempFilePath = path.join(os.tmpdir(), filename);
-
-        await sftp.get(filePath, tempFilePath);
-        console.log(`Downloaded file to temp path: ${tempFilePath}`);
-
-        // Set headers for file download
-    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
-    res.setHeader('Content-Type', 'application/octet-stream');
-
-    res.download(tempFilePath, filename, (err) => {
-        if (err) {
-          console.error('Error sending the file:', err);
-          res.status(500).send('Failed to download file');
-        } else {
-          console.log('File sent successfully');
-        }
-  
-        // Delete the temporary file after sending it
-        fs.unlink(tempFilePath, (unlinkErr) => {
-          if (unlinkErr) console.error('Error deleting temp file:', unlinkErr);
-        });
-      });
+        let downloadDir = path.join(os.homedir(), 'Downloads');
+        let dst = fs.createWriteStream(path.join(downloadDir, filename));
+        await sftp.get(path.posix.join(userDir, filename), dst);
+        res.status(200).send(filename+' was Downloaded successfully check your /Downloads path');
+        //   const localTempFilePath = path.join(os.tmpdir(), filename); // Utilisation du répertoire temporaire du système
+        //   // Utiliser un flux de lecture pour sftp.get()
+        //   const fileData = await sftp.get(path.posix.join(userDir, filename));
+        //   fs.writeFile(localTempFilePath, fileData, (err) => {
+        //     if (err) {
+        //         console.error('Erreur lors de l\'écriture du fichier:', err);
+        //         res.status(500).send('Erreur lors du téléchargement du fichier');
+        //     } else {
+        //         console.log('Téléchargement réussi');
+        //         res.download(localTempFilePath, filename, (err) => {
+        //             if (err) {
+        //                 console.error('Erreur lors de l\'envoi du fichier:', err);
+        //                 res.status(500).send('Erreur lors du téléchargement du fichier');
+        //             } else {
+        //                 console.log('Téléchargement réussi');
+        //             }
+        //             fs.unlink(localTempFilePath, (unlinkErr) => {
+        //                 if (unlinkErr) console.error('Erreur lors de la suppression du fichier temporaire:', unlinkErr);
+        //             });
+        //         });
+        //     }
+        // });
     }catch(err){
-
-    }finally{
-        await sftp.end();
-    }            
+        console.log('Erreur de requete:'+err);
+    }         
+});
+app.post('/download/:filename',verifyToken,async (req,res)=>{
+    try{
+        const {filename} = req.params;
+        // Check if req.userId is set correctly
+        // console.log('User ID:', req.userId);
+        if (!req.userId) {
+            return res.status(401).send('User ID not found');
+        }
+        const user = await User.findById(req.userId);
+        // console.log('User:', user);
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+        let restPath = await sftp.cwd();
+        console.log(restPath);
+        restPath = restPath.slice(1,restPath.length);
+        // console.log(restPath);
+        const userDir = path.join(restPath, user.DirPath);
+        const dirExists = await sftp.exists(userDir);
+        // console.log('Directory exists:', dirExists);
+        if (!dirExists) return res.status(415).send('Directory not found');
+        let downloadDir = path.join(os.homedir(), 'Downloads');
+        let dst = fs.createWriteStream(path.join(downloadDir, filename));
+        await sftp.get(path.posix.join(userDir, filename), dst);
+        res.status(200).send(filename+' was Downloaded successfully check your /Downloads path');
+        //   const localTempFilePath = path.join(os.tmpdir(), filename); // Utilisation du répertoire temporaire du système
+        //   // Utiliser un flux de lecture pour sftp.get()
+        //   const fileData = await sftp.get(path.posix.join(userDir, filename));
+        //   fs.writeFile(localTempFilePath, fileData, (err) => {
+        //     if (err) {
+        //         console.error('Erreur lors de l\'écriture du fichier:', err);
+        //         res.status(500).send('Erreur lors du téléchargement du fichier');
+        //     } else {
+        //         console.log('Téléchargement réussi');
+        //         res.download(localTempFilePath, filename, (err) => {
+        //             if (err) {
+        //                 console.error('Erreur lors de l\'envoi du fichier:', err);
+        //                 res.status(500).send('Erreur lors du téléchargement du fichier');
+        //             } else {
+        //                 console.log('Téléchargement réussi');
+        //             }
+        //             fs.unlink(localTempFilePath, (unlinkErr) => {
+        //                 if (unlinkErr) console.error('Erreur lors de la suppression du fichier temporaire:', unlinkErr);
+        //             });
+        //         });
+        //     }
+        // });
+    }catch(err){
+        console.log('Erreur de requete:'+err);
+    }         
 });
 app.get('/download',verifyToken,async (req,res)=>{
     try{
-        let restPath = '';
-        await sftp.connect(sftpconfig).then(res=>{
-            console.log('connected');
-            return sftp.cwd();
-        }).then(p=>{
-            restPath = p;
-            console.log('Current dir:',p);
-        });
         // Check if req.userId is set correctly
         console.log('User ID:', req.userId);
         if (!req.userId) {
@@ -209,6 +252,7 @@ app.get('/download',verifyToken,async (req,res)=>{
         if (!user) {
             return res.status(404).send('User not found');
         }
+        let restPath = await sftp.cwd();
         restPath = restPath.slice(1,restPath.length);
         console.log(restPath);
         const userDir = path.join(restPath, user.DirPath);
@@ -216,14 +260,17 @@ app.get('/download',verifyToken,async (req,res)=>{
         console.log('Directory exists:', dirExists);
         if (!dirExists) return res.status(415).send('Directory not found');
         const files = await sftp.list(userDir);
-        console.log('Files:', files);
+        // console.log('Files:', files);
         res.status(200).send({files});
     }catch(err){
-
-    }finally{
-        await sftp.end();
+        console.log('Erreur de requete'+err);
     }
-})
+});
+process.on('SIGINT', () => {
+    disconnectSFTP().then(() => {
+        process.exit();
+    });
+});
 app.listen('3000',()=>{
     console.log('Server is running on port 3000...');
 });
