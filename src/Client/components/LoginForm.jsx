@@ -1,12 +1,12 @@
 import "./../styles/LoginForm.css";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import axios from 'axios';
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { message, Result } from "antd";
 import { useAuth } from "./AuthContext";
 export default function LoginForm() {
-  const { token,setToken } = useAuth();
+  const { token, setToken } = useAuth();
   const {
     register,
     handleSubmit,
@@ -14,31 +14,38 @@ export default function LoginForm() {
     formState: { errors },
   } = useForm();
   const navigate = useNavigate();
-  const [loginError, setLoginError] = useState({value:false,message:""});
+  const [loginError, setLoginError] = useState({ value: false, message: "" });
   const onSubmit = (data) => console.log(data);
   const handleError = (errors) => {};
   const handleLogin = () => {
-    axios.post('http://localhost:3000/login',{
-      email: watch("email"),
-      password: watch("password"),
-    }).then(result=>{
-      console.log(result);
-      if(result.status === 200){
-        setToken(result.data.token);
-        navigate('/');
-      }else if(result.status === 401){
-        setLoginError({value:true,message:"Le mot de passe est Incorrect"});
-      }
-      else{
-       setLoginError({value:true,message:"Utilisateur non enregistré"});
-      }
-    }).catch(errors=>{
-      console.log(errors);
-    })
+    axios
+      .post("http://localhost:3000/login", {
+        email: watch("email"),
+        password: watch("password"),
+      })
+      .then((result) => {
+        console.log(result);
+        if (result.status === 200) {
+          setToken(result.data.token);
+          navigate("/");
+        } else if (result.status === 401) {
+          setLoginError({
+            value: true,
+            message: "Le mot de passe est Incorrect",
+          });
+        } else {
+          setLoginError({ value: true, message: "Utilisateur non enregistré" });
+        }
+      })
+      .catch((errors) => {
+        console.log(errors);
+        alert(errors);
+      });
   };
   //------ validations -------
   const registerOptions = {
-    email: { required: "Entrer une adresse email" ,
+    email: {
+      required: "Entrer une adresse email",
       pattern: {
         value: /^[^\s@]+@[^\s@]+.[^\s@]+$/,
         message: "Adresse email invalide",

@@ -1,7 +1,5 @@
-function AdminPage(){
-    return (
-        <div className="admin"></div>
-    );
+function AdminPage() {
+  return <div className="admin"></div>;
 }
 
 export default AdminPage;

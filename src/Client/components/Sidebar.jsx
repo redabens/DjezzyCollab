@@ -6,7 +6,7 @@ import { NavLink } from "react-router-dom";
 import "../styles/Sidebar.css";
 import Administrateur from "./Administrateur";
 
-function Sidebar({ open, handleToggle,params }) {
+function Sidebar({ open, handleToggle, params }) {
   const [navbar, setNavBar] = useState(params);
   const menuItemUp = [
     {
@@ -230,10 +230,7 @@ function Sidebar({ open, handleToggle,params }) {
           </div>
         </div>
 
-        <div
-          className="options"
-          style={!open ? {alignItems:'center'}:{}}
-        >
+        <div className="options" style={!open ? { alignItems: "center" } : {}}>
           <div className="optionsUp" style={{ gap: open ? "1.2vh" : "2vh" }}>
             {menuItemUp.map((item) => {
               return item.name === "Administrateur" ? (
