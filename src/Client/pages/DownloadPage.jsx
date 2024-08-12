@@ -23,7 +23,6 @@ function DownloadPage(){
         })
         .catch((error)=>{
             alert('Error Donwloading files');
-            navigate('/login');
         })
     },[]);
     return(
