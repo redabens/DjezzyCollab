@@ -16,12 +16,22 @@
   color: #a13c3c;
   font-family: "Montserrat", sans-serif !important;
   padding-bottom: 15px;
+  user-select: none; /* Empêche la sélection du texte */
+  -webkit-user-select: none; /* Pour les navigateurs WebKit (Chrome, Safari) */
+  -moz-user-select: none; /* Pour Firefox */
+  -ms-user-select: none; /* Pour Internet Explorer/Edge */
+  pointer-events: none; /* Empêche tous les événements de pointeur */
 }
 .my-form h6 {
   font-weight: 500;
   font-size: 0.7em;
   color: #6a6a6a;
   font-family: "Poppins", sans-serif;
+  user-select: none; /* Empêche la sélection du texte */
+  -webkit-user-select: none; /* Pour les navigateurs WebKit (Chrome, Safari) */
+  -moz-user-select: none; /* Pour Firefox */
+  -ms-user-select: none; /* Pour Internet Explorer/Edge */
+  pointer-events: none; /* Empêche tous les événements de pointeur */
 }
 form {
   width: 50%;

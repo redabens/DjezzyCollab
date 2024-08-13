@@ -54,6 +54,7 @@ const DropFileInput = (props) => {
   },  [fileList]);
   const SendFiles = async (event)=>{
     event.preventDefault();
+    setFileList([]);
     const formData = new FormData();
     const addFilesToFormData = async ()=>{
       for (let i = 0; i < uploadedFileList.length; i++) {
@@ -62,6 +63,7 @@ const DropFileInput = (props) => {
       for (let [key, value] of formData.entries()) {
         console.log(`${key}: ${value}`); // Affiche le nom de chaque fichier ajouté
       }
+      setUploadedFileList([]);
     }
     await addFilesToFormData();
     axios.post('http://localhost:3000/upload',
@@ -84,16 +86,13 @@ const DropFileInput = (props) => {
       <div className="drop-file">
         <div
           ref={wrapperRef}
-          onDragEnter={(event) => {
-            event.preventDefault();
+          onDragEnter={() => {
             onDragEnter();
           }}
-          onDragLeave={(event) => {
-            event.preventDefault();
+          onDragLeave={() => {
             onDragLeave();
           }}
-          onDrop={(event) => {
-            event.preventDefault();
+          onDrop={() => {
             onDrop();
           }}
           className="drop-file-input"

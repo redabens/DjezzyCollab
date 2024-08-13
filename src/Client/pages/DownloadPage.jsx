@@ -8,12 +8,6 @@ function DownloadPage(){
     const { token } = useAuth();
     const [downloads, setDownloads] = useState([]);
     const navigate = useNavigate();
-    const handleDownload = ()=>{
-
-    }
-    const hansdleRename = ()=>{
-
-    }
     useEffect(function(){
         axios.get('http://localhost:3000/download',{
             headers: { 'Authorization': token },    
@@ -29,7 +23,6 @@ function DownloadPage(){
         })
         .catch((error)=>{
             alert('Error Donwloading files');
-            navigate('/login');
         })
     },[]);
     return(

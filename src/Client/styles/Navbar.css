@@ -11,6 +11,10 @@
   font-size: 0.85em;
   background-color: white;
   box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);
+  user-select: none; /* Empêche la sélection du texte */
+  -webkit-user-select: none; /* Pour les navigateurs WebKit (Chrome, Safari) */
+  -moz-user-select: none; /* Pour Firefox */
+  -ms-user-select: none; /* Pour Internet Explorer/Edge */
 }
 .navbarElt {
   position: relative;

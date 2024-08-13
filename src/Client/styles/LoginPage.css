@@ -35,6 +35,11 @@
   width: 100%;
   color: white;
   gap: 15px;
+  user-select: none; /* Empêche la sélection du texte */
+  -webkit-user-select: none; /* Pour les navigateurs WebKit (Chrome, Safari) */
+  -moz-user-select: none; /* Pour Firefox */
+  -ms-user-select: none; /* Pour Internet Explorer/Edge */
+  pointer-events: none; /* Empêche tous les événements de pointeur */
 }
 .scripts h2 {
   font-family: "Poppins", sans-serif;
@@ -78,6 +83,11 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  user-select: none; /* Empêche la sélection du texte */
+  -webkit-user-select: none; /* Pour les navigateurs WebKit (Chrome, Safari) */
+  -moz-user-select: none; /* Pour Firefox */
+  -ms-user-select: none; /* Pour Internet Explorer/Edge */
+  pointer-events: none; /* Empêche tous les événements de pointeur */
 }
 .separateur p {
   color: #8f8f8f;

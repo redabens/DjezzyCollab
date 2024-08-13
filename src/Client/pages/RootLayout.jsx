@@ -4,8 +4,15 @@ import { useState } from "react";
 import Sidebar from "./../components/Sidebar";
 import Navbr from "./../components/Navbr";
 import LogoDjezzy from "./../components/LogoDjezzy";
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet, Navigate , useLocation } from "react-router-dom";
+import { useAuth } from '../components/AuthContext'; // Assurez-vous du bon chemin d'importation
 export default function RootLayout() {
+  const { token } = useAuth();
+
+  // Vérifiez l'état d'authentification avant de rendre le contenu
+  if (!token) {
+    return <Navigate to="/login" />;
+  }
   const [open, setOpen] = useState(true);
   const handleToggle = (e) => {
     setOpen((prev) => !prev);

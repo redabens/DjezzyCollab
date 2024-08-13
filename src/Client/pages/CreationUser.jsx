@@ -57,71 +57,74 @@ export default function CreationUser() {
 
   return (
     <div className="creation-user-page">
+      
       <h1>Création d'un nouvel utilisateur</h1>
-      <form onSubmit={handleSubmit(handleSignUp)}>
-        <div className="section-one">
-          <div className="formElt">
-            <label htmlFor="Nom">Nom:</label>
-            <input
-              name="nom"
-              type="text"
-              placeholder="saisir le nom..."
-              {...register("nom", registerOptions.nom)}
-            />
-            <small className="text-danger">
-              {errors?.nom && errors.nom.message}
-            </small>
+      <form className="signUp-form" onSubmit={handleSubmit(handleSignUp)}>
+        <div className="sections">
+          <div className="section-one">
+            <div className="formElt">
+              <label htmlFor="Nom">Nom:</label>
+              <input
+                name="nom"
+                type="text"
+                placeholder="saisir le nom..."
+                {...register("nom", registerOptions.nom)}
+              />
+              <small className="text-danger">
+                {errors?.nom && errors.nom.message}
+              </small>
+            </div>
+            <div className="formElt">
+              <label htmlFor="Prénom">Prénom:</label>
+              <input
+                name="prenom"
+                type="text"
+                placeholder="saisir le prenom..."
+                {...register("prenom", registerOptions.prenom)}
+              />
+              <small className="text-danger">
+                {errors?.prenom && errors.prenom.message}
+              </small>
+            </div>
+            <div className="formElt">
+              <label htmlFor="email">Email:</label>
+              <input
+                name="email"
+                type="text"
+                placeholder="saisir l'email..."
+                {...register("email", registerOptions.email)}
+              />
+              <small className="text-danger">
+                {errors?.email && errors.email.message}
+              </small>
+            </div>
           </div>
-          <div className="formElt">
-            <label htmlFor="Prénom">Prénom:</label>
-            <input
-              name="prenom"
-              type="text"
-              placeholder="saisir le prenom..."
-              {...register("prenom", registerOptions.prenom)}
-            />
-            <small className="text-danger">
-              {errors?.prenom && errors.prenom.message}
-            </small>
-          </div>
-          <div className="formElt">
-            <label htmlFor="email">Email:</label>
-            <input
-              name="email"
-              type="text"
-              placeholder="saisir l'email..."
-              {...register("email", registerOptions.email)}
-            />
-            <small className="text-danger">
-              {errors?.email && errors.email.message}
-            </small>
+          <div className="section-two">
+            <div className="formElt">
+              <label htmlFor="password">Mot de passe:</label>
+              <input
+                name="password"
+                type="password"
+                placeholder="saisir un mot de passe..."
+                {...register("password", registerOptions.password)}
+              />
+              <small className="text-danger">
+                {errors?.password && errors.password.message}
+              </small>
+            </div>
+            <div className="formElt">
+              <label htmlFor="path">Path des fichiers:</label>
+              <select name="path" id="path" {...register("path")}>
+                {pathList.map((path, index) => (
+                  <option value={path} key={index}>
+                    {path}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
         </div>
-        <div className="section-two">
-          <div className="formElt">
-            <label htmlFor="password">Mot de passe:</label>
-            <input
-              name="password"
-              type="password"
-              placeholder="saisir un mot de passe..."
-              {...register("password", registerOptions.password)}
-            />
-            <small className="text-danger">
-              {errors?.password && errors.password.message}
-            </small>
-          </div>
-          <div>
-            <label htmlFor="path">Path des fichiers:</label>
-            <select name="path" id="path" {...register("path")}>
-              {pathList.map((path, index) => (
-                <option value={path} key={index}>
-                  {path}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-        <button style={{ backgroundColor: "red" }} type="submit">
+        <button type="submit">
           Créer l'utilisateur
         </button>
       </form>
