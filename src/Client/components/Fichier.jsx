@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAuth } from "../components/AuthContext";
 import axios from "axios";
 import "./../styles/Fichier.css";
+import AutoResizeInput from "./AutoResizeInput";
 
 export default function Fichier({ file }) {
   const { token } = useAuth();
@@ -75,23 +76,8 @@ export default function Fichier({ file }) {
           style={{ width: "26px", height: "26px" }}
         />
         <div className="file-name">
-          <input
-            type="text"
-            name="titre"
-            value={nom}
-            className={!rename ? "titre-nonRename" : "titre-Rename"}
-            disabled={!rename}
-            onChange={handleNom}
-            style={{
-              width: `${nom.length}ch`, 
-            }}
-            onKeyUp={(event) => {
-              if (event.key === "Enter") {
-                handleRename();
-              }
-            }}
-          />
-          <span className="file-extension">{extension}</span>{" "}
+          <AutoResizeInput rename={rename} nom={nom} handleNom={handleNom} handleRename={handleRename}/>
+          <span className="file-extension">{extension}</span>
         
         </div>
       </div>

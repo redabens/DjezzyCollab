@@ -1,8 +1,16 @@
+@import url("https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c&display=swap");
 .download-page{
     height: 100%;
-    width: 100%;  
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    gap: 10px;
 }
 h1{
+    font-family: "M PLUS Rounded 1c", sans-serif;
+    font-weight: 700;
+    font-style: normal;
     user-select: none; /* Empêche la sélection du texte */
     -webkit-user-select: none; /* Pour les navigateurs WebKit (Chrome, Safari) */
     -moz-user-select: none; /* Pour Firefox */
@@ -15,5 +23,8 @@ h1{
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 5px;
+    gap: 8px;
+    max-height: 74%;
+    overflow-y: auto; /* Permet le défilement vertical */
+    padding: 10px;
 }

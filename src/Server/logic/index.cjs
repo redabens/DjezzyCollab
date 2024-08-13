@@ -34,13 +34,19 @@ app.use("/signUp", cors(), userRoutes);
 
 // sftp configuration
 const sftp = new SFTPClient();
-const sftpconfig = {
-  host: "192.168.0.198",
-  port: "22",
-  username: "sarair",
-  password: "sara2004",
-};
+// const sftpconfig = {
+//   host: "192.168.0.198",
+//   port: "22",
+//   username: "sarair",
+//   password: "sara2004",
+// };
 
+const sftpconfig = {
+    host: "192.168.70.101",
+    port: "22",
+    username: "redabens",
+    password: "Redabens2004..",
+};
 
 async function connectSFTP() {
     try {
@@ -263,28 +269,27 @@ app.get('/download',verifyToken,async (req,res)=>{
         console.log('Erreur de requete'+err);
     }
 });
+//endpoitn to get the user role
+app.get("/userRole", verifyToken, async (req, res) => {
+    try {
+      if (!req.userId) {
+        return res.status(401).send("User ID not found");
+      }
+      const user = await User.findById(req.userId);
+      if (!user) {
+        return res.status(404).send("User not found");
+      }
+      const userRole = user.role; // Access role from the user object
+      res.json({ role: userRole });
+    } catch (error) {
+      console.error("Error fetching user role:", error);
+      res.status(500).send("Server error");
+    }
+  });
 process.on('SIGINT', () => {
     disconnectSFTP().then(() => {
         process.exit();
     });
-});
-
-//endpoitn to get the user role
-app.get("/userRole", verifyToken, async (req, res) => {
-  try {
-    if (!req.userId) {
-      return res.status(401).send("User ID not found");
-    }
-    const user = await User.findById(req.userId);
-    if (!user) {
-      return res.status(404).send("User not found");
-    }
-    const userRole = user.role; // Access role from the user object
-    res.json({ role: userRole });
-  } catch (error) {
-    console.error("Error fetching user role:", error);
-    res.status(500).send("Server error");
-  }
 });
 
 app.listen('3000',()=>{
