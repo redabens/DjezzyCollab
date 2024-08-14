@@ -27,7 +27,7 @@ function DownloadPage(){
     },[]);
     return(
         <div className="download-page">
-            <h1>Download Page</h1>
+            <h1>Fichiers disponibles:</h1>
             <div className="preview">
                 {downloads.map((file,index)=>{
                     return (

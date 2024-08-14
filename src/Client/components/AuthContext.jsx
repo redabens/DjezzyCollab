@@ -14,8 +14,7 @@ export const AuthProvider = ({ children }) => {
           const res = await axios.get("/userRole", {
             headers: { Authorization: `Bearer ${token}` },
           });
-          setRole(res.user.role);
-          console.log("ssssssssssssssssssssss:" + res.user.role);
+          setRole(res.data.role);
         } catch (error) {
           console.error("Error fetching user role:", error);
         }

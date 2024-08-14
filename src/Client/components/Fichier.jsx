@@ -7,10 +7,10 @@ export default function Fichier({ file }) {
   const { token } = useAuth();
   const [nom, setNom] = useState(
     file.name.slice(0, file.name.lastIndexOf("."))
-  ); 
+  );
   const [rename, setRename] = useState(false);
 
-  const extension = file.name.slice(file.name.lastIndexOf(".")); 
+  const extension = file.name.slice(file.name.lastIndexOf("."));
 
   const handleDownload = () => {
     axios
@@ -70,7 +70,7 @@ export default function Fichier({ file }) {
     <div className="box-file">
       <div className="left">
         <img
-          src="./../../src/assets/Style=broken.svg"
+          src="./../../src/assets/yellow_file.svg"
           alt="FileIcon"
           style={{ width: "26px", height: "26px" }}
         />
@@ -83,7 +83,7 @@ export default function Fichier({ file }) {
             disabled={!rename}
             onChange={handleNom}
             style={{
-              width: `${nom.length}ch`, 
+              width: `${nom.length}ch`,
             }}
             onKeyUp={(event) => {
               if (event.key === "Enter") {
@@ -92,7 +92,6 @@ export default function Fichier({ file }) {
             }}
           />
           <span className="file-extension">{extension}</span>{" "}
-        
         </div>
       </div>
       <div className="right">

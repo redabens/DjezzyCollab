@@ -5,8 +5,10 @@ import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import { NavLink } from "react-router-dom";
 import "../styles/Sidebar.css";
 import Administrateur from "./Administrateur";
+import { useAuth } from "../components/AuthContext";
 
 function Sidebar({ open, handleToggle, params }) {
+  const { role } = useAuth();
   const [navbar, setNavBar] = useState(params);
   const menuItemUp = [
     {
