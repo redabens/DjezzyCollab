@@ -1,6 +1,36 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+
+/****** file displayed in grid box ******/
+.grid-box-file {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  gap: 5px;
+  padding: 5px 10px;
+  border-radius: 10px;
+  width: 70%;
+  height: 170px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+}
+.bottom {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 5px;
+}
+/****** file displayed in row ******/
 .box-file {
-  width: 80%;
+  width: 90%;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -37,9 +67,14 @@
   pointer-events: none; /* Empêche tous les événements de pointeur */
 }
 .file-name {
-  display: flex;
-  flex-direction: row;
+  display: inline-block; /* Make the file name behave like an inline block */
+  width: 80%; /* Set the width to 80% */
+  white-space: normal; /* Allow text to wrap to the next line */
+  word-wrap: break-word; /* Break long words to prevent overflow */
+  overflow-wrap: break-word; /* Break long words to prevent overflow */
+  max-width: 90%; 
   font-family: "Montserrat", sans-serif !important;
+  font-size: 0.8rem;
 }
 
 .titre-nonRename {
@@ -54,9 +89,15 @@
   -moz-user-select: none; /* Pour Firefox */
   -ms-user-select: none; /* Pour Internet Explorer/Edge */
   pointer-events: none; /* Empêche tous les événements de pointeur */
+  display: inline-block; 
+  white-space: nowrap; 
+  overflow: hidden; 
+  text-overflow: ellipsis;
+  max-width: 90%;
 }
 .titre-Rename {
   font-size: 0.9rem;
   font-weight: 500;
   font-family: "Montserrat", sans-serif !important;
+  max-width: 100%;
 }
