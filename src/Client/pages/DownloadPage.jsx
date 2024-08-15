@@ -10,8 +10,7 @@ function DownloadPage() {
   const [isGrid, setIsGrid] = useState(false);
   const navigate = useNavigate();
   useEffect(function () {
-    axios
-      .get("http://localhost:3000/download", {
+    axios.get("http://localhost:3000/download", {
         headers: { Authorization: token },
       })
       .then((res) => {

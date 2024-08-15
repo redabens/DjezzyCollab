@@ -11,6 +11,26 @@ export default function CreationUser() {
     watch,
     formState: { errors },
   } = useForm();
+  const list = ["/Downloads/public", "/Users/Managers"];
+  const [pathList, setPathList] = useState(list);
+  //------ useEffect -------
+  useEffect(function (){ 
+    axios.get("http://localhost:3000/creation-compte")
+      .then((response) => {
+        if(response.status === 200){
+          console.log(response.data);
+          setPathList(response.data.paths);
+        }else if(response.status === 404){
+          console.log("Erreur 404");
+          return alert(response.data);
+        }
+      })
+      .catch((errors) => {
+        console.log(errors);
+        alert(errors);
+      });
+  })
+  //------ handleSignUp -------
   const handleSignUp = async () => {
     await axios
       .post("http://localhost:3000/signUp", {
@@ -51,10 +71,6 @@ export default function CreationUser() {
     },
     path: { required: "Path est obligatoire" },
   };
-  //-------------------------------
-  const list = ["/Downloads/public", "/Users/Managers"];
-  const [pathList, setPathList] = useState(list);
-
   return (
     <div className="creation-user-page">
       
@@ -116,8 +132,8 @@ export default function CreationUser() {
               <label htmlFor="path">Path des fichiers:</label>
               <select name="path" id="path" {...register("path")}>
                 {pathList.map((path, index) => (
-                  <option value={path} key={index}>
-                    {path}
+                  <option value={path.path} key={index}>
+                    {path.path}
                   </option>
                 ))}
               </select>

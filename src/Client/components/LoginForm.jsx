@@ -18,8 +18,7 @@ export default function LoginForm() {
   const onSubmit = (data) => console.log(data);
   const handleError = (errors) => {};
   const handleLogin = () => {
-    axios
-      .post("http://localhost:3000/login", {
+    axios.post("http://localhost:3000/login", {
         email: watch("email"),
         password: watch("password"),
       })

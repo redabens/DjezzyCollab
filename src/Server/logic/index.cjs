@@ -21,7 +21,9 @@ const storage = multer.memoryStorage(); // Store files in memory
 const upload = multer({ storage: storage });
 // file import
 const User = require("../models/users.cjs");
+const Path = require("../models/paths.cjs");
 
+// Connect to MongoDB
 mongoose
   .connect("mongodb://localhost:27017/Djezzy-Collab")
   .then(() => console.log("Connected to MongoDB..."))
@@ -36,19 +38,19 @@ app.use("/signUp", cors(), userRoutes);
 
 // sftp configuration
 const sftp = new SFTPClient();
-const sftpconfig = {
-  host: "192.168.0.198",
-  port: "22",
-  username: "sarair",
-  password: "sara2004",
-};
-
 // const sftpconfig = {
-//     host: "192.168.70.101",
-//     port: "22",
-//     username: "redabens",
-//     password: "Redabens2004..",
+//   host: "192.168.0.198",
+//   port: "22",
+//   username: "sarair",
+//   password: "sara2004",
 // };
+
+const sftpconfig = {
+    host: "192.168.70.101",
+    port: "22",
+    username: "redabens",
+    password: "Redabens2004..",
+};
 
 async function connectSFTP() {
   try {
@@ -129,6 +131,23 @@ app.post("/login", async (req, res) => {
     res.status(200).send({ token });
   } catch (error) {
     res.status(500).send("Erro logging in");
+  }
+});
+//endpoitn to get the user role
+app.get("/userRole", verifyToken, async (req, res) => {
+  try {
+    if (!req.userId) {
+      return res.status(401).send("User ID not found");
+    }
+    const user = await User.findById(req.userId);
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
+    const userRole = user.role; // Access role from the user object
+    res.status(200).send({userRole});
+  } catch (error) {
+    console.error("Error fetching user role:", error);
+    res.status(500).send("Server error");
   }
 });
 // pour enregistrer les fichiers dans le serveur
@@ -260,23 +279,16 @@ app.get("/download", verifyToken, async (req, res) => {
     console.log("Erreur de requete" + err);
   }
 });
-//endpoitn to get the user role
-app.get("/userRole", verifyToken, async (req, res) => {
-  try {
-    if (!req.userId) {
-      return res.status(401).send("User ID not found");
-    }
-    const user = await User.findById(req.userId);
-    if (!user) {
-      return res.status(404).send("User not found");
-    }
-    const userRole = user.role; // Access role from the user object
-    res.json({ role: userRole });
-  } catch (error) {
-    console.error("Error fetching user role:", error);
-    res.status(500).send("Server error");
+app.get("/creation-compte", async (req,res)=>{
+  try{
+    const paths = await Path.find({});
+    if(!paths) return res.status(404).send('no path found');
+    res.status(200).send({paths});
+  }catch{
+    console.log("erreur de requete");
+    res.status(500).send("serveur error");
   }
-});
+})
 process.on("SIGINT", () => {
   disconnectSFTP().then(() => {
     process.exit();

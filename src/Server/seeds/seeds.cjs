@@ -4,6 +4,7 @@ var Schema = mongoose.Schema;
 
 // file import
 const User = require('../models/users.cjs');
+const Path = require('../models/paths.cjs');
 
 mongoose.connect('mongodb://localhost:27017/Djezzy-Collab').then(() => console.log('Connected to MongoDB...'))
 .catch(error => console.log(error.message));
@@ -25,5 +26,23 @@ const user2 = new User({
 });
 await user1.save();
 await user2.save();
+}
+const CreatePaths = async ()=>{
+    
+const user1 = await User.findOne({
+    firstName: 'Bensemane',
+    lastName: 'Mohamed Reda',
+    email: 'reda9bens4@gmail.com',    
+});
+    const path1 = new Path({
+        path: '/Downloads/public',
+        createdBy: user1._id,
+    })
+    await path1.save();
+    const path2 = new Path({
+        path: '/Downloads/admin',
+        createdBy: user1._id,
+    })
+    await path2.save();
 }
 
