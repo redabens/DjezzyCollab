@@ -12,7 +12,9 @@ export default function CreationUser() {
     formState: { errors },
   } = useForm();
   const list = ["/Downloads/public", "/Users/Managers"];
-  const [pathList, setPathList] = useState(list);
+  const roleList = ["admin", "user","download","upload"];
+  const [pathList,setPathList]= useState(list);
+  const [role, setRole] = useState("user");
   //------ useEffect -------
   useEffect(function (){ 
     axios.get("http://localhost:3000/creation-compte")
@@ -29,20 +31,30 @@ export default function CreationUser() {
         console.log(errors);
         alert(errors);
       });
-  })
+  },[]);
   //------ handleSignUp -------
+  const handleError = (errors) => {};
   const handleSignUp = async () => {
-    await axios
-      .post("http://localhost:3000/signUp", {
-        firstName: watch("nom"),
-        lastName: watch("prenom"),
-        email: watch("email"),
-        password: watch("password"),
-        DirPath: watch("path"),
-      })
-      .then((response) => {
-        console.log(response.data);
-        navigate("/upload");
+    const userData = {
+      firstName: watch("nom"),
+      lastName: watch("prenom"),
+      email: watch("email"),
+      password: watch("password"),
+      DirPath: watch("path"),
+      role: watch("role"),
+    }
+    axios
+      .post("http://localhost:3000/creation-compte", {userData})
+      .then(res=>{
+        if(res.status === 200){
+          alert("Utilisateur créé avec succès");
+          navigate("/admin/creation-comptes");
+        }else if(res.status === 404){
+          alert(res.data);
+        }
+        else if(res.status === 500){
+          alert(res.data);
+        }
       })
       .catch((errors) => {
         console.log(errors);
@@ -70,16 +82,17 @@ export default function CreationUser() {
       required: "Enrer le mot de passe",
     },
     path: { required: "Path est obligatoire" },
+    role: { required: "Role est obligatoire" },
   };
   return (
     <div className="creation-user-page">
       
       <h1>Création d'un nouvel utilisateur</h1>
-      <form className="signUp-form" onSubmit={handleSubmit(handleSignUp)}>
+      <form className="signUp-form" onSubmit={handleSubmit(handleSignUp,handleError)}>
         <div className="sections">
           <div className="section-one">
             <div className="formElt">
-              <label htmlFor="Nom">Nom:</label>
+              <label htmlFor="nom">Nom:</label>
               <input
                 name="nom"
                 type="text"
@@ -91,7 +104,7 @@ export default function CreationUser() {
               </small>
             </div>
             <div className="formElt">
-              <label htmlFor="Prénom">Prénom:</label>
+              <label htmlFor="prenom">Prénom:</label>
               <input
                 name="prenom"
                 type="text"
@@ -130,10 +143,22 @@ export default function CreationUser() {
             </div>
             <div className="formElt">
               <label htmlFor="path">Path des fichiers:</label>
-              <select name="path" id="path" {...register("path")}>
+              <select name="path" id="path"{...register("path")}>
+                <option value="">select a path</option>
                 {pathList.map((path, index) => (
                   <option value={path.path} key={index}>
                     {path.path}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="formElt">
+              <label htmlFor="role">Role du user:</label>
+              <select name="role" id="role" {...register("role")}>
+              <option value="">select a role</option>
+                {roleList.map((role, index) => (
+                  <option value={role} key={index}>
+                    {role}
                   </option>
                 ))}
               </select>

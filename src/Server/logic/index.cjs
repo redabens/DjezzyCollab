@@ -11,8 +11,8 @@ const os = require("os");
 const cors = require("cors");
 const fs = require("fs");
 const SFTPClient = require("ssh2-sftp-client");
-
 const userRoutes = require("../routes/userRoutes.cjs");
+const { authenticate, addUser } = require('./ldap.cjs'); // Importez le module LDAP
 // express configuration
 const app = express();
 
@@ -117,6 +117,24 @@ async function verifyExistance(file, userDir, remotePath, i) {
 // pour connecter les utilisateurs
 app.post("/login", async (req, res) => {
   try {
+  //   const { email, password } = req.body;
+    
+  //   // Extraire le nom d'utilisateur du courriel si nécessaire
+  //   const username = email.split('@')[0]; // Adaptez cette ligne selon la structure de vos DN LDAP
+
+  //   authenticate(username, bcrypt.hashSync(password,8), (success) => {
+  //     if (success) {
+          // const user = await User.findOne({
+            // email: req.body.email,
+          // });
+          // if (!user) return res.status(404).send("user not found");
+  //       const token = jwt.sign({ _id: user._id }, secret, { expiresIn: 86400 });
+  //       res.status(200).send({ token });
+  //     } else {
+  //       res.status(401).send("Invalid credentials");
+  //     }
+  //   });
+  // });
     const user = await User.findOne({
       email: req.body.email,
     });
@@ -131,6 +149,42 @@ app.post("/login", async (req, res) => {
     res.status(200).send({ token });
   } catch (error) {
     res.status(500).send("Erro logging in");
+  }
+});
+// recuperer les paths de la database
+app.get("/creation-compte", async (req,res)=>{
+  try{
+    const paths = await Path.find({});
+    if(!paths) return res.status(404).send('no path found');
+    res.status(200).send({paths});
+  }catch{
+    console.log("erreur de requete");
+    res.status(500).send("serveur error");
+  }
+})
+process.on("SIGINT", () => {
+  disconnectSFTP().then(() => {
+    process.exit();
+  });
+});
+// creer un utilisateur
+app.post('/creation-compte', async (req, res) => {
+  try{
+    const utilisateur = new User({
+      firstName: req.body.userData.firstName,
+      lastName: req.body.userData.lastName,
+      email: req.body.userData.email,
+      password: bcrypt.hashSync(req.body.userData.password,8),
+      DirPath: req.body.userData.DirPath,
+      role: req.body.userData.role,
+    });
+    const saved = await utilisateur.save();
+    console.log('saved:'+saved);
+    if(!saved) res.status(404).send('failed to add user')
+    res.status(200).send('User added successfully');
+  } catch (error) {
+    console.log(error);
+    res.status(500).send('Error adding user');
   }
 });
 //endpoitn to get the user role
@@ -279,22 +333,6 @@ app.get("/download", verifyToken, async (req, res) => {
     console.log("Erreur de requete" + err);
   }
 });
-app.get("/creation-compte", async (req,res)=>{
-  try{
-    const paths = await Path.find({});
-    if(!paths) return res.status(404).send('no path found');
-    res.status(200).send({paths});
-  }catch{
-    console.log("erreur de requete");
-    res.status(500).send("serveur error");
-  }
-})
-process.on("SIGINT", () => {
-  disconnectSFTP().then(() => {
-    process.exit();
-  });
-});
-
 app.listen("3000", () => {
   console.log("Server is running on port 3000...");
 });
