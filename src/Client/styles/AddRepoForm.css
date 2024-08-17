@@ -1,0 +1,74 @@
+@import url("https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+.add-repo-form {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+  gap: 6%;
+}
+.form-area {
+  width: 80%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  padding-left: 4%;
+  border: 1px solid rgb(188, 188, 188);
+  border-radius: 8px;
+  gap: 70px;
+}
+.ajouterBtn {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  border-radius: 6px;
+  border: 0.5px solid rgb(206, 206, 206);
+  padding: 4px;
+  height: 30px;
+  gap: 4px;
+  font-family: "Montserrat", sans-serif !important;
+  font-size: 0.7em;
+  font-weight: 500;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.add-repo-component {
+  display: flex;
+  flex-direction: column;
+  width: 60%;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.add-repo-component input {
+  border: 1.3px solid rgb(201, 201, 201);
+  background-color: white;
+  border-radius: 4px;
+  height: 30px;
+  width: 100%;
+  padding-left: 10px;
+  padding-right: 10px;
+  font-family: "Montserrat", sans-serif !important;
+  font-size: 0.75em;
+}
+.add-repo-component input:focus {
+  outline: none;
+}
+.add-repo-component label {
+  font-size: 0.75em;
+  color: #6a6a6a;
+  font-weight: 500;
+}
+small {
+  font-size: 0.7em;
+}
+.valideAddBtn {
+  padding-left: 8px;
+  padding-right: 8px;
+  width: 80px;
+  background-color: #1b4d2f;
+}
+.rotate-icon {
+  transform: rotate(-90deg);
+}
