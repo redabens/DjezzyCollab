@@ -12,7 +12,8 @@ const cors = require("cors");
 const fs = require("fs");
 const SFTPClient = require("ssh2-sftp-client");
 const userRoutes = require("../routes/userRoutes.cjs");
-const { authenticate, addUser } = require('./ldap.cjs'); // Importez le module LDAP
+
+//const { authenticate, addUser } = require('./ldap.cjs'); // Importez le module LDAP
 // express configuration
 const app = express();
 
@@ -32,9 +33,13 @@ mongoose
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
-app.use(cors());
-app.use(userRoutes);
-app.use("/signUp", cors(), userRoutes);
+app.use(
+  cors({
+    origin: "*",
+  })
+);
+
+app.use("/users", userRoutes);
 
 // sftp configuration
 const sftp = new SFTPClient();
@@ -46,10 +51,10 @@ const sftp = new SFTPClient();
 // };
 
 const sftpconfig = {
-    host: "192.168.70.101",
-    port: "22",
-    username: "redabens",
-    password: "Redabens2004..",
+  host: "192.168.70.101",
+  port: "22",
+  username: "redabens",
+  password: "Redabens2004..",
 };
 
 async function connectSFTP() {
@@ -117,24 +122,24 @@ async function verifyExistance(file, userDir, remotePath, i) {
 // pour connecter les utilisateurs
 app.post("/login", async (req, res) => {
   try {
-  //   const { email, password } = req.body;
-    
-  //   // Extraire le nom d'utilisateur du courriel si nécessaire
-  //   const username = email.split('@')[0]; // Adaptez cette ligne selon la structure de vos DN LDAP
+    //   const { email, password } = req.body;
 
-  //   authenticate(username, bcrypt.hashSync(password,8), (success) => {
-  //     if (success) {
-          // const user = await User.findOne({
-            // email: req.body.email,
-          // });
-          // if (!user) return res.status(404).send("user not found");
-  //       const token = jwt.sign({ _id: user._id }, secret, { expiresIn: 86400 });
-  //       res.status(200).send({ token });
-  //     } else {
-  //       res.status(401).send("Invalid credentials");
-  //     }
-  //   });
-  // });
+    //   // Extraire le nom d'utilisateur du courriel si nécessaire
+    //   const username = email.split('@')[0]; // Adaptez cette ligne selon la structure de vos DN LDAP
+
+    //   authenticate(username, bcrypt.hashSync(password,8), (success) => {
+    //     if (success) {
+    // const user = await User.findOne({
+    // email: req.body.email,
+    // });
+    // if (!user) return res.status(404).send("user not found");
+    //       const token = jwt.sign({ _id: user._id }, secret, { expiresIn: 86400 });
+    //       res.status(200).send({ token });
+    //     } else {
+    //       res.status(401).send("Invalid credentials");
+    //     }
+    //   });
+    // });
     const user = await User.findOne({
       email: req.body.email,
     });
@@ -152,24 +157,24 @@ app.post("/login", async (req, res) => {
   }
 });
 // recuperer les paths de la database
-app.get("/creation-compte", async (req,res)=>{
-  try{
+app.get("/creation-compte", async (req, res) => {
+  try {
     const paths = await Path.find({});
-    if(!paths) return res.status(404).send('no path found');
-    res.status(200).send({paths});
-  }catch{
+    if (!paths) return res.status(404).send("no path found");
+    res.status(200).send({ paths });
+  } catch {
     console.log("erreur de requete");
     res.status(500).send("serveur error");
   }
 })
 // creer un utilisateur
-app.post('/creation-compte', async (req, res) => {
-  try{
+app.post("/creation-compte", async (req, res) => {
+  try {
     const utilisateur = new User({
       firstName: req.body.userData.firstName,
       lastName: req.body.userData.lastName,
       email: req.body.userData.email,
-      password: bcrypt.hashSync(req.body.userData.password,8),
+      password: bcrypt.hashSync(req.body.userData.password, 8),
       DirPath: req.body.userData.DirPath,
       role: req.body.userData.role,
     });
@@ -185,7 +190,7 @@ app.post('/creation-compte', async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    res.status(500).send('Error adding user');
+    res.status(500).send("Error adding user");
   }
 });
 //endpoitn to get the user role
@@ -199,7 +204,7 @@ app.get("/userRole", verifyToken, async (req, res) => {
       return res.status(404).send("User not found");
     }
     const userRole = user.role; // Access role from the user object
-    res.status(200).send({userRole});
+    res.status(200).send({ userRole });
   } catch (error) {
     console.error("Error fetching user role:", error);
     res.status(500).send("Server error");
@@ -256,8 +261,7 @@ app.get("/download/:filename", verifyToken, async (req, res) => {
     const userDir = path.join(restPath, user.DirPath);
     const dirExists = await sftp.exists(userDir);
     if (!dirExists) return res.status(415).send("Directory not found");
-
-    // sends the stream directly to the browser 
+    // sends the stream directly to the browser
     const filePath = path.posix.join(userDir, filename);
     res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
     sftp.createReadStream(filePath).pipe(res);
@@ -334,7 +338,48 @@ app.get("/download", verifyToken, async (req, res) => {
     console.log("Erreur de requete" + err);
   }
 });
-
+app.post("/paths/create", verifyToken, async (req, res) => {
+  console.log("POST /paths/create hit");
+  const { pathName} = req.body;
+  console.log("paaaaath:" + pathName );
+  try {
+    console.log("User ID: ==>", req.userId);
+    if (!req.userId) {
+      return res.status(401).send("User ID not found");
+    }
+    const user = await User.findById(req.userId);
+    if (!user) {
+      console.log("user not found POST /paths/create");
+      return res.status(404).json({ message: "User not found" });
+    }
+    let restPath = await sftp.cwd();
+    console.log(restPath);
+    restPath = restPath.slice(1, restPath.length);
+    console.log(restPath);
+    const fullPath = path.join(restPath,pathName);
+    // Create the directory on the SFTP server
+    const directoryExists = await sftp.exists(fullPath);
+    if (!directoryExists) {
+      await sftp.mkdir(fullPath, true);
+      console.log(`Directory created: ${fullPath}`);
+    } else {
+      return res.status(400).json({ message: "Directory already exists" });
+    }
+   
+    const newPath = new Path({
+      path: fullPath,
+      createdBy: req.userId,
+    });
+    await newPath.save();
+    console.log("Path saved in MongoDB:", newPath);
+    res
+      .status(201)
+      .json({ message: "Directory created and path saved", path: newPath });
+  } catch (error) {
+    console.error("Error creating path:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
 process.on("SIGINT", () => {
   disconnectSFTP().then(() => {
     process.exit();
