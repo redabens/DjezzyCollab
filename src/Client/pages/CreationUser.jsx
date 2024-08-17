@@ -49,6 +49,8 @@ export default function CreationUser() {
         if(res.status === 200){
           alert("Utilisateur créé avec succès");
           navigate("/admin/creation-comptes");
+        }else if(res.status === 401){
+          alert(res.data);
         }else if(res.status === 404){
           alert(res.data);
         }

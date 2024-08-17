@@ -17,17 +17,14 @@ function authenticate(username, password, callback) {
   });
 }
 function addUser(userData, callback) {
-    const dn = `uid=${userData.username},ou=users,dc=djezzy-collab,dc=com`;
+    const username = userData.email.split('@')[0];
+    const dn = `uid=${username},ou=users,dc=djezzy-collab,dc=com`;
     const user = {
-      cn: userData.fullName,
-      sn: userData.lastName,
-      uid: userData.username,
-      userPassword: userData.password,
-      objectClass: ['inetOrgPerson', 'posixAccount', 'top'],
-      uidNumber: userData.uidNumber,
-      gidNumber: userData.gidNumber,
-      homeDirectory: `/home/${userData.username}`,
-    };
+      cn: username,
+      sn: `${userData.firstName} ${userData.lastName}`,
+      objectClass: userData.role === 'admin' ? ['organizationalPerson']: ['inetOrgPerson'],
+      password: userData.password,
+    }
   
     client.add(dn, user, (err) => {
       if (err) {

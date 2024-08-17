@@ -162,11 +162,6 @@ app.get("/creation-compte", async (req,res)=>{
     res.status(500).send("serveur error");
   }
 })
-process.on("SIGINT", () => {
-  disconnectSFTP().then(() => {
-    process.exit();
-  });
-});
 // creer un utilisateur
 app.post('/creation-compte', async (req, res) => {
   try{
@@ -180,8 +175,14 @@ app.post('/creation-compte', async (req, res) => {
     });
     const saved = await utilisateur.save();
     console.log('saved:'+saved);
-    if(!saved) res.status(404).send('failed to add user')
-    res.status(200).send('User added successfully');
+    if(!saved) res.status(404).send('failed to add user');
+    addUser(utilisateur, (success, err) => {
+      if (success) {
+        res.status(200).send('User added successfully');
+      } else {
+        res.status(401).send('Error adding user: ' + err.message);
+      }
+    });
   } catch (error) {
     console.log(error);
     res.status(500).send('Error adding user');
@@ -332,6 +333,12 @@ app.get("/download", verifyToken, async (req, res) => {
   } catch (err) {
     console.log("Erreur de requete" + err);
   }
+});
+
+process.on("SIGINT", () => {
+  disconnectSFTP().then(() => {
+    process.exit();
+  });
 });
 app.listen("3000", () => {
   console.log("Server is running on port 3000...");
