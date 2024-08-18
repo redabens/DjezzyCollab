@@ -14,6 +14,7 @@ import UploadPage from "./Client/pages/UploadPage";
 import AidePage from "./Client/pages/AidePage";
 import CreationUser from "./Client/pages/CreationUser";
 import GestionRepertoires from "./Client/pages/GestionRepertoires";
+import GestionUsers from "./Client/pages/GestionUsers";
 import AdminPage from "./Client/pages/AdminPage";
 import LoginPage from "./Client/pages/LoginPage";
 // fixed element
@@ -32,8 +33,11 @@ const router = createBrowserRouter(
         <Route path="/upload" element={<UploadPage />} />
         <Route path="/aide" element={<AidePage />} />
         <Route path="/admin" element={<AdminPage />} />
-        <Route path="/admin/gestion-repertoires" element={<GestionRepertoires />} />
-        <Route path="/admin/gestion-utilisateurs" element={<AdminPage />} />
+        <Route
+          path="/admin/gestion-repertoires"
+          element={<GestionRepertoires />}
+        />
+        <Route path="/admin/gestion-utilisateurs" element={<GestionUsers />} />
         <Route path="/admin/creation-comptes" element={<CreationUser />} />
       </Route>
       <Route path="*" element={<NotFound />} />
