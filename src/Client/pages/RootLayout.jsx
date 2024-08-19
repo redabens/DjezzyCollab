@@ -2,32 +2,32 @@ import "./../../../src/App.css";
 import "./../styles/RootLayout.css";
 import { useState,useEffect } from "react";
 import Sidebar from "./../components/Sidebar";
-import Navbr from "./../components/Navbr";
+import Navbar from "./../components/Navbr";
 import LogoDjezzy from "./../components/LogoDjezzy";
 import { Outlet, Navigate , useLocation } from "react-router-dom";
 import { useAuth } from '../components/AuthContext'; // Assurez-vous du bon chemin d'importation
 import axios from "axios";
 export default function RootLayout() {
   const { token } = useAuth();
-  const [userRole,setUserRole] = useState('');
+  const [user,setUser] = useState('');
   // Vérifiez l'état d'authentification avant de rendre le contenu
   if (!token) {
     return <Navigate to="/login" />;
   }
   useEffect(function (){
-    axios.get("http://localhost:3000/download", {
+    axios.get("http://localhost:3000/user", {
       headers: { Authorization: token },
     }).then((res) => {
       if (res.status === 200) {
-        setUserRole(res.data.userRole);
+        setUser(res.data.user);
       } else if (res.status === 401) return alert("User Id not Found");
       else if (res.status === 404) return alert("User not found");
       else if (res.status === 500) return alert("Failed to upload due to server");
     })
     .catch((error) => {
-      alert("Error getting user Role");
+      alert("Error getting user");
     });
-  });
+  }),[];
   const [open, setOpen] = useState(true);
   const handleToggle = (e) => {
     setOpen((prev) => !prev);
@@ -82,7 +82,7 @@ export default function RootLayout() {
       }
     >
       <div className="navbar">
-        <Navbr open={open} />
+        <Navbar open={open} user={user}/>
       </div>
       <div className="Sidebar">
         <Sidebar open={open} handleToggle={handleToggle} params={params} />

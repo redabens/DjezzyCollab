@@ -194,7 +194,7 @@ app.post("/creation-compte", async (req, res) => {
   }
 });
 //endpoitn to get the user role
-app.get("/userRole", verifyToken, async (req, res) => {
+app.get("/user", verifyToken, async (req, res) => {
   try {
     if (!req.userId) {
       return res.status(401).send("User ID not found");
@@ -203,10 +203,9 @@ app.get("/userRole", verifyToken, async (req, res) => {
     if (!user) {
       return res.status(404).send("User not found");
     }
-    const userRole = user.role; // Access role from the user object
-    res.status(200).send({ userRole });
+    res.status(200).send({ user });
   } catch (error) {
-    console.error("Error fetching user role:", error);
+    console.error("Error fetching user:", error);
     res.status(500).send("Server error");
   }
 });

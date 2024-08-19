@@ -8,7 +8,7 @@ import Administrateur from "./Administrateur";
 import { useAuth } from "../components/AuthContext";
 
 function Sidebar({ open, handleToggle, params }) {
-  const { role } = useAuth();
+  const { token } = useAuth();
   const [navbar, setNavBar] = useState(params);
   const menuItemUp = [
     {

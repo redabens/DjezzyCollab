@@ -5,13 +5,7 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 
-export default function Navbar() {
-  const [user, setUser] = useState({
-    name: "Abdelhak Kaid",
-    email: "k_abdelhak@djeezy.dz",
-    tel: "07792345606",
-  });
-
+export default function Navbar({user}) {
   const [isOpen, setIsOpen] = useState(false);
 
   function togglePopover() {
@@ -22,7 +16,7 @@ export default function Navbar() {
   return (
     <nav className="navbr">
       <div className="navbarElt">
-        <h3 style={{ fontSize: "0.9em" }}>{user.name}</h3>
+        <h3 style={{ fontSize: "0.9em" }}>{`${user.firstName} ${user.lastName}`}</h3>
         <div onClick={togglePopover}>
           <img
             className="pdp"
@@ -43,15 +37,19 @@ export default function Navbar() {
           </div>
           <div className="infoElt">
             <h3>Nom:</h3>
-            <h3 className="var">{user.name}</h3>
+            <h3 className="var">{`${user.firstName} ${user.lastName}`}</h3>
           </div>
           <div className="infoElt">
             <h3>Email:</h3>
             <h3 className="var">{user.email}</h3>
           </div>
           <div className="infoElt">
-            <h3>Télephone:</h3>
-            <h3 className="var">{user.tel}</h3>
+            <h3>Directory Path:</h3>
+            <h3 className="var">{user.DirPath}</h3>
+          </div>
+          <div className="infoElt">
+            <h3>Role:</h3>
+            <h3 className="var">{user.role}</h3>
           </div>
         </Box>
       )}

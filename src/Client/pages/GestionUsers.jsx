@@ -7,8 +7,11 @@ export default function GestionUsers() {
   const searchKeys = ["firstName", "lastName", "email"];
   console.log(query);
   const search = (data) => {
-    return data.filter((item) =>
-      searchKeys.some((key) => item[key].toLowerCase().includes(query))
+    const regxp = new RegExp(query,'gi');
+    return data.filter((item) =>{
+      const pseudoquery = `${item[searchKeys[0]]} ${item[searchKeys[1]]} ${item[searchKeys[2]]}`;
+      return pseudoquery.match(regxp);
+    }
     );
   };
   const filteredUsers = search(UsersList);
