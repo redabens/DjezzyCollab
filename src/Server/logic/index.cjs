@@ -43,19 +43,23 @@ app.use("/users", userRoutes);
 
 // sftp configuration
 const sftp = new SFTPClient();
-// const sftpconfig = {
-//   host: "192.168.0.198",
-//   port: "22",
-//   username: "sarair",
-//   password: "sara2004",
-// };
-
+sftp.on("debug", (msg) => {
+  console.log("DEBUG: " + msg);
+});
 const sftpconfig = {
-  host: "192.168.70.101",
+  host: "192.168.0.198",
   port: "22",
-  username: "redabens",
-  password: "Redabens2004..",
+  username: "sarair",
+  password: "sara2004",
+  // debug: console.log,
 };
+
+// const sftpconfig = {
+//   host: "192.168.70.101",
+//   port: "22",
+//   username: "redabens",
+//   password: "Redabens2004..",
+// };
 
 async function connectSFTP() {
   try {
@@ -166,7 +170,7 @@ app.get("/creation-compte", async (req, res) => {
     console.log("erreur de requete");
     res.status(500).send("serveur error");
   }
-})
+});
 // creer un utilisateur
 app.post("/creation-compte", async (req, res) => {
   try {
@@ -179,13 +183,13 @@ app.post("/creation-compte", async (req, res) => {
       role: req.body.userData.role,
     });
     const saved = await utilisateur.save();
-    console.log('saved:'+saved);
-    if(!saved) res.status(404).send('failed to add user');
+    console.log("saved:" + saved);
+    if (!saved) res.status(404).send("failed to add user");
     addUser(utilisateur, (success, err) => {
       if (success) {
-        res.status(200).send('User added successfully');
+        res.status(200).send("User added successfully");
       } else {
-        res.status(401).send('Error adding user: ' + err.message);
+        res.status(401).send("Error adding user: " + err.message);
       }
     });
   } catch (error) {
@@ -339,8 +343,8 @@ app.get("/download", verifyToken, async (req, res) => {
 });
 app.post("/paths/create", verifyToken, async (req, res) => {
   console.log("POST /paths/create hit");
-  const { pathName} = req.body;
-  console.log("paaaaath:" + pathName );
+  const { pathName } = req.body;
+  console.log("paaaaath:" + pathName);
   try {
     console.log("User ID: ==>", req.userId);
     if (!req.userId) {
@@ -355,7 +359,7 @@ app.post("/paths/create", verifyToken, async (req, res) => {
     console.log(restPath);
     restPath = restPath.slice(1, restPath.length);
     console.log(restPath);
-    const fullPath = path.join(restPath,pathName);
+    const fullPath = path.join(restPath, pathName);
     // Create the directory on the SFTP server
     const directoryExists = await sftp.exists(fullPath);
     if (!directoryExists) {
@@ -364,7 +368,7 @@ app.post("/paths/create", verifyToken, async (req, res) => {
     } else {
       return res.status(400).json({ message: "Directory already exists" });
     }
-   
+
     const newPath = new Path({
       path: fullPath,
       createdBy: req.userId,
@@ -379,6 +383,55 @@ app.post("/paths/create", verifyToken, async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 });
+
+// pour l'affichage de l'arbore
+app.get("/tree-files", async (req, res) => {
+  try {
+    let restPath = await sftp.cwd();
+    const fileTree = await buildFileTree(sftp, restPath);
+    res.json(fileTree);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to fetch files" });
+  } finally {
+    sftp.end();
+  }
+});
+
+const buildFileTree = async (sftp, dirPath) => {
+  try {
+    const items = await sftp.list(dirPath); //tableau d'obj de tout dir, file existe in dirPath
+    const tree = [];
+
+    for (const item of items) {
+      if (item.type === "d") {
+        // if it's a directory : appel recursif ... =>  each dir and its children(list of dirs files) => arbre
+        const children = await buildFileTree(sftp, `${dirPath}/${item.name}`);
+        if (children.length === 0) {
+          /* Add a dummy child if there are no real children / :)
+           dump solution for RichTree component not showing the umpty directories(that have umpty children array) whith the expend icons 
+           comportement par defaut of mui richtreeview*/
+          children.push({ id: `${dirPath}/${item.name}/dummy`, label: " " });
+        }
+        tree.push({
+          id: `${dirPath}/${item.name}`, // each one is an obj that has its path, so we can access it if its a file
+          label: item.name,
+          children,
+        });
+      } else {
+        tree.push({
+          id: `${dirPath}/${item.name}`,
+          label: item.name,
+        });
+      }
+    }
+    return tree;
+  } catch (err) {
+    console.error(`FAILED to list items in directory ${dirPath}:`, err);
+    return [];
+  }
+};
+
 process.on("SIGINT", () => {
   disconnectSFTP().then(() => {
     process.exit();

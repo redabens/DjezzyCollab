@@ -32,3 +32,8 @@
   font-weight: 600;
   font-size: 1em;
 }
+.existant-repos-list {
+  max-height: 35%;
+  overflow-y: scroll;
+  border: 2px solid rebeccapurple;
+}
