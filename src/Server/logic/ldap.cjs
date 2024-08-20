@@ -1,8 +1,5 @@
-const ldap = require('ldapjs');
-
-const client = ldap.createClient({
-  url: 'ldap://192.168.70.106:389' // Remplacez par l'URL de votre serveur LDAP
-});
+var LdapClient = require('ldapjs-client');
+var client = new LdapClient({ url: 'ldap://192.168.70.106:389' });// Remplacez par l'URL de votre serveur LDAP
 
 function authenticate(username, password, callback) {
   // Construct the DN (Distinguished Name) based on username
@@ -19,12 +16,15 @@ function authenticate(username, password, callback) {
 function addUser(userData, callback) {
     const username = userData.email.split('@')[0];
     const dn = `uid=${username},ou=users,dc=djezzy-collab,dc=com`;
-    const user = {
-      cn: username,
-      sn: `${userData.firstName} ${userData.lastName}`,
-      objectClass: userData.role === 'admin' ? ['organizationalPerson']: ['inetOrgPerson'],
-      password: userData.password,
-    }
+   // Déterminer l'objectClass selon le rôle
+   const user = {
+    cn: username,
+    sn: `${userData.firstName} ${userData.lastName}`,
+    objectClass: ['inetOrgPerson', userData.role === 'admin' ? 'organizationalPerson' : 'person', 'top'],
+    userPassword: userData.password, // Notez qu'il est recommandé de hasher le mot de passe avant de l'envoyer
+    uid: username,
+    mail: userData.email
+  }
   
     client.add(dn, user, (err) => {
       if (err) {
