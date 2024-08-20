@@ -74,7 +74,7 @@
 .users-box {
   width: 90%;
   height: 100%;
-  max-height: 84%;
+  max-height: 86%;
   overflow-y: scroll;
   /* border: 2px solid rgb(255, 199, 14); */
 }
