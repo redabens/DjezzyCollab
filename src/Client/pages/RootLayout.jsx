@@ -27,7 +27,7 @@ export default function RootLayout() {
     .catch((error) => {
       alert("Error getting user");
     });
-  }),[];
+  },[]);
   const [open, setOpen] = useState(true);
   const handleToggle = (e) => {
     setOpen((prev) => !prev);
