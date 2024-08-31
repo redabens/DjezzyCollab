@@ -9,11 +9,25 @@
   -ms-user-select: none; /* Pour Internet Explorer/Edge */
   pointer-events: none; /* Empêche tous les événements de pointeur */
 }
+
+/* animation logo  */
+@keyframes rotateImage {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(1080deg); /* 3 rounds = 360 * 3 */
+  }
+}
 .logo {
   display: inline-block;
   width: 2.3rem;
   height: 2.3rem;
 }
+.logo.rotate {
+  animation: rotateImage 1s ease-in-out;
+}
+
 .Nom {
   font-family: "Secular One", sans-serif;
   font-weight: 400;
@@ -28,9 +42,9 @@
   font-variation-settings: "wdth" 100;
 }
 /* white logo style */
-.whiteLogoWithName{
-display: flex;
-flex-direction: row;
-align-items: center;
-gap: 10px;
+.whiteLogoWithName {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
 }

@@ -2,14 +2,17 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
 .add-repo-form {
   width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: row;
   justify-content: start;
   align-items: center;
   gap: 6%;
+  
 }
 .form-area {
   width: 80%;
+  height: 100%;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;

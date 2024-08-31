@@ -9,10 +9,11 @@ export default function CreationUser() {
     register,
     handleSubmit,
     watch,
+    reset,
     formState: { errors },
   } = useForm();
   const list = ["/Downloads/public", "/Users/Managers"];
-  const roleList = ["admin", "user", "download", "upload"];
+  const roleList = [ "user","admin", "download", "upload"];
   const [pathList, setPathList] = useState([]);
   const [role, setRole] = useState("user");
   //------ useEffect -------
@@ -48,11 +49,11 @@ export default function CreationUser() {
       .post("http://localhost:3000/creation-compte", { userData })
       .then((res) => {
         if (res.status === 200) {
-          alert("Utilisateur créé avec succès");
-          navigate("/admin/creation-comptes");
-        }else if(res.status === 401){
+          //alert("Utilisateur créé avec succès");
+          reset();
+        } else if (res.status === 401) {
           alert(res.data);
-        }else if(res.status === 404){
+        } else if (res.status === 404) {
           alert(res.data);
         } else if (res.status === 500) {
           alert(res.data);
@@ -148,7 +149,7 @@ export default function CreationUser() {
             <div className="formElt">
               <label htmlFor="path">Path des fichiers:</label>
               <select name="path" id="path" {...register("path")}>
-                <option value="">select a path</option>
+                {/* <option value="">select a path</option> */}
                 {pathList.map((path, index) => (
                   <option value={path.path} key={index}>
                     {path.path}
@@ -159,7 +160,7 @@ export default function CreationUser() {
             <div className="formElt">
               <label htmlFor="role">Role du user:</label>
               <select name="role" id="role" {...register("role")}>
-                <option value="">select a role</option>
+                {/* <option value="">select a role</option> */}
                 {roleList.map((role, index) => (
                   <option value={role} key={index}>
                     {role}

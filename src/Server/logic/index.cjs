@@ -13,7 +13,7 @@ const fs = require("fs");
 const SFTPClient = require("ssh2-sftp-client");
 const userRoutes = require("../routes/userRoutes.cjs");
 
-const { authenticate, addUser } = require('./ldap.cjs'); // Importez le module LDAP
+const { authenticate, addUser } = require("./ldap.cjs"); // Importez le module LDAP
 // express configuration
 const app = express();
 
@@ -46,19 +46,37 @@ const sftp = new SFTPClient();
 // sftp.on("debug", (msg) => {
 //   console.log("DEBUG: " + msg);
 // });
+const sftpconfig = {
+  host: "172.25.80.1",
+  port: "22",
+  username: "sarair",
+  password: "sara2004",
+  // debug: console.log,
+};
+
 // const sftpconfig = {
-//   host: "192.168.0.198",
+//   host: "192.168.70.101",
 //   port: "22",
-//   username: "sarair",
-//   password: "sara2004",
-//   // debug: console.log,
+//   username: "redabens",
+//   password: "Redabens2004..",
 // };
 
-const sftpconfig = {
-  host: "192.168.70.101",
-  port: "22",
-  username: "redabens",
-  password: "Redabens2004..",
+// connect to ldap server
+const connectToLdap = () => {
+  return new Promise((resolve, reject) => {
+    client.bind(
+      "cn=admin,dc=djezzy-collab,dc=com",
+      "your-admin-password",
+      (err) => {
+        if (err) {
+          reject("Failed to connect to LDAP server: " + err);
+        } else {
+          console.log("Connected to LDAP server");
+          resolve();
+        }
+      }
+    );
+  });
 };
 
 async function connectSFTP() {
@@ -171,32 +189,78 @@ app.get("/creation-compte", async (req, res) => {
     res.status(500).send("serveur error");
   }
 });
-// creer un utilisateur
+
 app.post("/creation-compte", async (req, res) => {
   try {
-    const utilisateur = new User({
+    const utilisateur = {
       firstName: req.body.userData.firstName,
       lastName: req.body.userData.lastName,
       email: req.body.userData.email,
       password: bcrypt.hashSync(req.body.userData.password, 8),
       DirPath: req.body.userData.DirPath,
       role: req.body.userData.role,
-    });
-    const saved = await utilisateur.save();
-    console.log("saved:" + saved);
-    if (!saved) res.status(404).send("failed to add user");
+    }
+    const newUser = new User(utilisateur);
+    const saved = await newUser.save();
+    console.log("saved:", saved);
+
+    if (!saved) return res.status(404).send("Failed to add user");
+
     addUser(utilisateur, (success, err) => {
       if (success) {
-        res.status(200).send("User added successfully");
+        return res.status(200).send("User added successfully");
       } else {
-        res.status(401).send("Error adding user: " + err.message);
+        console.error("Error adding user to LDAP:", err);
+        return res
+          .status(401)
+          .send("Error adding user to LDAP: " + err.message);
       }
     });
   } catch (error) {
-    console.log(error);
-    res.status(500).send("Error adding user");
+    console.error("Error adding user:", error);
+    return res.status(500).send("Error adding user");
   }
 });
+
+
+// const createManualUser = async () => {
+//   try {
+//     const utilisateur = {
+//       firstName: 'Iratni',
+//       lastName: 'Sara Amina',
+//       email: 'ms_iratni@esi.dz',
+//       password: bcrypt.hashSync('sara2004', 8),
+//       DirPath: '/Downloads/public',  
+//       role: 'user',  
+//     };
+
+//     // Save the user in MongoDB
+//     const newUser = new User(utilisateur);
+//     const savedUser = await newUser.save();
+//     console.log('User created successfully in MongoDB:', savedUser);
+
+//     // Create the user in LDAP
+//     addUser(utilisateur, (success, err) => {
+//       if (success) {
+//         console.log('User created successfully in LDAP');
+//       } else {
+//         console.error('Error creating user in LDAP:', err);
+//       }
+//     });
+//   } catch (error) {
+//     console.error('Error creating user:', error);
+//   } finally {
+//     mongoose.connection.close();  // Close the connection after the user is created
+//   }
+// };
+
+// // Call the function to create the user
+// createManualUser();
+
+
+
+
+
 //endpoitn to get the user role
 app.get("/user", verifyToken, async (req, res) => {
   try {
@@ -387,59 +451,60 @@ app.post("/paths/create", verifyToken, async (req, res) => {
 // pour l'affichage de l'arbore
 async function canReadPath(path) {
   try {
-      const files = await sftp.list(path);
-      console.log('Dossier listé avec succès:', files);
-      return true;
+    const files = await sftp.list(path);
+    console.log("Dossier listé avec succès:", files);
+    return true;
   } catch (err) {
-      if (err.code === 5) { // Vérifie le code d'erreur
-          console.error('Permission refusée pour lire ce chemin:', path);
-      } else {
-          console.error('Erreur lors de l\'accès au chemin:', err.message);
-      }
-      return false;
+    if (err.code === 5) {
+      // Vérifie le code d'erreur
+      console.error("Permission refusée pour lire ce chemin:", path);
+    } else {
+      console.error("Erreur lors de l'accès au chemin:", err.message);
+    }
+    return false;
   }
 }
 const buildFileTree = async (sftp, dirPath) => {
   try {
     const access = await canReadPath(dirPath);
-    console.log(access);
     if (access) {
-      const items = await sftp.list(dirPath); //tableau d'obj de tout dir, file existe in dirPath
-      console.dir(items);
+      const items = await sftp.list(dirPath);
       const tree = [];
-      if(items){
-        for (let item of items) {
-          if (item.type === "d") {
-            // if it's a directory : appel recursif ... =>  each dir and its children(list of dirs files) => arbre
-            let children = await buildFileTree(sftp, `${dirPath}/${item.name}`);
-            if (!children) {
-              children=[];
-              /* Add a dummy child if there are no real children / :)
-               dump solution for RichTree component not showing the umpty directories(that have umpty children array) whith the expend icons 
-               comportement par defaut of mui richtreeview*/
-              children.push({ id: `${dirPath}/${item.name}/dummy`, label: "empty" });
-            }
-            tree.push({
-              id: `${dirPath}/${item.name}`, // each one is an obj that has its path, so we can access it if its a file
-              label: item.name,
-              children,
-            });
-          } else {
-            tree.push({
-              id: `${dirPath}/${item.name}`,
-              label: item.name,
+
+      for (let item of items) {
+        if (item.type === "d") {
+          let children = await buildFileTree(sftp, `${dirPath}/${item.name}`);
+          if (!children) {
+            children = [];
+            // Add dummy child to ensure directory can be expanded
+            children.push({
+              id: `${dirPath}/${item.name}/dummy`,
+              label: "",
             });
           }
+          tree.push({
+            id: `${dirPath}/${item.name}`,
+            label: item.name,
+            children,
+          });
+        } else {
+          tree.push({
+            id: `${dirPath}/${item.name}`,
+            label: item.name,
+          });
         }
-        return tree;
-      } else{
-        return null;
       }
+      return tree;
+    } else {
+      return null;
     }
   } catch (err) {
-    console.error(`FAILED to list items in directory ${dirPath} because ${err.code}:`, err);
+    // Skip directories that can't be accessed due to permission issues
+    console.error(`Skipped directory ${dirPath} due to error:`, err.message);
+    return null;
   }
 };
+
 app.get("/tree-files", async (req, res) => {
   try {
     const restPath = await sftp.cwd();

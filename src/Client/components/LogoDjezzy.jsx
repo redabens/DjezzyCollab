@@ -1,9 +1,16 @@
 import "../styles/LogoDjezzy.css";
-export default function LogoDjezzy() {
+import { useState } from "react";
+export default function LogoDjezzy({rotating}) {
+  // const [rotating, setRotating] = useState(false);
+  // const handleRotateLogo = () => {
+  //   setRotating(true);
+  //   setTimeout(() => setRotating(false), 2000); // Duration should match the animation duration
+  // };
+
   return (
     <div className="LogoWithName" >
       <img
-        className="logo"
+        className={`logo ${rotating ? "rotate" : ""}`}
         src="./../../src/assets/logo_djezzy.svg"
         alt="logo_djezzy"
       />

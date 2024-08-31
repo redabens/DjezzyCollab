@@ -20,3 +20,33 @@
   font-weight: 600;
   color: grey;
 }
+/* Center the icon */
+.swal-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Add space between buttons */
+.swal-confirm-button,
+.swal-cancel-button {
+  margin: 0 10px; /* Increase spacing */
+}
+
+/* Customize buttons further if needed */
+.swal-confirm-button,
+.swal-cancel-button {
+  padding: 8px 20px; /* Adjust padding for more spacing */
+}
+
+/* Additional customizations */
+.swal-popup {
+  padding: 20px; /* Adjust the padding around the popup */
+}
+
+.swal-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px; /* Adjust the padding for the entire modal */
+}
