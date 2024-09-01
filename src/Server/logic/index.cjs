@@ -215,7 +215,10 @@ app.post("/creation-compte", async (req, res) => {
           .status(401)
           .send("Error adding user to LDAP: " + err.message);
       }
-    });
+    }
+  );
+
+
   } catch (error) {
     console.error("Error adding user:", error);
     return res.status(500).send("Error adding user");

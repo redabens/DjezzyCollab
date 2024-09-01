@@ -15,7 +15,6 @@
   align-items: center;
   font-family: "M PLUS Rounded 1c", sans-serif !important;
   font-size: 1.8em;
-  z-index: 1;
 }
 
 /* search bar style */
@@ -24,7 +23,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1;
 }
 .search-bar {
   width: 50%;
@@ -37,7 +35,6 @@
   gap: 8px;
   padding-left: 5px;
   /* box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1); */
-  z-index: 1;
 }
 .search-input {
   width: 100%;
@@ -45,7 +42,6 @@
   outline: none;
   font-family: "Mulish", sans-serif;
 }
-
 /* box users style */
 .users-tools-rectangle {
   display: flex;
@@ -58,7 +54,6 @@
   background-color: #f2efef;
   border: 1.5px solid #f8cece;
   border-radius: 10px 10px 0px 0px;
-  z-index: 1;
 }
 .filter-component {
   display: flex;
@@ -66,7 +61,6 @@
   gap: 6px;
   font-size: 0.9em;
   font-weight: 600;
-  z-index: 1;
 }
 .users-list-area {
   width: 100%;
@@ -75,12 +69,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  z-index: 1;
 }
 .users-box {
   width: 90%;
   height: 100%;
-
   /* border: 2px solid rgb(255, 199, 14); */
 }
 .users {

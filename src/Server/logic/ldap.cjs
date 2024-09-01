@@ -85,6 +85,7 @@ async function addUser(userData, callback) {
     callback(false, err);
   }
 }
+
 // delete user from ldap
 async function deleteUserFromLDAP(email, callback) {
   const dn = `uid=${email},ou=users,dc=djezzy-collab,dc=com`;
@@ -97,4 +98,4 @@ async function deleteUserFromLDAP(email, callback) {
     callback(false, err);
   }
 }
-module.exports = { authenticate, addUser,deleteUserFromLDAP };
+module.exports = { authenticate, addUser, deleteUserFromLDAP };

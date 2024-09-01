@@ -3,13 +3,14 @@ import "./../styles/GestionRepertoires.css";
 import AddRepoForm from "../components/AddRepoForm";
 import LinearProgress from "@mui/material/LinearProgress";
 import axios from "axios";
-
 import Box from "@mui/material/Box";
 import { RichTreeView } from "@mui/x-tree-view/RichTreeView";
+import CustomTreeItem from "../components/CustomTreeItem";
 
 export default function GestionRepertoires() {
   const [fileTree, setFileTree] = useState([]);
   const [loadingFileTree, setLoadingFileTree] = useState(true);
+
   useEffect(() => {
     const fetchFileTree = async () => {
       try {
@@ -34,7 +35,7 @@ export default function GestionRepertoires() {
         <h3>Répertoires existants:</h3>
         {loadingFileTree && <LinearProgress />}
         <Box className="existant-repos-list">
-          <RichTreeView items={fileTree} />
+          <RichTreeView items={fileTree} slots={{ item: CustomTreeItem }} />
         </Box>
       </div>
     </div>
