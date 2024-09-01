@@ -22,7 +22,7 @@ export default function GestionUsers() {
       }
     };
     fetchUsers();
-  }, []);
+  }, Users);
 
   // Search functionality
   const searchKeys = ["firstName", "lastName", "email"];
@@ -115,14 +115,15 @@ export default function GestionUsers() {
           </div>
         </div>
       </div>
-      {showDialog && (<div className="popup">
-        <YesNoDialog
-          titre="Confirmation de suppression"
-          message="Voulez-vous vraiment supprimer cet utilisateur?"
-          image="./../../src/assets/delete_illustration.svg" // example image
-          onConfirmDialog={onConfirmDialog}
-        />
-      </div>
+      {showDialog && (
+        <div className="popup">
+          <YesNoDialog
+            titre="Confirmation de suppression"
+            message="Voulez-vous vraiment supprimer cet utilisateur?"
+            image="./../../src/assets/delete_illustration.svg"
+            onConfirmDialog={onConfirmDialog}
+          />
+        </div>
       )}
     </div>
   );

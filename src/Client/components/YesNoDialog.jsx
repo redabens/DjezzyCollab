@@ -1,7 +1,7 @@
+import "../styles/YesNoDialog.css";
 const YesNoDialog = ({ titre, message, image, onConfirmDialog }) => {
   return (
-    <div className="dialog">
-      {/* {`dialog ${onConfirmDialog ? "show" : "hide"}`} */}
+    <div className={`dialog ${onConfirmDialog ? "show" : "hide"}`}>
       <div className="dialog-content">
         <div className="dialog-header">
           <h2 className="dialog-title">{titre}</h2>

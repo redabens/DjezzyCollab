@@ -85,11 +85,12 @@ async function addUser(userData, callback) {
     callback(false, err);
   }
 }
+
 // delete user from ldap
 async function deleteUserFromLDAP(email, callback) {
   const dn = `uid=${email},ou=users,dc=djezzy-collab,dc=com`;
   try {
-    await client.bind("cn=admin,dc=djezzy-collab,dc=com", "sara2004");
+    await client.bind("cn=admin,dc=djezzy-collab,dc=com", LDAPmdps);
     await client.del(dn);
     callback(true);
   } catch (err) {
@@ -97,4 +98,4 @@ async function deleteUserFromLDAP(email, callback) {
     callback(false, err);
   }
 }
-module.exports = { authenticate, addUser,deleteUserFromLDAP };
+module.exports = { authenticate, addUser, deleteUserFromLDAP };

@@ -3,7 +3,6 @@
   height: 100%;
   display: grid;
   grid-template-rows: 9% 1fr;
-
 }
 .navbar {
   grid-column: 2;
