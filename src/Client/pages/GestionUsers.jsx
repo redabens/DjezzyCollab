@@ -115,14 +115,14 @@ export default function GestionUsers() {
           </div>
         </div>
       </div>
-
-      {showDialog && (
+      {showDialog && (<div className="popup">
         <YesNoDialog
           titre="Confirmation de suppression"
           message="Voulez-vous vraiment supprimer cet utilisateur?"
           image="./../../src/assets/delete_illustration.svg" // example image
           onConfirmDialog={onConfirmDialog}
-        className="delete-dialog-box"/>
+        />
+      </div>
       )}
     </div>
   );

@@ -1,5 +1,5 @@
 var LdapClient = require("ldapjs-client");
-var client = new LdapClient({ url: "ldap://localhost:389" });
+var client = new LdapClient({ url: "ldap://192.168.157.1:389" });
 
 function authenticate(username, password, callback) {
   const dn = `uid=${username},ou=users,dc=djezzy-collab,dc=com`;
@@ -53,8 +53,9 @@ async function addUser(userData, callback) {
 
   try {
     // Bind to the LDAP server
-    await client.bind("cn=admin,dc=djezzy-collab,dc=com", "sara2004"); // Replace with your admin DN and password
-
+    // await client.bind("cn=admin,dc=djezzy-collab,dc=com", "sara2004"); // Replace with your admin DN and password
+    await client.bind("cn=admin,dc=djezzy-collab,dc=com", "Redabens2004.."); // Replace with your admin DN and password
+    
     const ouExists = await ensureOUExists(ouDN);
 
     if (!ouExists) {
