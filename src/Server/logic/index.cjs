@@ -46,20 +46,20 @@ const sftp = new SFTPClient();
 // sftp.on("debug", (msg) => {
 //   console.log("DEBUG: " + msg);
 // });
-const sftpconfig = {
-  host: "172.25.80.1",
-  port: "22",
-  username: "sarair",
-  password: "sara2004",
-  // debug: console.log,
-};
-
 // const sftpconfig = {
-//   host: "192.168.70.101",
+//   host: "172.25.80.1",
 //   port: "22",
-//   username: "redabens",
-//   password: "Redabens2004..",
+//   username: "sarair",
+//   password: "sara2004",
+//   // debug: console.log,
 // };
+
+const sftpconfig = {
+  host: "192.168.157.12",
+  port: "22",
+  username: "redabens",
+  password: "Redabens2004..",
+};
 
 // connect to ldap server
 const connectToLdap = () => {
@@ -222,17 +222,25 @@ app.post("/creation-compte", async (req, res) => {
   }
 });
 
-
-// const createManualUser = async () => {
+// const utilisateur1 = {
+//   firstName: 'Iratni',
+//   lastName: 'Sara Amina',
+//   email: 'ms_iratni@esi.dz',
+//   password: bcrypt.hashSync('sara2004', 8),
+//   DirPath: '/Downloads/public',  
+//   role: 'user',  
+// };
+// const utilisateur2 = {
+//   firstName: 'Bensemane',
+//   lastName: 'Mohamed Reda',
+//   email: 'reda9bens4@gmail.com',
+//   password: bcrypt.hashSync('Redabens2004..', 8),
+//   DirPath: '/Downloads/public',  
+//   role: 'admin',  
+// };
+// const createManualUser = async (utilisateur) => {
 //   try {
-//     const utilisateur = {
-//       firstName: 'Iratni',
-//       lastName: 'Sara Amina',
-//       email: 'ms_iratni@esi.dz',
-//       password: bcrypt.hashSync('sara2004', 8),
-//       DirPath: '/Downloads/public',  
-//       role: 'user',  
-//     };
+    
 
 //     // Save the user in MongoDB
 //     const newUser = new User(utilisateur);
@@ -255,7 +263,8 @@ app.post("/creation-compte", async (req, res) => {
 // };
 
 // // Call the function to create the user
-// createManualUser();
+// createManualUser(utilisateur1);
+// createManualUser(utilisateur2);
 
 
 

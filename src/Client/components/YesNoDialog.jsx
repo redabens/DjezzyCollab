@@ -1,6 +1,6 @@
 const YesNoDialog = ({ titre, message, image, onConfirmDialog }) => {
   return (
-    <div className="dialog show">
+    <div className="dialog">
       {/* {`dialog ${onConfirmDialog ? "show" : "hide"}`} */}
       <div className="dialog-content">
         <div className="dialog-header">
