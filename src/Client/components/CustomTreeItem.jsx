@@ -2,7 +2,7 @@ import { TreeItem2 } from "@mui/x-tree-view/TreeItem2";
 
 function CustomTreeItem({ item, ...props }) {
   const handleNodeClick = (event) => {
-    console.log("Selected Repertoire Path:");
+    console.log("Selected Repertoire Path:", item.id); 
   };
 
   return (

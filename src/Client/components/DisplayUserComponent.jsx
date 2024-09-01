@@ -10,6 +10,10 @@ export default function DisplayUserComponent({ user, onDelete }) {
   // const handleDeleteClick = () => {
   //   onDelete(user._id);
   // };
+  const handleOndelete = (popupState) => {
+    popupState.close();
+    onDelete(user._id);
+  };
 
   return (
     <div className="user-component">
@@ -34,7 +38,9 @@ export default function DisplayUserComponent({ user, onDelete }) {
             />
             <Menu {...bindMenu(popupState)}>
               <MenuItem onClick={popupState.close}>Modifier</MenuItem>
-              <MenuItem onClick={onDelete}>Supprimer</MenuItem>
+              <MenuItem onClick={() => handleOndelete(popupState)}>
+                Supprimer
+              </MenuItem>
               <MenuItem onClick={popupState.close}>Bloquer</MenuItem>
             </Menu>
           </Fragment>
