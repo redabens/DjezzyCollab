@@ -1,29 +1,25 @@
 var LdapClient = require("ldapjs-client");
 var client = new LdapClient({ url: "ldap://192.168.157.1:389" });
 
-function authenticate(username, password, callback) {
-  const dn = `uid=${username},ou=users,dc=djezzy-collab,dc=com`;
-
-  client.bind(dn, password, (err) => {
-    if (err) {
-      callback(false); // Authentication failed
-    } else {
-      callback(true); // Authentication succeeded
-    }
-  });
+async function authenticate(username, password) {
+  const dn = `ou=users,dc=djezzy-collab,dc=com`;
+  console.log(password);
+  await client.bind("cn=admin,dc=djezzy-collab,dc=com", "Redabens2004..");
+  searchOptions = {
+    filter:  `(&(uid=${username})(userPassword=${password}))`,
+    scope: "sub", // We only need to check the base entry itself
+    attributes: ["uid","userPassword"], // We only care about the DN
+  };
+  const ouExists = await ensureOUExists(dn,searchOptions);
+  return ouExists;
 }
 // verify if ou existe in root
-async function ensureOUExists(dn) {
+async function ensureOUExists(dn,searchOptions) {
   try {
-    const searchOptions = {
-      scope: "base", // We only need to check the base entry itself
-      attributes: ["dn"], // We only care about the DN
-    };
-
     const result = await client.search(dn, searchOptions);
     // If the search returns results, the OU exists
     if (result.length > 0) {
-      return true;
+      return result;
     } else {
       return false;
     }
@@ -55,8 +51,11 @@ async function addUser(userData, callback) {
     // Bind to the LDAP server
     // await client.bind("cn=admin,dc=djezzy-collab,dc=com", "sara2004"); // Replace with your admin DN and password
     await client.bind("cn=admin,dc=djezzy-collab,dc=com", "Redabens2004.."); // Replace with your admin DN and password
-    
-    const ouExists = await ensureOUExists(ouDN);
+    const searchOptions = {
+      scope: "base", // We only need to check the base entry itself
+      attributes: ["dn"], // We only care about the DN
+    };
+    const ouExists = await ensureOUExists(ouDN,searchOptions);
 
     if (!ouExists) {
       await createOU(ouDN, (success, err) => {

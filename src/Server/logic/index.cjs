@@ -144,36 +144,31 @@ async function verifyExistance(file, userDir, remotePath, i) {
 // pour connecter les utilisateurs
 app.post("/login", async (req, res) => {
   try {
-    //   const { email, password } = req.body;
+      const { email, password } = req.body;
 
-    //   // Extraire le nom d'utilisateur du courriel si nécessaire
-    //   const username = email.split('@')[0]; // Adaptez cette ligne selon la structure de vos DN LDAP
-
-    //   authenticate(username, bcrypt.hashSync(password,8), (success) => {
-    //     if (success) {
+      const credentials = authenticate(email,password);
+      if (credentials) {
+        const user = await User.findOne({
+        email: req.body.email,
+      });
+      if (!user) return res.status(404).send("user not found");
+      const token = jwt.sign({ _id: user._id }, secret, { expiresIn: 86400 });
+      res.status(200).send({ token });
+      } else {
+        res.status(401).send("Invalid credentials");
+      }
     // const user = await User.findOne({
-    // email: req.body.email,
+    //   email: req.body.email,
     // });
     // if (!user) return res.status(404).send("user not found");
-    //       const token = jwt.sign({ _id: user._id }, secret, { expiresIn: 86400 });
-    //       res.status(200).send({ token });
-    //     } else {
-    //       res.status(401).send("Invalid credentials");
-    //     }
-    //   });
-    // });
-    const user = await User.findOne({
-      email: req.body.email,
-    });
-    if (!user) return res.status(404).send("user not found");
-    const validPassword = await bcrypt.compare(
-      req.body.password,
-      user.password
-    );
-    if (!validPassword)
-      return res.status(401).send("the password is incorrect");
-    const token = jwt.sign({ _id: user._id }, secret, { expiresIn: 86400 });
-    res.status(200).send({ token });
+    // const validPassword = await bcrypt.compare(
+    //   req.body.password,
+    //   user.password
+    // );
+    // if (!validPassword)
+    //   return res.status(401).send("the password is incorrect");
+    // const token = jwt.sign({ _id: user._id }, secret, { expiresIn: 86400 });
+    // res.status(200).send({ token });
   } catch (error) {
     res.status(500).send("Erro logging in");
   }
