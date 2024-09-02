@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function LoginForm() {
   const { token, setToken } = useAuth();
+  const [credentialsErr, setCredentialsErr] = useState(false);
   const {
     register,
     handleSubmit,
@@ -23,24 +24,29 @@ export default function LoginForm() {
         password: watch("password"),
       })
       .then((result) => {
-        console.log(result);
         if (result.status === 200) {
           setToken(result.data.token);
           navigate("/");
-        } else if (result.status === 401) {
-          setLoginError({
-            value: true,
-            message: "Le mot de passe est Incorrect",
-          });
         } else {
-          setLoginError({ value: true, message: "Utilisateur non enregistré" });
+          setLoginError({ value: true, message: "Unexpected error occurred" });
         }
       })
-      .catch((errors) => {
-        console.log(errors);
-        alert(errors);
+      .catch((error) => {
+        if (error.response) {
+          if (error.response.status === 401) {
+            setCredentialsErr(true);
+          } else if (error.response.status === 404) {
+            setLoginError({ value: true, message: "Utilisateur non trouvé" });
+          } else if (error.response.status === 500) {
+            setLoginError({ value: true, message: "Erreur serveur, réessayez plus tard" });
+          }
+        } else {
+          console.log(error);
+          alert("An unexpected error occurred. Please try again.");
+        }
       });
   };
+  
   //------ validations -------
   const registerOptions = {
     email: {
@@ -61,7 +67,10 @@ export default function LoginForm() {
         <h1>Se connecter</h1>
         <h6>Connectez-vous à votre compte</h6>
       </div>
-      <form onSubmit={handleSubmit(handleLogin, handleError)}>
+      <form onSubmit={handleSubmit(handleLogin, handleError)}>    
+        {credentialsErr && (<div className="credentialsErr">
+          <p>Email ou Mot de Passe Incorrect. Veuillez corriger.</p>
+        </div>)}
         <div className="input-component">
           <label htmlFor="email">Email:</label>
           <input

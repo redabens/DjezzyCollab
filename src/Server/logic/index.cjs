@@ -62,22 +62,22 @@ const sftpconfig = {
 };
 
 // connect to ldap server
-const connectToLdap = () => {
-  return new Promise((resolve, reject) => {
-    client.bind(
-      "cn=admin,dc=djezzy-collab,dc=com",
-      "your-admin-password",
-      (err) => {
-        if (err) {
-          reject("Failed to connect to LDAP server: " + err);
-        } else {
-          console.log("Connected to LDAP server");
-          resolve();
-        }
-      }
-    );
-  });
-};
+// const connectToLdap = () => {
+//   return new Promise((resolve, reject) => {
+//     client.bind(
+//       "cn=admin,dc=djezzy-collab,dc=com",
+//       "Redabens2004..",
+//       (err) => {
+//         if (err) {
+//           reject("Failed to connect to LDAP server: " + err);
+//         } else {
+//           console.log("Connected to LDAP server");
+//           resolve();
+//         }
+//       }
+//     );
+//   });
+// };
 
 async function connectSFTP() {
   try {
@@ -144,19 +144,20 @@ async function verifyExistance(file, userDir, remotePath, i) {
 // pour connecter les utilisateurs
 app.post("/login", async (req, res) => {
   try {
-      const { email, password } = req.body;
+    const { email, password } = req.body;
 
-      const credentials = authenticate(email,password);
-      if (credentials) {
-        const user = await User.findOne({
-        email: req.body.email,
-      });
-      if (!user) return res.status(404).send("user not found");
+    const credentials = await authenticate(email, password);
+    console.log(credentials);
+
+    if (credentials) {
+      const user = await User.findOne({ email: req.body.email });
+      if (!user) return res.status(404).send({ error: "User not found" });
+
       const token = jwt.sign({ _id: user._id }, secret, { expiresIn: 86400 });
-      res.status(200).send({ token });
-      } else {
-        res.status(401).send("Invalid credentials");
-      }
+      return res.status(200).send({ token });
+    } else {
+      return res.status(401).send({ error: "Invalid credentials" });
+    }
     // const user = await User.findOne({
     //   email: req.body.email,
     // });
@@ -170,9 +171,11 @@ app.post("/login", async (req, res) => {
     // const token = jwt.sign({ _id: user._id }, secret, { expiresIn: 86400 });
     // res.status(200).send({ token });
   } catch (error) {
-    res.status(500).send("Erro logging in");
+    console.error(error);
+    return res.status(500).send({ error: "Error logging in" });
   }
 });
+
 // recuperer les paths de la database
 app.get("/creation-compte", async (req, res) => {
   try {

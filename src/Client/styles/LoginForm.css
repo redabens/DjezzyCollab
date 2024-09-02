@@ -78,7 +78,16 @@ small {
   color: red;
   font-size: 0.7em;
 }
-
+.credentialsErr{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #a13c3c;
+  border-radius: 3px;
+  color: white;
+  padding: 10px;
+  font-size: 0.8em;
+}
 .mdps-oublie p {
   display: flex;
   justify-content: end;

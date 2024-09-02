@@ -1,17 +1,49 @@
 var LdapClient = require("ldapjs-client");
 var client = new LdapClient({ url: "ldap://192.168.157.1:389" });
+//connect to the server ldap
+async function connectLDAP() {
+  try {
+    // Bind to the LDAP server
+    // await client.bind("cn=admin,dc=djezzy-collab,dc=com", "sara2004"); // Replace with your admin DN and password
+    await client.bind("cn=admin,dc=djezzy-collab,dc=com", "Redabens2004..");
+    console.log("Connected to LDAP server");
+  } catch (err) {
+    console.log("LDAP connection error:", err);
+  }
+}
 
+connectLDAP();
+
+async function disconnectLDAP() {
+  try {
+    await client.unbind();
+    console.log("Disconnected from LDAP server");
+  } catch (err) {
+    console.log("LDAP disconnection error:", err);
+  }
+}
+
+// authenticate user
 async function authenticate(username, password) {
-  const dn = `ou=users,dc=djezzy-collab,dc=com`;
-  console.log(password);
-  await client.bind("cn=admin,dc=djezzy-collab,dc=com", "Redabens2004..");
-  searchOptions = {
-    filter:  `(&(uid=${username})(userPassword=${password}))`,
-    scope: "sub", // We only need to check the base entry itself
-    attributes: ["uid","userPassword"], // We only care about the DN
-  };
-  const ouExists = await ensureOUExists(dn,searchOptions);
-  return ouExists;
+  try {
+    const dn = `ou=users,dc=djezzy-collab,dc=com`;
+    searchOptions = {
+      filter:  `(&(uid=${username})(userPassword=${password}))`,
+      scope: "sub", // We only need to check the base entry itself
+      attributes: ["uid","userPassword"], // We only care about the DN
+    };
+    const result = await client.search(dn, searchOptions);
+    if (result.length > 0) {
+      console.log("Entry found:", result[0]);
+      return true;  // Utilisateur authentifié
+    } else {
+      console.log("No entries found.");
+      return false; // Aucune entrée trouvée
+    }
+    // return result;
+  }catch(err){
+    console.log("error");
+  }
 }
 // verify if ou existe in root
 async function ensureOUExists(dn,searchOptions) {
@@ -19,7 +51,7 @@ async function ensureOUExists(dn,searchOptions) {
     const result = await client.search(dn, searchOptions);
     // If the search returns results, the OU exists
     if (result.length > 0) {
-      return result;
+      return true;
     } else {
       return false;
     }
@@ -48,9 +80,6 @@ async function addUser(userData, callback) {
   const userDN = `uid=${userData.email},${ouDN}`; // email instead of username
 
   try {
-    // Bind to the LDAP server
-    // await client.bind("cn=admin,dc=djezzy-collab,dc=com", "sara2004"); // Replace with your admin DN and password
-    await client.bind("cn=admin,dc=djezzy-collab,dc=com", "Redabens2004.."); // Replace with your admin DN and password
     const searchOptions = {
       scope: "base", // We only need to check the base entry itself
       attributes: ["dn"], // We only care about the DN
@@ -90,7 +119,6 @@ async function addUser(userData, callback) {
 async function deleteUserFromLDAP(email, callback) {
   const dn = `uid=${email},ou=users,dc=djezzy-collab,dc=com`;
   try {
-    await client.bind("cn=admin,dc=djezzy-collab,dc=com", LDAPmdps);
     await client.del(dn);
     callback(true);
   } catch (err) {
@@ -98,4 +126,9 @@ async function deleteUserFromLDAP(email, callback) {
     callback(false, err);
   }
 }
+process.on("SIGINT", () => {
+  disconnectLDAP().then(() => {
+    process.exit();
+  });
+});
 module.exports = { authenticate, addUser, deleteUserFromLDAP };
