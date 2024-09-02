@@ -24,7 +24,7 @@
 }
 .my-form h6 {
   font-weight: 500;
-  font-size: 0.7em;
+  font-size: 0.8em;
   color: #6a6a6a;
   font-family: "Poppins", sans-serif;
   user-select: none; /* Empêche la sélection du texte */
@@ -77,8 +77,21 @@ form button {
 small {
   color: red;
   font-size: 0.7em;
+  user-select: none;
 }
-
+.credentialsErr{
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+  user-select: none;
+  /* background-color: #a13c3c;
+  border-radius: 3px; */
+  color: red;
+  padding: 10px;
+  font-size: 0.75em;
+ 
+}
 .mdps-oublie p {
   display: flex;
   justify-content: end;
@@ -86,4 +99,5 @@ small {
   text-decoration: underline;
   color: #a13c3c;
   padding-top: 10px;
+  user-select: none;
 }

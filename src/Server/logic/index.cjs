@@ -62,22 +62,22 @@ const sftpconfig = {
 // };
 
 // connect to ldap server
-const connectToLdap = () => {
-  return new Promise((resolve, reject) => {
-    client.bind(
-      "cn=admin,dc=djezzy-collab,dc=com",
-      "your-admin-password",
-      (err) => {
-        if (err) {
-          reject("Failed to connect to LDAP server: " + err);
-        } else {
-          console.log("Connected to LDAP server");
-          resolve();
-        }
-      }
-    );
-  });
-};
+// const connectToLdap = () => {
+//   return new Promise((resolve, reject) => {
+//     client.bind(
+//       "cn=admin,dc=djezzy-collab,dc=com",
+//       "Redabens2004..",
+//       (err) => {
+//         if (err) {
+//           reject("Failed to connect to LDAP server: " + err);
+//         } else {
+//           console.log("Connected to LDAP server");
+//           resolve();
+//         }
+//       }
+//     );
+//   });
+// };
 
 async function connectSFTP() {
   try {
@@ -144,40 +144,33 @@ async function verifyExistance(file, userDir, remotePath, i) {
 // pour connecter les utilisateurs
 app.post("/login", async (req, res) => {
   try {
-    //   const { email, password } = req.body;
+    const { email, password } = req.body;
+    const credentials = await authenticate(email, password);
+    console.log(credentials);
 
-    //   // Extraire le nom d'utilisateur du courriel si nécessaire
-    //   const username = email.split('@')[0]; // Adaptez cette ligne selon la structure de vos DN LDAP
+    if (credentials) {
+      const user = await User.findOne({
+        email: req.body.email,
+      });
+      if (!user) return res.status(404).send("user not found");
+      const validPassword = await bcrypt.compare(
+        req.body.password,
+        user.password
+      );
+      if (!validPassword)
+        return res.status(401).send("the password is incorrect");
 
-    //   authenticate(username, bcrypt.hashSync(password,8), (success) => {
-    //     if (success) {
-    // const user = await User.findOne({
-    // email: req.body.email,
-    // });
-    // if (!user) return res.status(404).send("user not found");
-    //       const token = jwt.sign({ _id: user._id }, secret, { expiresIn: 86400 });
-    //       res.status(200).send({ token });
-    //     } else {
-    //       res.status(401).send("Invalid credentials");
-    //     }
-    //   });
-    // });
-    const user = await User.findOne({
-      email: req.body.email,
-    });
-    if (!user) return res.status(404).send("user not found");
-    const validPassword = await bcrypt.compare(
-      req.body.password,
-      user.password
-    );
-    if (!validPassword)
-      return res.status(401).send("the password is incorrect");
-    const token = jwt.sign({ _id: user._id }, secret, { expiresIn: 86400 });
-    res.status(200).send({ token });
+      const token = jwt.sign({ _id: user._id }, secret, { expiresIn: 86400 });
+      return res.status(200).send({ token });
+    } else {
+      return res.status(401).send({ error: "Invalid credentials" });
+    }
   } catch (error) {
-    res.status(500).send("Erro logging in");
+    console.error(error);
+    return res.status(500).send({ error: "Error logging in" });
   }
 });
+
 // recuperer les paths de la database
 app.get("/creation-compte", async (req, res) => {
   try {
@@ -251,17 +244,15 @@ app.post("/creation-compte", async (req, res) => {
 //       if (success) {
 //         console.log('User created successfully in LDAP');
 //       } else {
-//         console.error('Error creating user in LDAP:', err);
+//         console.log('Error creating user in LDAP:', err);
 //       }
 //     });
 //   } catch (error) {
 //     console.error('Error creating user:', error);
-//   } finally {
-//     mongoose.connection.close();  // Close the connection after the user is created
 //   }
 // };
 
-// // Call the function to create the user
+// Call the function to create the user
 // createManualUser(utilisateur1);
 // createManualUser(utilisateur2);
 

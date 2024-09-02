@@ -1,27 +1,66 @@
 var LdapClient = require("ldapjs-client");
-var client = new LdapClient({ url: "ldap://localhost:389" });
-
-const LDAPmdps = "sara2004";//"Redabens2004.."
-
-function authenticate(username, password, callback) {
-  const dn = `uid=${username},ou=users,dc=djezzy-collab,dc=com`;
-
-  client.bind(dn, password, (err) => {
-    if (err) {
-      callback(false); // Authentication failed
-    } else {
-      callback(true); // Authentication succeeded
-    }
-  });
-}
-// verify if ou existe in root
-async function ensureOUExists(dn) {
+const bcrypt = require("bcryptjs");
+var client = new LdapClient({ url: "ldap://localhost:389" }); //192.168.157.1
+//connect to the server ldap
+async function connectLDAP() {
   try {
-    const searchOptions = {
-      scope: "base", // We only need to check the base entry itself
-      attributes: ["dn"], // We only care about the DN
+    // Bind to the LDAP server
+    await client.bind("cn=admin,dc=djezzy-collab,dc=com", "sara2004"); // Replace with your admin DN and password
+    //await client.bind("cn=admin,dc=djezzy-collab,dc=com", "Redabens2004..");
+    console.log("Connected to LDAP server");
+  } catch (err) {
+    console.log("LDAP connection error:", err);
+  }
+}
+
+connectLDAP();
+
+async function disconnectLDAP() {
+  try {
+    await client.unbind();
+    console.log("Disconnected from LDAP server");
+  } catch (err) {
+    console.log("LDAP disconnection error:", err);
+  }
+}
+
+// authenticate user
+async function authenticate(username, password) {
+  try {
+    const dn = `ou=users,dc=djezzy-collab,dc=com`;
+    searchOptions = {
+      filter: `(&(uid=${username}))`,
+      scope: "sub", // We only need to check the base entry itself
+      attributes: ["uid", "userPassword"], // We only care about the DN
     };
 
+    const result = await client.search(dn, searchOptions);
+    if (result.length > 0) {
+      const user = result[0];
+      console.log("Entry found:", JSON.stringify(user, null, 2));
+      const userPsw = user.userPassword;
+      const isPasswordMatch = await bcrypt.compare(password, userPsw);
+      console.log(isPasswordMatch);
+      if (isPasswordMatch) {
+        console.log("password match correctly in ldap");
+        return true;
+      } else {
+        //icorrect password
+        console.log("password doesnt match the entry's password ");
+        return false;
+      }
+    } else {
+      console.log("No entries found.");
+      return false; // Aucune entrée trouvée
+    }
+    // return result;
+  } catch (err) {
+    console.log("error", err);
+  }
+}
+// verify if ou existe in root
+async function ensureOUExists(dn, searchOptions) {
+  try {
     const result = await client.search(dn, searchOptions);
     // If the search returns results, the OU exists
     if (result.length > 0) {
@@ -52,12 +91,13 @@ async function addUser(userData, callback) {
   const ouDN = "ou=users,dc=djezzy-collab,dc=com";
   const username = userData.email.split("@")[0];
   const userDN = `uid=${userData.email},${ouDN}`; // email instead of username
-
+  connectLDAP();
   try {
-    // Bind to the LDAP server
-    await client.bind("cn=admin,dc=djezzy-collab,dc=com", LDAPmdps); // Replace with your admin DN and password
-
-    const ouExists = await ensureOUExists(ouDN);
+    const searchOptions = {
+      scope: "base", // We only need to check the base entry itself
+      attributes: ["dn"], // We only care about the DN
+    };
+    const ouExists = await ensureOUExists(ouDN, searchOptions);
 
     if (!ouExists) {
       await createOU(ouDN, (success, err) => {
@@ -92,7 +132,6 @@ async function addUser(userData, callback) {
 async function deleteUserFromLDAP(email, callback) {
   const dn = `uid=${email},ou=users,dc=djezzy-collab,dc=com`;
   try {
-    await client.bind("cn=admin,dc=djezzy-collab,dc=com", LDAPmdps);
     await client.del(dn);
     callback(true);
   } catch (err) {
@@ -100,4 +139,9 @@ async function deleteUserFromLDAP(email, callback) {
     callback(false, err);
   }
 }
+process.on("SIGINT", () => {
+  disconnectLDAP().then(() => {
+    process.exit();
+  });
+});
 module.exports = { authenticate, addUser, deleteUserFromLDAP };
