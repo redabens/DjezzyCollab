@@ -1,5 +1,11 @@
-import { RichTreeView } from "@mui/x-tree-view/RichTreeView";
-import CustomTreeItem from "./CustomTreeItem"; // Adjust the import path
+import { useState, useEffect } from "react";
+import "./../styles/GestionRepertoires.css";
+import AddRepoForm from "../components/AddRepoForm";
+import LinearProgress from "@mui/material/LinearProgress";
+import axios from "axios";
+import Box from "@mui/material/Box";
+import { SimpleTreeView } from "@mui/x-tree-view/SimpleTreeView";
+import { TreeItem2 } from "@mui/x-tree-view/TreeItem2";
 
 export default function GestionRepertoires() {
   const [fileTree, setFileTree] = useState([]);
@@ -9,7 +15,8 @@ export default function GestionRepertoires() {
     const fetchFileTree = async () => {
       try {
         const response = await axios.get("http://localhost:3000/tree-files");
-        setFileTree(response.data);
+        const limitedTree = response.data.slice(2, 4); // Limit to the first two directories
+        setFileTree(limitedTree);
         setLoadingFileTree(false);
       } catch (err) {
         console.error("Failed to fetch file tree:", err);
@@ -17,6 +24,22 @@ export default function GestionRepertoires() {
     };
     fetchFileTree();
   }, []);
+
+  const renderTree = (nodes) => (
+    <TreeItem2 key={nodes.id} nodeId={nodes.id} label={nodes.label} onClick={() => handleNodeClick(nodes)}>
+      {Array.isArray(nodes.children)
+        ? nodes.children.map((node) => renderTree(node))
+        : null}
+    </TreeItem2>
+  );
+
+  const handleNodeClick = (node) => {
+    if (node && node.id) {
+      console.log("Selected Repertoire Path:", node.id);
+    } else {
+      console.error("Node or node.id is undefined");
+    }
+  };
 
   return (
     <div className="gestion-rep-page">
@@ -28,14 +51,9 @@ export default function GestionRepertoires() {
         <h3>Répertoires existants:</h3>
         {loadingFileTree && <LinearProgress />}
         <Box className="existant-repos-list">
-          <RichTreeView
-            items={fileTree}
-            slots={{
-              item: (props) => (
-                <CustomTreeItem {...props} item={props.item} />
-              ),
-            }}
-          />
+          <SimpleTreeView>
+            {fileTree.map((treeItem) => renderTree(treeItem))}
+          </SimpleTreeView>
         </Box>
       </div>
     </div>

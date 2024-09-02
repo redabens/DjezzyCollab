@@ -199,7 +199,7 @@ app.post("/creation-compte", async (req, res) => {
       password: bcrypt.hashSync(req.body.userData.password, 8),
       DirPath: req.body.userData.DirPath,
       role: req.body.userData.role,
-    }
+    };
     const newUser = new User(utilisateur);
     const saved = await newUser.save();
     console.log("saved:", saved);
@@ -215,10 +215,7 @@ app.post("/creation-compte", async (req, res) => {
           .status(401)
           .send("Error adding user to LDAP: " + err.message);
       }
-    }
-  );
-
-
+    });
   } catch (error) {
     console.error("Error adding user:", error);
     return res.status(500).send("Error adding user");
@@ -230,20 +227,19 @@ app.post("/creation-compte", async (req, res) => {
 //   lastName: 'Sara Amina',
 //   email: 'ms_iratni@esi.dz',
 //   password: bcrypt.hashSync('sara2004', 8),
-//   DirPath: '/Downloads/public',  
-//   role: 'user',  
+//   DirPath: '/Downloads/public',
+//   role: 'user',
 // };
 // const utilisateur2 = {
 //   firstName: 'Bensemane',
 //   lastName: 'Mohamed Reda',
 //   email: 'reda9bens4@gmail.com',
 //   password: bcrypt.hashSync('Redabens2004..', 8),
-//   DirPath: '/Downloads/public',  
-//   role: 'admin',  
+//   DirPath: '/Downloads/public',
+//   role: 'admin',
 // };
 // const createManualUser = async (utilisateur) => {
 //   try {
-    
 
 //     // Save the user in MongoDB
 //     const newUser = new User(utilisateur);
@@ -268,10 +264,6 @@ app.post("/creation-compte", async (req, res) => {
 // // Call the function to create the user
 // createManualUser(utilisateur1);
 // createManualUser(utilisateur2);
-
-
-
-
 
 //endpoitn to get the user role
 app.get("/user", verifyToken, async (req, res) => {
@@ -508,7 +500,7 @@ const buildFileTree = async (sftp, dirPath) => {
       }
       return tree;
     } else {
-      return null;
+      return null; // for uneccessible directories
     }
   } catch (err) {
     // Skip directories that can't be accessed due to permission issues
