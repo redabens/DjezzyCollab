@@ -38,13 +38,13 @@ export default function Administrateur({
           onClick={handleAdmin}
           className="adminis"
           sx={{
-            minHeight: "20px",
+            minHeight: "16px",
             backgroundColor: state.admin ? "#F8CECE" : null,
             color: "#121212",
             padding: "6px",
             border: "2px solid #f8cece",
             borderRadius: "10px 10px 10px 10px",
-            gap: "1rem",
+            gap: "0.8rem",
             "&:hover": {
               backgroundColor: state.admin ? "#f8cece" : "unset", // Remove hover background
               color: "unset", // Remove hover color change
@@ -71,7 +71,7 @@ export default function Administrateur({
                   variant="div"
                   style={{
                     fontFamily: "Noto Sans, sans-serif",
-                    fontSize: "1.45em",
+                    fontSize: "1.3em",
                     fontWeight: 600,
                     color: "#121212",
                     textDecoration: "none",
@@ -146,7 +146,7 @@ export default function Administrateur({
                       variant="div"
                       style={{
                         fontFamily: "Noto Sans, sans-serif",
-                        fontSize: "1.8em",
+                        fontSize: "1.5em",
                         fontWeight: 500,
                         color: "#121212",
                         textDecoration: "none",
@@ -194,7 +194,7 @@ export default function Administrateur({
                       variant="div"
                       style={{
                         fontFamily: "Noto Sans, sans-serif",
-                        fontSize: "1.8em",
+                        fontSize: "1.5em",
                         fontWeight: 500,
                         color: "#121212",
                         textDecoration: "none",
@@ -242,7 +242,7 @@ export default function Administrateur({
                       variant="div"
                       style={{
                         fontFamily: "Noto Sans, sans-serif",
-                        fontSize: "1.8em",
+                        fontSize: "1.5em",
                         fontWeight: 500,
                         color: "#121212",
                         textDecoration: "none",

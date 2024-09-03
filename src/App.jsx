@@ -32,7 +32,7 @@ const router = createBrowserRouter(
         <Route path="/notifications" element={<NotificationsPage />} />
         <Route path="/upload" element={<UploadPage />} />
         <Route path="/aide" element={<AidePage />} />
-        <Route path="/admin" element={<AdminPage />} />
+        {/* <Route path="/admin" element={<AdminPage />} /> */}
         <Route
           path="/admin/gestion-repertoires"
           element={<GestionRepertoires />}

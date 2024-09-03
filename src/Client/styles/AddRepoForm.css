@@ -8,10 +8,9 @@
   justify-content: start;
   align-items: center;
   gap: 6%;
-  
 }
 .form-area {
-  width: 80%;
+  width: 100%;
   height: 100%;
   display: flex;
   flex-direction: row;
@@ -19,7 +18,7 @@
   padding-left: 4%;
   border: 1px solid rgb(188, 188, 188);
   border-radius: 8px;
-  gap: 70px;
+  gap: 50px;
 }
 .ajouterBtn {
   display: flex;
@@ -40,12 +39,38 @@
 .add-repo-component {
   display: flex;
   flex-direction: column;
-  width: 60%;
+  width: 80%;
   padding-top: 10px;
   padding-bottom: 10px;
 }
-.add-repo-component input {
+.input-area {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
   border: 1.3px solid rgb(201, 201, 201);
+  border-radius: 4px;
+  padding-left: 10px;
+  padding-right: 10px;
+  font-family: "Montserrat", sans-serif !important;
+  font-size: 0.75em;
+  height: 30px;
+  width: 100%;
+  align-items: center;
+}
+.input-area p {
+  font-size: small;
+}
+.delimiteur {
+  height: 50%;
+  width: 0.8px;
+  background-color: #6a6a6a;
+}
+.input-area input {
+  outline: none;
+  border: none;
+  font-family: "Montserrat", sans-serif !important;
+  font-size: 1em;
+  /* border: 1.3px solid rgb(201, 201, 201);
   background-color: white;
   border-radius: 4px;
   height: 30px;
@@ -53,7 +78,7 @@
   padding-left: 10px;
   padding-right: 10px;
   font-family: "Montserrat", sans-serif !important;
-  font-size: 0.75em;
+  font-size: 0.75em; */
 }
 .add-repo-component input:focus {
   outline: none;

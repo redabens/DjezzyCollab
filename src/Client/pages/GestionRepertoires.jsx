@@ -8,6 +8,7 @@ import { SimpleTreeView } from "@mui/x-tree-view/SimpleTreeView";
 import { TreeItem2 } from "@mui/x-tree-view/TreeItem2";
 
 export default function GestionRepertoires() {
+  const [formPath, setFormPath] = useState("/");
   const [fileTree, setFileTree] = useState([]);
   const [loadingFileTree, setLoadingFileTree] = useState(true);
 
@@ -15,8 +16,7 @@ export default function GestionRepertoires() {
     const fetchFileTree = async () => {
       try {
         const response = await axios.get("http://localhost:3000/tree-files");
-        const limitedTree = response.data.slice(2, 4); // Limit to the first two directories
-        setFileTree(limitedTree);
+        setFileTree(response.data);
         setLoadingFileTree(false);
       } catch (err) {
         console.error("Failed to fetch file tree:", err);
@@ -24,28 +24,47 @@ export default function GestionRepertoires() {
     };
     fetchFileTree();
   }, []);
+  
+  const renitPath = ()=>{
+    setFormPath("/");
+  }
 
   const renderTree = (nodes) => (
-    <TreeItem2 key={nodes.id} nodeId={nodes.id} label={nodes.label} onClick={() => handleNodeClick(nodes)}>
+    <TreeItem2
+      key={nodes.id}
+      itemId={nodes.id}
+      label={
+        nodes.type === "d" ? (
+          <span>
+            📁 {nodes.label}
+          </span>
+        ) : (
+          <span >
+            📄 {nodes.label}
+          </span>
+        )
+      }
+      onClick={(event) => handleNodeClick(event, nodes)}
+    >
       {Array.isArray(nodes.children)
         ? nodes.children.map((node) => renderTree(node))
         : null}
     </TreeItem2>
   );
-
-  const handleNodeClick = (node) => {
-    if (node && node.id) {
-      console.log("Selected Repertoire Path:", node.id);
+  const handleNodeClick = (event, node) => {
+    event.stopPropagation();
+    if (node && node.id && node.type === "d") {
+      console.log("Selected Repertoire Path iiiiiis:", node.id);
+      setFormPath(node.id);
     } else {
       console.error("Node or node.id is undefined");
     }
   };
-
   return (
     <div className="gestion-rep-page">
       <h1>Gestion des répertoires</h1>
       <div className="add-rep-form">
-        <AddRepoForm />
+        <AddRepoForm path={formPath} renitPath={renitPath} />
       </div>
       <div className="existant-repos-box">
         <h3>Répertoires existants:</h3>

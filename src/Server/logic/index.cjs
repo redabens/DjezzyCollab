@@ -402,41 +402,52 @@ app.get("/download", verifyToken, async (req, res) => {
 });
 app.post("/paths/create", verifyToken, async (req, res) => {
   console.log("POST /paths/create hit");
-  const { pathName } = req.body;
-  console.log("paaaaath:" + pathName);
+  const {pathName } = req.body;
+  console.log("Path:", pathName);
+
   try {
+    // Check if the user ID is valid
     console.log("User ID: ==>", req.userId);
     if (!req.userId) {
       return res.status(401).send("User ID not found");
     }
+
+    // Find the user by ID
     const user = await User.findById(req.userId);
     if (!user) {
-      console.log("user not found POST /paths/create");
+      console.log("User not found in POST /paths/create");
       return res.status(404).json({ message: "User not found" });
     }
-    let restPath = await sftp.cwd();
-    console.log(restPath);
-    restPath = restPath.slice(1, restPath.length);
-    console.log(restPath);
-    const fullPath = path.join(restPath, pathName);
-    // Create the directory on the SFTP server
-    const directoryExists = await sftp.exists(fullPath);
-    if (!directoryExists) {
-      await sftp.mkdir(fullPath, true);
-      console.log(`Directory created: ${fullPath}`);
-    } else {
-      return res.status(400).json({ message: "Directory already exists" });
+
+    // Format the full path
+    const fullPath = pathName.slice(1, pathName.length);
+    console.log("Full path:", fullPath);
+
+    const existingPath = await Path.findOne({ path: fullPath });
+    if (existingPath) {
+      console.log("Path already exists in the database:", fullPath);
+      return res.status(400).json({ message: "Path already exists" });
     }
+
+    // Create the directory on the SFTP server (if necessary)
+    // Uncomment and implement the SFTP logic if needed
+    // const directoryExists = await sftp.exists(fullPath);
+    // if (!directoryExists) {
+    //   await sftp.mkdir(fullPath, true);
+    //   console.log(`Directory created: ${fullPath}`);
+    // } else {
+    //   return res.status(400).json({ message: "Directory already exists" });
+    // }
 
     const newPath = new Path({
       path: fullPath,
       createdBy: req.userId,
     });
     await newPath.save();
+
     console.log("Path saved in MongoDB:", newPath);
-    res
-      .status(201)
-      .json({ message: "Directory created and path saved", path: newPath });
+    res.status(201).json({ message: "Directory created and path saved", path: newPath });
+
   } catch (error) {
     console.error("Error creating path:", error);
     res.status(500).json({ message: "Internal server error" });
@@ -469,23 +480,25 @@ const buildFileTree = async (sftp, dirPath) => {
       for (let item of items) {
         if (item.type === "d") {
           let children = await buildFileTree(sftp, `${dirPath}/${item.name}`);
-          if (!children) {
-            children = [];
-            // Add dummy child to ensure directory can be expanded
-            children.push({
-              id: `${dirPath}/${item.name}/dummy`,
-              label: "",
-            });
-          }
+          // if (!children) {
+          //   children = [];
+          //   // Add dummy child to ensure directory can be expanded
+          //   children.push({
+          //     id: `${dirPath}/${item.name}/dummy`,
+          //     label: "",
+          //   });
+          // }
           tree.push({
             id: `${dirPath}/${item.name}`,
             label: item.name,
+            type: "d",
             children,
           });
         } else {
           tree.push({
             id: `${dirPath}/${item.name}`,
             label: item.name,
+            type: "f",
           });
         }
       }
