@@ -35,7 +35,7 @@
   font-size: 1em;
 }
 .existant-repos-list {
-  max-height: 30%;
+  max-height: 350px;
   overflow-y: scroll;
   border: 1px solid rgb(214, 214, 214);
   border-radius: 10px;

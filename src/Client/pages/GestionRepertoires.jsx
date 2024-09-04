@@ -15,7 +15,7 @@ export default function GestionRepertoires() {
     const fetchFileTree = async () => {
       try {
         const response = await axios.get("http://localhost:3000/tree-files");
-        const limitedTree = response.data.slice(2, 4); // Limit to the first two directories
+        const limitedTree = response.data; // Limit to the first two directories
         setFileTree(limitedTree);
         setLoadingFileTree(false);
       } catch (err) {
@@ -26,7 +26,7 @@ export default function GestionRepertoires() {
   }, []);
 
   const renderTree = (nodes) => (
-    <TreeItem2 key={nodes.id} nodeId={nodes.id} label={nodes.label} onClick={() => handleNodeClick(nodes)}>
+    <TreeItem2 key={nodes.id} itemId={nodes.id} label={nodes.label} onClick={() => handleNodeClick(nodes)}>
       {Array.isArray(nodes.children)
         ? nodes.children.map((node) => renderTree(node))
         : null}

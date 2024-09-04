@@ -69,7 +69,7 @@ export default function LoginForm() {
       </div>
       <form onSubmit={handleSubmit(handleLogin, handleError)}>    
         {credentialsErr && (<div className="credentialsErr">
-          <p>Email ou mot de passe incorrect. Veuillez réessayez.</p>
+          <p>Email ou mot de passe incorrect. Veuillez réessayez!</p>
         </div>)}
         <div className="input-component">
           <label htmlFor="email">Email:</label>

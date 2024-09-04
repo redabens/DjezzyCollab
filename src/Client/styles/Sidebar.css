@@ -27,7 +27,7 @@
 .sidebar-close {
   border-top: 1px solid rgba(161, 60, 60, 10%);
   border-right: 1px solid rgba(161, 60, 60, 10%);
-  background-color: #fff7f7;
+  background-color: #fff7f7;/*#fff7f7*/
   /* background-color: rgba(248, 206, 206, 35%); */
   border-top-right-radius: 10px;
   width: 4%;
