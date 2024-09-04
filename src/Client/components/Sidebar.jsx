@@ -73,41 +73,40 @@ function Sidebar({ open, handleToggle, params }) {
       },
       id: uuid(),
     },
+    {
+      path: "/admin",
+      name: "Administrateur",
+      icon: (
+        <img
+          className="admin"
+          src="./../../src/assets/security-user.svg"
+          alt="logo_admin"
+          style={
+            open
+              ? { width: "20px", height: "20px" }
+              : { width: "23px", height: "23px", paddingLeft: "2px" }
+          }
+        />
+      ),
+      func: function () {
+        setNavBar((prev) => ({
+          upload: false,
+          download: false,
+          admin: !prev.admin,
+          gestRep: false,
+          gestUtils: false,
+          creatCompt: false,
+          notifs: false,
+          params: false,
+          aide: false,
+        }));
+      },
+      couleur: function () {
+        return navbar.admin;
+      },
+      id: uuid(),
+    },
   ];
-  const adminElement = {
-    path: "/admin",
-    name: "Administrateur",
-    icon: (
-      <img
-        className="admin"
-        src="./../../src/assets/security-user.svg"
-        alt="logo_admin"
-        style={
-          open
-            ? { width: "20px", height: "20px" }
-            : { width: "23px", height: "23px", paddingLeft: "2px" }
-        }
-      />
-    ),
-    func: function () {
-      setNavBar((prev) => ({
-        upload: false,
-        download: false,
-        admin: !prev.admin,
-        gestRep: false,
-        gestUtils: false,
-        creatCompt: false,
-        notifs: false,
-        params: false,
-        aide: false,
-      }));
-    },
-    couleur: function () {
-      return navbar.admin;
-    },
-    id: uuid(),
-  };
-
   const menuItemDown = [
     {
       path: "/notifications",
@@ -247,7 +246,55 @@ function Sidebar({ open, handleToggle, params }) {
                     backgroundColor:
                       !open && item.couleur() ? "#f8cece" : "null",
                   }}
-                ></NavLink>
+                >
+                  {open ? (
+                    <Administrateur
+                      state={navbar}
+                      handleAdmin={item.func}
+                      handleGestRep={() => {
+                        setNavBar((prev) => ({
+                          upload: false,
+                          download: false,
+                          admin: true,
+                          gestRep: true,
+                          gestUtils: false,
+                          creatCompt: false,
+                          notifs: false,
+                          params: false,
+                          aide: false,
+                        }));
+                      }}
+                      handleGestUtils={() => {
+                        setNavBar((prev) => ({
+                          upload: false,
+                          download: false,
+                          admin: true,
+                          gestRep: false,
+                          gestUtils: true,
+                          creatCompt: false,
+                          notifs: false,
+                          params: false,
+                          aide: false,
+                        }));
+                      }}
+                      handleCreatCompte={() => {
+                        setNavBar((prev) => ({
+                          upload: false,
+                          download: false,
+                          admin: true,
+                          gestRep: false,
+                          gestUtils: false,
+                          creatCompt: true,
+                          notifs: false,
+                          params: false,
+                          aide: false,
+                        }));
+                      }}
+                    />
+                  ) : (
+                    <div className="iconUp">{item.icon}</div>
+                  )}
+                </NavLink>
               ) : (
                 <NavLink
                   to={item.path}
@@ -264,56 +311,6 @@ function Sidebar({ open, handleToggle, params }) {
                 </NavLink>
               );
             })}
-
-            {open ? (
-              <div className="adminElement">
-                <Administrateur
-                  state={navbar}
-                  handleAdmin={adminElement.func}
-                  handleGestRep={() => {
-                    setNavBar((prev) => ({
-                      upload: false,
-                      download: false,
-                      admin: true,
-                      gestRep: true,
-                      gestUtils: false,
-                      creatCompt: false,
-                      notifs: false,
-                      params: false,
-                      aide: false,
-                    }));
-                  }}
-                  handleGestUtils={() => {
-                    setNavBar((prev) => ({
-                      upload: false,
-                      download: false,
-                      admin: true,
-                      gestRep: false,
-                      gestUtils: true,
-                      creatCompt: false,
-                      notifs: false,
-                      params: false,
-                      aide: false,
-                    }));
-                  }}
-                  handleCreatCompte={() => {
-                    setNavBar((prev) => ({
-                      upload: false,
-                      download: false,
-                      admin: true,
-                      gestRep: false,
-                      gestUtils: false,
-                      creatCompt: true,
-                      notifs: false,
-                      params: false,
-                      aide: false,
-                    }));
-                  }}
-                />
-              </div>
-            ) : (
-              <div className="iconUp">{adminElement.icon}</div>
-            )}
           </div>
 
           <div className="optionsDown" style={{ gap: open ? "1.2vh" : "2vh" }}>
