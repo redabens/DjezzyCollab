@@ -17,14 +17,18 @@ function DownloadPage() {
         if (res.status === 200) {
           console.log(res.data.files);
           setDownloads(res.data.files);
-        } else if (res.status === 401) return alert("User Id not Found");
-        else if (res.status === 404) return alert("User not found");
-        else if (res.status === 415) return alert("Directory not found");
-        else if (res.status === 500)
-          return alert("Failed to upload due to server");
+        }
       })
       .catch((error) => {
-        alert("Error Donwloading files");
+        if(error.response){
+          if (res.status === 401) return alert("User Id not Found");
+          else if (res.status === 404) return alert("User not found");
+          else if (res.status === 415) return alert("Directory not found");
+          else if (res.status === 500) return alert("Failed to upload due to server");
+        } else {
+          console.log(error);
+          alert("An unexpected error occurred. Please try again.");
+        }
       });
   }, []);
   return (

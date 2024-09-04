@@ -20,14 +20,23 @@ const DropFileInput = (props) => {
   const onDrop = (e) => {
     wrapperRef.current.classList.remove("dragover");
   };
+  const [sizeError,setSizeError] = useState(false);
   const [fileList, setFileList] = useState([]);
   const [uploadedFileList, setUploadedFileList] = useState([]);
+  // const [nombre,setNombre] = useState({uploading:0,uploaded:0});
   const onFileDrop = (e) => {
+    setSizeError(false);
+    const maxSize = 25 * 1024 * 1024; // Limite de taille de fichier : 25MB
     const newFile = e.target.files;
+    console.log(newFile);
     if (newFile) {
       const updatedList = [...fileList];
     for (let i = 0; i < newFile.length; i++) {
-      updatedList.push({ id: uuid(), file: newFile[i], isUploaded: false });
+      if (newFile[i].size > maxSize) {
+        setSizeError(true);
+      } else{
+        updatedList.push({ id: uuid(), file: newFile[i], isUploaded: false });
+      }
     }
       setFileList(updatedList);
       props.onFileChange(updatedList);
@@ -72,18 +81,21 @@ const DropFileInput = (props) => {
         if(res.status === 200) { 
           navigate('/upload');
         }
-        else if(res.status === 401) return alert('User Id not Found');
-        else if(res.status === 404) return alert('User not found');
-        else if(res.status === 500) return alert('Failed to upload due to server');
-    }).catch(error=>{
-      alert('Error uploading files');
-      navigate('/login');
-      console.log(error);
-    })
+    }).catch((error) => {
+      if(error.response){
+        if (res.status === 401) return alert("User Id not Found");
+        else if (res.status === 404) return alert("User not found");
+        // else if (res.status === 415) return alert("Directory not found");
+        else if (res.status === 500) return alert("Failed to upload due to server");
+      } else {
+        console.log(error);
+        alert("An unexpected error occurred. Please try again.");
+      }
+    });
   }
   return (
     <form className="dropfile" onSubmit={SendFiles}>
-      <div className="drop-file">
+      <div className="drop-file" style={{gap: sizeError? "5px": "20px"}}>
         <div
           ref={wrapperRef}
           onDragEnter={() => {
@@ -107,18 +119,18 @@ const DropFileInput = (props) => {
               Drag & Drop files or <span>Browse</span>
             </p>
             <p style={{ fontSize: "10px", color: "gray", marginTop: "10px" }}>
-              Supported formates: JPEG, PNG, GIF, MP4, PDF, PSD, AI, Word, PPT
+              Supported formates: JPEG, PNG, SVG, GIF, MP4, PDF, Word, PPT, DAT.
             </p>
           </div>
 
           <input type="file" value="" onChange={onFileDrop} multiple />
         </div>
+        {sizeError && <p style={{color:"red",fontSize:"12px"}}>File size should be less than 25MB</p>}
         <div className="drop-file-preview">
           {fileList.length > 0 ? (
             <div className="drop-file-uploading">
               <p className="file-uploaded_titles">
-                Uploading- {fileList.filter((file) => file.isUploaded).length}/
-                {fileList.length}files
+                Uploading
               </p>
               <div
                 className="drop-file-uploading_items"
@@ -203,6 +215,7 @@ const DropFileInput = (props) => {
                     <div
                       className="drop-file-uploaded_item_right"
                       onClick={() => {
+                        FileListRemove(file.id);
                         uploadedFileListRemove(file.id);
                       }}
                     >
