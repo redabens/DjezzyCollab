@@ -12,7 +12,6 @@ export default function CreationUser() {
     reset,
     formState: { errors },
   } = useForm();
-  const list = ["/Downloads/public", "/Users/Managers"];
   const roleList = [ "user","admin", "download", "upload"];
   const [pathList, setPathList] = useState([]);
   const [role, setRole] = useState("user");

@@ -73,24 +73,32 @@
 }
 .users-box {
   width: 90%;
-  height: 100%;
+  height: 60vh;
+  display: flex;
+  flex-direction: column;
   /* border: 2px solid rgb(255, 199, 14); */
 }
 .users {
-  max-height: 64%;
+  max-height: 60vh;
   overflow-y: scroll;
 }
 .usersUmpty {
-  height: 400px;
-  width: 100%;
+ height: 60vh;
+ 
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   font-size: 0.9em;
   color: grey;
+
+}
+.aucun-user-text{
+  text-align: center;
+  font-size: 0.9em;
 }
 .popup {
-/* background-color: rgba(0, 0, 0, 0.5);*/
+  /* background-color: rgba(0, 0, 0, 0.5);*/
   position: absolute;
   top: 0;
   left: 0;
@@ -101,4 +109,3 @@
   align-items: center;
   border-radius: 8px;
 }
-

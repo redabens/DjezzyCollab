@@ -47,6 +47,7 @@
   font-weight: 600;
   margin: 0;
   color: #212129;
+  width: 90%;
 }
 .btn-dialog-close {
   position: relative;
@@ -84,7 +85,7 @@
   justify-content: center;
 }
 .dialog-img-body img {
-  width: 250px;
+  width: 400px;
 }
 .dialog-message {
   font-size: 15px;

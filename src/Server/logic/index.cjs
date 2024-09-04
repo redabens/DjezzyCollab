@@ -400,6 +400,7 @@ app.get("/download", verifyToken, async (req, res) => {
     console.log("Erreur de requete" + err);
   }
 });
+
 app.post("/paths/create", verifyToken, async (req, res) => {
   console.log("POST /paths/create hit");
   const {pathName } = req.body;
@@ -411,7 +412,7 @@ app.post("/paths/create", verifyToken, async (req, res) => {
     if (!req.userId) {
       return res.status(401).send("User ID not found");
     }
-
+    
     // Find the user by ID
     const user = await User.findById(req.userId);
     if (!user) {

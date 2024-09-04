@@ -19,7 +19,8 @@ export default function LoginForm() {
   const onSubmit = (data) => console.log(data);
   const handleError = (errors) => {};
   const handleLogin = () => {
-    axios.post("http://localhost:3000/login", {
+    axios
+      .post("http://localhost:3000/login", {
         email: watch("email"),
         password: watch("password"),
       })
@@ -38,7 +39,10 @@ export default function LoginForm() {
           } else if (error.response.status === 404) {
             setLoginError({ value: true, message: "Utilisateur non trouvé" });
           } else if (error.response.status === 500) {
-            setLoginError({ value: true, message: "Erreur serveur, réessayez plus tard" });
+            setLoginError({
+              value: true,
+              message: "Erreur serveur, réessayez plus tard",
+            });
           }
         } else {
           console.log(error);
@@ -46,7 +50,7 @@ export default function LoginForm() {
         }
       });
   };
-  
+
   //------ validations -------
   const registerOptions = {
     email: {
@@ -67,10 +71,12 @@ export default function LoginForm() {
         <h1>Se connecter</h1>
         <h6>Connectez-vous à votre compte</h6>
       </div>
-      <form onSubmit={handleSubmit(handleLogin, handleError)}>    
-        {credentialsErr && (<div className="credentialsErr">
-          <p>Email ou mot de passe incorrect. Veuillez réessayez.</p>
-        </div>)}
+      <form onSubmit={handleSubmit(handleLogin, handleError)}>
+        {credentialsErr && (
+          <div className="credentialsErr">
+            <p>Email ou mot de passe incorrect. Veuillez réessayez.</p>
+          </div>
+        )}
         <div className="input-component">
           <label htmlFor="email">Email:</label>
           <input
