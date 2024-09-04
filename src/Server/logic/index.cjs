@@ -420,7 +420,7 @@ app.post("/paths/create", verifyToken, async (req, res) => {
     }
 
     // Format the full path
-    const fullPath = pathName.slice(1, pathName.length);
+    const fullPath = pathName;
     console.log("Full path:", fullPath);
 
     const existingPath = await Path.findOne({ path: fullPath });
@@ -472,9 +472,12 @@ async function canReadPath(path) {
 }
 const buildFileTree = async (sftp, dirPath) => {
   try {
-    const access = await canReadPath(dirPath);
+    let restPath = await sftp.cwd();
+    restPath = restPath.slice(1, restPath.length);
+    const Path = path.join(restPath, dirPath);
+    const access = await canReadPath(Path);
     if (access) {
-      const items = await sftp.list(dirPath);
+      const items = await sftp.list(Path);
       const tree = [];
 
       for (let item of items) {
@@ -516,7 +519,7 @@ const buildFileTree = async (sftp, dirPath) => {
 app.get("/tree-files", async (req, res) => {
   try {
     const restPath = await sftp.cwd();
-    const fileTree = await buildFileTree(sftp, restPath);
+    const fileTree = await buildFileTree(sftp, "");
     res.json(fileTree);
   } catch (err) {
     console.error(err);
