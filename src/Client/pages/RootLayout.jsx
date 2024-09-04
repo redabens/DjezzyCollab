@@ -62,8 +62,8 @@ export default function RootLayout() {
         return { ...defaultParams, upload: true };
       case "/download":
         return { ...defaultParams, download: true };
-      // case "/admin":
-      //   return { ...defaultParams, admin: true };
+      case "/admin":
+        return { ...defaultParams, admin: true };
       case "/admin/gestion-repertoires":
         return { ...defaultParams, gestRep: true };
       case "/admin/gestion-utilisateurs":
