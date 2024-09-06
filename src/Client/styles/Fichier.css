@@ -30,7 +30,7 @@
 }
 /****** file displayed in row ******/
 .box-file {
-  width: 90%;
+  width: 95%;
   display: flex;
   flex-direction: row;
   justify-content: space-between;

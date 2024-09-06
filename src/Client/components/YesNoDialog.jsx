@@ -6,10 +6,10 @@ const YesNoDialog = ({ titre, message, image, onConfirmDialog }) => {
         <div className="dialog-header">
           <h2 className="dialog-title">{titre}</h2>
           <button
-            className="btn-dialog-close"
+            className="btn-dialog-close2"
             onClick={() => onConfirmDialog(false)}
           >
-            <i className="bx bx-x"></i>
+            <img src="./../../src/assets/Vector.svg" alt="cancel" />
           </button>
         </div>
         <div className="dialog-body">

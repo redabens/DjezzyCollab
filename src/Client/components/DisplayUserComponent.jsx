@@ -4,7 +4,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import PopupState, { bindTrigger, bindMenu } from "material-ui-popup-state";
 
-export default function DisplayUserComponent({ user, onDelete }) {
+export default function DisplayUserComponent({ user, onDelete, onEdit }) {
   const userName = `${user.firstName} ${user.lastName}`;
 
   // const handleDeleteClick = () => {
@@ -13,6 +13,11 @@ export default function DisplayUserComponent({ user, onDelete }) {
   const handleOndelete = (popupState) => {
     popupState.close();
     onDelete(user._id);
+  };
+
+  const handleOnEdit = (popupState) => {
+    popupState.close();
+    onEdit(user);
   };
 
   return (
@@ -37,7 +42,9 @@ export default function DisplayUserComponent({ user, onDelete }) {
               {...bindTrigger(popupState)}
             />
             <Menu {...bindMenu(popupState)}>
-              <MenuItem onClick={popupState.close}>Modifier</MenuItem>
+              <MenuItem onClick={() => handleOnEdit(popupState)}>
+                Modifier
+              </MenuItem>
               <MenuItem onClick={() => handleOndelete(popupState)}>
                 Supprimer
               </MenuItem>

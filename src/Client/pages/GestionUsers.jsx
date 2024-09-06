@@ -3,12 +3,21 @@ import "./../styles/GestionUsers.css";
 import axios from "axios";
 import DisplayUserComponent from "../components/DisplayUserComponent";
 import YesNoDialog from "../components/YesNoDialog";
+import EditUser from "../components/EditUser";
+import { Fragment } from "react";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import PopupState, { bindTrigger, bindMenu } from "material-ui-popup-state";
 
 export default function GestionUsers() {
   const [query, setQuery] = useState("");
   const [Users, setUsers] = useState([]);
-  const [showDialog, setShowDialog] = useState(false);
   const [userToDelete, setUserToDelete] = useState(null);
+  const [userToEdit, setUserToEdit] = useState(null);
+  const [filterKey, setFilterKey] = useState("Tous les utilisateurs");
+  // dialog boxes
+  const [showDialog, setShowDialog] = useState(false);
+  const [isShowEditUser, setIsShowEditUser] = useState(false);
 
   // Getting users from DB
   useEffect(() => {
@@ -22,8 +31,23 @@ export default function GestionUsers() {
       }
     };
     fetchUsers();
-  }, Users);
+  }, []);
 
+  // filter users fonctionality
+  const applyRoleFilter = (data) => {
+    switch (filterKey) {
+      case "Administrateur":
+        return data.filter((user) => user.role === "admin");
+      case "Download role":
+        return data.filter((user) => user.role === "download");
+      case "Upload role":
+        return data.filter((user) => user.role === "upload");
+      case "Download & upload":
+        return data.filter((user) => user.role === "user");
+      default:
+        return data;
+    }
+  };
   // Search functionality
   const searchKeys = ["firstName", "lastName", "email"];
   const search = (data) => {
@@ -35,7 +59,7 @@ export default function GestionUsers() {
       return pseudoquery.match(regxp);
     });
   };
-  const filteredUsers = search(Users);
+  const filteredUsers = search(applyRoleFilter(Users));
 
   // Handle delete user
   const handleDeleteUser = async (id) => {
@@ -49,6 +73,42 @@ export default function GestionUsers() {
     }
   };
 
+  const handleEditUser = async (
+    userID,
+    firstName,
+    lastName,
+    email,
+    DirPath,
+    role
+  ) => {
+    console.log("handleEditUser hit : " + userID);
+    try {
+      const updatedUserData = {
+        firstName,
+        lastName,
+        email,
+        DirPath,
+        role,
+      };
+
+      const response = await axios.put(
+        `http://localhost:3000/users/${userID}`,
+        updatedUserData
+      );
+
+      setUsers((prevUsers) =>
+        prevUsers.map((user) =>
+          user._id === userID ? response.data.data : user
+        )
+      );
+
+      if (response.status === 200) console.log("User updated successfully");
+    } catch (err) {
+      console.error("Failed to edit user:", err);
+      alert("Failed to edit user");
+    }
+  };
+
   // Show confirmation dialog
   const showDeleteDialog = (userId) => {
     setShowDialog(true);
@@ -59,15 +119,38 @@ export default function GestionUsers() {
     setUserToDelete(userId);
   };
 
+  const showEditUser = (user) => {
+    setIsShowEditUser(true);
+    console.log(
+      "showEditUser hit in gestion users, showEditUser is: ",
+      isShowEditUser
+    );
+    setUserToEdit(user);
+  };
+
   // Handle confirmation from dialog
-  const onConfirmDialog = (confirm) => {
+  const onConfirmDialog = async (confirm) => {
     console.log("onConfirmDialog hit : " + confirm);
     if (confirm && userToDelete) {
-      handleDeleteUser(userToDelete); // the id
+      await handleDeleteUser(userToDelete); // the id
     }
     setShowDialog(false);
   };
 
+  const onConfirmEdit = (
+    confirm,
+    firstName,
+    lastName,
+    email,
+    DirPath,
+    role
+  ) => {
+    console.log("onConfirmEdit hit : " + confirm);
+    if (confirm && userToEdit) {
+      handleEditUser(userToEdit._id, firstName, lastName, email, DirPath, role); // the id
+    }
+    setIsShowEditUser(false);
+  };
   return (
     <div className="gestion-users-page">
       <h2>Gestion des utilisateurs</h2>
@@ -91,13 +174,63 @@ export default function GestionUsers() {
         <div className="users-box">
           <div className="users-tools-rectangle">
             <div className="filter-component">
-              <p>Filtrer</p>
-              <img
-                src="./../../src/assets/filter-square.svg"
-                alt="filtrer_icon"
-                height="20px"
-                width="20px"
-              />
+              <PopupState variant="popover" popupId="demo-popup-menu">
+                {(popupState) => (
+                  <Fragment>
+                    <p style={{ fontSize: "0.9em" }}>{filterKey}</p>
+                    <img
+                      src="./../../src/assets/filter-square.svg"
+                      alt="filtrer_icon"
+                      height="20px"
+                      width="20px"
+                      {...bindTrigger(popupState)}
+                    />
+
+                    <Menu {...bindMenu(popupState)}>
+                      <MenuItem
+                        onClick={() => {
+                          setFilterKey("Tous les utilisateurs");
+                          popupState.close();
+                        }}
+                      >
+                        Tous les utilisateurs
+                      </MenuItem>
+                      <MenuItem
+                        onClick={() => {
+                          setFilterKey("Administrateur");
+                          popupState.close();
+                        }}
+                      >
+                        Administrateur
+                      </MenuItem>
+                      <MenuItem
+                        onClick={() => {
+                          setFilterKey("Download role");
+                          popupState.close();
+                        }}
+                      >
+                        Download role
+                      </MenuItem>
+                      <MenuItem
+                        onClick={() => {
+                          setFilterKey("Upload role");
+                          popupState.close();
+                        }}
+                      >
+                        upload role
+                      </MenuItem>
+                      <MenuItem
+                        onClick={() => {
+                          setFilterKey("Download & upload");
+                          popupState.close();
+                        }}
+                      >
+                        Download & upload
+                      </MenuItem>
+                    </Menu>
+                  </Fragment>
+                )}
+              </PopupState>
             </div>
           </div>
           <div className={filteredUsers.length > 0 ? "users" : "usersEmpty"}>
@@ -107,10 +240,11 @@ export default function GestionUsers() {
                   key={user._id}
                   user={user}
                   onDelete={() => showDeleteDialog(user._id)}
+                  onEdit={() => showEditUser(user)}
                 />
               ))
             ) : (
-              <p>Aucun utilisateur</p>
+              <p className="aucun-user-text">Aucun utilisateur trouvé</p>
             )}
           </div>
         </div>
@@ -123,6 +257,11 @@ export default function GestionUsers() {
             image="./../../src/assets/delete_illustration.svg"
             onConfirmDialog={onConfirmDialog}
           />
+        </div>
+      )}
+      {isShowEditUser && (
+        <div className="popup">
+          <EditUser user={userToEdit} onConfirmEdit={onConfirmEdit} />
         </div>
       )}
     </div>

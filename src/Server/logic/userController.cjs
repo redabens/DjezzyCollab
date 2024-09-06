@@ -75,4 +75,38 @@ const deleteUser = async (req, res) => {
   }
 };
 
-module.exports = { createUser, getAllUsers, deleteUser };
+const updateUser = async (req, res) => {
+  const userId = req.params.id;
+  const data = req.body;
+
+  try {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({
+        status: "error",
+        message: "User not found",
+      });
+    }
+
+    Object.keys(data).forEach((key) => {
+      user[key] = data[key];
+    });
+
+    await user.save();
+    res.status(200).json({
+      status: "success",
+      message: "User updated successfully",
+      data: user,
+    });
+  } catch (err) {
+    console.log("Error updating user: " + err);
+    res.status(500).json({
+      status: "error",
+      message: "Error updating user",
+    });
+  }
+};
+
+
+module.exports = { createUser, getAllUsers, deleteUser, updateUser };

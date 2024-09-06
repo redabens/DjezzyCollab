@@ -46,20 +46,20 @@ const sftp = new SFTPClient();
 // sftp.on("debug", (msg) => {
 //   console.log("DEBUG: " + msg);
 // });
-// const sftpconfig = {
-//   host: "172.25.80.1",
-//   port: "22",
-//   username: "sarair",
-//   password: "sara2004",
-//   // debug: console.log,
-// };
-
 const sftpconfig = {
-  host: "192.168.157.12",
+  host: "172.25.80.1",
   port: "22",
-  username: "redabens",
-  password: "Redabens2004..",
+  username: "sarair",
+  password: "sara2004",
+  // debug: console.log,
 };
+
+// const sftpconfig = {
+//   host: "192.168.157.12",
+//   port: "22",
+//   username: "redabens",
+//   password: "Redabens2004..",
+// };
 
 // connect to ldap server
 // const connectToLdap = () => {
@@ -400,6 +400,7 @@ app.get("/download", verifyToken, async (req, res) => {
     console.log("Erreur de requete" + err);
   }
 });
+
 app.post("/paths/create", verifyToken, async (req, res) => {
   console.log("POST /paths/create hit");
   const {pathName } = req.body;
@@ -411,7 +412,7 @@ app.post("/paths/create", verifyToken, async (req, res) => {
     if (!req.userId) {
       return res.status(401).send("User ID not found");
     }
-
+    
     // Find the user by ID
     const user = await User.findById(req.userId);
     if (!user) {
