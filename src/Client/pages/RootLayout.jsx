@@ -39,6 +39,7 @@ export default function RootLayout() {
       alert("Error getting user");
     });
   },[]);
+  
   const [open, setOpen] = useState(true);
   const handleToggle = (e) => {
     setOpen((prev) => !prev);
@@ -97,7 +98,7 @@ export default function RootLayout() {
         <Navbar open={open} user={user}/>
       </div>
       <div className="Sidebar">
-        <Sidebar open={open} handleToggle={handleToggle} params={params} handleRotateLogo={handleRotateLogo}/>
+        <Sidebar open={open} user={user} handleToggle={handleToggle} params={params} handleRotateLogo={handleRotateLogo}/>
       </div>
       <div className="LogoDjezzy">
         <LogoDjezzy rotating={rotating}/>

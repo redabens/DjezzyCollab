@@ -7,11 +7,11 @@ import "../styles/Sidebar.css";
 import Administrateur from "./Administrateur";
 import { useAuth } from "../components/AuthContext";
 
-function Sidebar({ open, handleToggle, params }) {
+function Sidebar({ open, user, handleToggle, params }) {
   const { token } = useAuth();
   const [navbar, setNavBar] = useState(params);
   const menuItemUp = [
-    {
+    user.role !== "download" && {
       path: "/upload",
       name: "Envoyer un fichier",
       icon: (
@@ -43,7 +43,7 @@ function Sidebar({ open, handleToggle, params }) {
       },
       id: uuid(),
     },
-    {
+    user.role !== "upload" && {
       path: "/download",
       name: "Télecharger un fichier",
       icon: (
@@ -73,7 +73,7 @@ function Sidebar({ open, handleToggle, params }) {
       },
       id: uuid(),
     },
-    {
+    user.role === "admin" && {
       path: "/admin",
       name: "Administrateur",
       icon: (
@@ -106,7 +106,7 @@ function Sidebar({ open, handleToggle, params }) {
       },
       id: uuid(),
     },
-  ];
+  ].filter(Boolean);
   const menuItemDown = [
     {
       path: "/notifications",
