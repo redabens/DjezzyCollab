@@ -6,8 +6,8 @@
   height: 100%;
   width: 100%;
   display: grid;
-  grid-template-rows: 30px 50px 1fr;
-  gap: 10px;
+  grid-template-rows: 5vh 10vh 1fr;
+  gap: 1vh;
   font-family: "Mulish", sans-serif;
 }
 .gestion-users-page h2 {
@@ -73,13 +73,13 @@
 }
 .users-box {
   width: 90%;
-  height: 60vh;
+  height: 70vh;
   display: flex;
   flex-direction: column;
-  /* border: 2px solid rgb(255, 199, 14); */
+   border-bottom: 1px solid #f8cece;
 }
 .users {
-  max-height: 60vh;
+  max-height: 70vh;
   overflow-y: scroll;
 }
 .usersUmpty {

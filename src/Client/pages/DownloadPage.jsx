@@ -10,7 +10,8 @@ function DownloadPage() {
   const [isGrid, setIsGrid] = useState(false);
   const navigate = useNavigate();
   useEffect(function () {
-    axios.get("http://localhost:3000/download", {
+    axios
+      .get("http://localhost:3000/download", {
         headers: { Authorization: token },
       })
       .then((res) => {
@@ -34,34 +35,37 @@ function DownloadPage() {
         <div
           className="display-row"
           onClick={() => setIsGrid(false)}
-          style={{
-            backgroundColor: !isGrid
-              ? "rgba(173, 216, 230, 0.9)" // baby blue with opacity
-              : "transparent",
-          }}
           title="Rows"
         >
-          <img
-            src="./../../src/assets/display_rows.svg"
-            alt="display_rows"
-            style={{ width: "18px", height: "18px" }}
-          />
+          {isGrid ? (
+            <img
+              src="./../../src/assets/display_rows.svg"
+              alt="display_rows"
+              style={{ width: "18px", height: "18px" }}
+            />
+          ) : (
+            <img
+              src="./../../src/assets/display_rows_full.svg"
+              alt="display_rows"
+              style={{ width: "18px", height: "18px" }}
+            />
+          )}
         </div>
         <div
           className="display-grid"
           onClick={() => setIsGrid(true)}
-          style={{
-            backgroundColor: isGrid
-              ? "rgba(173, 216, 230, 0.9)" // baby blue with opacity
-              : "transparent",
-          }}
+       
           title="Grid"
         >
-          <img
-            src="./../../src/assets/display_grid.svg"
+         {isGrid ?<img
+            src="./../../src/assets/display_grid_full.svg"
             alt="display_grid"
             style={{ width: "20px", height: "20px" }}
-          />
+          /> : <img
+          src="./../../src/assets/display_grid.svg"
+          alt="display_rows"
+          style={{ width: "18px", height: "18px" }}
+        />} 
         </div>
       </div>
       <div className={isGrid ? "grid-preview" : "preview"}>
