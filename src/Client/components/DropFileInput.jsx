@@ -179,7 +179,7 @@ const DropFileInput = (props) => {
         {sizeError !== "" && (
           <p
             style={{
-              width:"70%",
+              width: "70%",
               color:
                 sizeError === "Files uploaded successfully!" ? "green" : "red",
               backgroundColor:

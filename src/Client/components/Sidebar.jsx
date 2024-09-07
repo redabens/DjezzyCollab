@@ -203,6 +203,7 @@ function Sidebar({ open, user, handleToggle, params }) {
       id: uuid(),
     },
   ];
+  
   return (
     <div className="container">
       <div className={open ? "sidebar-open" : "sidebar-close"}>
