@@ -23,14 +23,16 @@ export default function CreationUser() {
         if (response.status === 200) {
           console.log(response.data);
           setPathList(response.data.paths);
-        } else if (response.status === 404) {
-          console.log("Erreur 404");
-          return alert(response.data);
         }
       })
-      .catch((errors) => {
-        console.log(errors);
-        alert(errors);
+      .catch((error) => {
+        if (error.response.status === 404) {
+          console.log("Erreur 404");
+          return alert(error.response.data);
+        } else{
+        console.log(error);
+        alert("error inconnue");
+        }
       });
   }, []);
   //------ handleSignUp -------

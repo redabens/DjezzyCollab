@@ -19,6 +19,7 @@ const DropFileInput = (props) => {
     "jpeg",
     "png",
     "jpj",
+    "svg",
     "gif",
     "mp4",
     "pdf",
@@ -66,7 +67,10 @@ const DropFileInput = (props) => {
   /**
     
   const onFileDrop = (e) => {
+    setSizeError(false);
+    const maxSize = 25 * 1024 * 1024; // Limite de taille de fichier : 25MB
     const newFile = e.target.files;
+    console.log(newFile);
     if (newFile) {
       const updatedList = [...fileList];
       for (let i = 0; i < newFile.length; i++) {

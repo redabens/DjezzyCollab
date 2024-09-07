@@ -13,16 +13,20 @@ export default function GestionRepertoires() {
   const [loadingFileTree, setLoadingFileTree] = useState(true);
 
   useEffect(() => {
-    const fetchFileTree = async () => {
-      try {
-        const response = await axios.get("http://localhost:3000/tree-files");
+    axios.get("http://localhost:3000/tree-files")
+    .then((response) => {
+      if(response.status === 200){
         setFileTree(response.data);
         setLoadingFileTree(false);
-      } catch (err) {
-        console.error("Failed to fetch file tree:", err);
       }
-    };
-    fetchFileTree();
+    })
+    .catch((err) => {
+      if(err.response.status === 500){
+        alert(err.response.data);
+      } else{
+        alert("unknown error");
+      }
+    });
   }, []);
   
   const renitPath = ()=>{

@@ -12,6 +12,8 @@ const cors = require("cors");
 const fs = require("fs");
 const SFTPClient = require("ssh2-sftp-client");
 const userRoutes = require("../routes/userRoutes.cjs");
+const notifRoutes = require("../routes/notifRoutes.cjs");
+const notifController = require("./notifController.cjs");
 
 const { authenticate, addUser } = require("./ldap.cjs"); // Importez le module LDAP
 // express configuration
@@ -23,6 +25,7 @@ const upload = multer({ storage: storage });
 // file import
 const User = require("../models/users.cjs");
 const Path = require("../models/paths.cjs");
+const Notif = require("../models/notifs.cjs");
 
 // Connect to MongoDB
 mongoose
@@ -40,7 +43,7 @@ app.use(
 );
 
 app.use("/users", userRoutes);
-
+app.use("/notifs", notifRoutes);
 // sftp configuration
 const sftp = new SFTPClient();
 // sftp.on("debug", (msg) => {
@@ -55,7 +58,7 @@ const sftpconfig = {
 };
 
 // const sftpconfig = {
-//   host: "192.168.157.12",
+//   host: "192.168.1.65",
 //   port: "22",
 //   username: "redabens",
 //   password: "Redabens2004..",
@@ -260,16 +263,16 @@ app.post("/creation-compte", async (req, res) => {
 app.get("/user", verifyToken, async (req, res) => {
   try {
     if (!req.userId) {
-      return res.status(401).send("User ID not found");
+      return res.status(401).send({ error: "User ID not found" });
     }
     const user = await User.findById(req.userId);
     if (!user) {
-      return res.status(404).send("User not found");
+      return res.status(404).send({ error: "User not found" });
     }
     res.status(200).send({ user });
   } catch (error) {
     console.error("Error fetching user:", error);
-    res.status(500).send("Server error");
+    res.status(500).send({ error: "Server error" });
   }
 });
 // pour enregistrer les fichiers dans le serveur
@@ -277,12 +280,12 @@ app.post("/upload", [verifyToken, upload.array("files")], async (req, res) => {
   try {
     console.log("User ID:", req.userId);
     if (!req.userId) {
-      return res.status(401).send("User ID not found");
+      return res.status(401).send({ error: "User ID not found" });
     }
     const user = await User.findById(req.userId);
     console.log("User:", user);
     if (!user) {
-      return res.status(404).send("User not found");
+      return res.status(404).send({ error: "User not found" });
     }
     // Upload files to SFTP server
     let restPath = await sftp.cwd();
@@ -299,11 +302,22 @@ app.post("/upload", [verifyToken, upload.array("files")], async (req, res) => {
       const remotePath = path.posix.join(userDir, file.originalname);
       console.log("Remote path:", remotePath);
       await verifyExistance(file, userDir, remotePath, j);
+
+      // creation de la notification of upload
+      const notifData = {
+        userId: req.userId,
+        type: "upload",
+        fileName: file.originalname,
+      };
+      await notifController.addNotif({
+        body: notifData,
+      });
     }
+
     res.status(200).send("Upload successful");
   } catch (error) {
     console.error(error);
-    res.status(500).send("Server error");
+    res.status(500).send({ error: "Server error" });
   }
 });
 
@@ -312,23 +326,24 @@ app.get("/download/:filename", verifyToken, async (req, res) => {
   try {
     const { filename } = req.params;
     if (!req.userId) {
-      return res.status(401).send("User ID not found");
+      return res.status(401).send({ error: "User ID not found" });
     }
     const user = await User.findById(req.userId);
     if (!user) {
-      return res.status(404).send("User not found");
+      return res.status(404).send({ error: "User not found" });
     }
     let restPath = await sftp.cwd();
     restPath = restPath.slice(1);
     const userDir = path.join(restPath, user.DirPath);
     const dirExists = await sftp.exists(userDir);
-    if (!dirExists) return res.status(415).send("Directory not found");
+    if (!dirExists)
+      return res.status(415).send({ error: "Directory not found" });
     // sends the stream directly to the browser
     const filePath = path.posix.join(userDir, filename);
     res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
     sftp.createReadStream(filePath).pipe(res);
   } catch (error) {
-    res.status(500).send("Failed to download file");
+    res.status(500).send({ error: "Failed to download file" });
   }
 });
 
@@ -343,12 +358,12 @@ app.patch("/download/:filename", verifyToken, async (req, res) => {
     // Check if req.userId is set correctly
     console.log("User ID:", req.userId);
     if (!req.userId) {
-      return res.status(401).send("User ID not found");
+      return res.status(401).send({ error: "User ID not found" });
     }
     const user = await User.findById(req.userId);
     console.log("User:", user);
     if (!user) {
-      return res.status(404).send("User not found");
+      return res.status(404).send({ error: "User not found" });
     }
     let restPath = await sftp.cwd();
     console.log(restPath);
@@ -357,7 +372,8 @@ app.patch("/download/:filename", verifyToken, async (req, res) => {
     const userDir = path.join(restPath, user.DirPath);
     const dirExists = await sftp.exists(userDir);
     console.log("Directory exists:", dirExists);
-    if (!dirExists) return res.status(415).send("Directory not found");
+    if (!dirExists)
+      return res.status(415).send({ error: "Directory not found" });
     const lastPath = path.join(userDir, filename);
     console.log(lastPath);
     const newPath = path.join(userDir, newFilename);
@@ -365,7 +381,9 @@ app.patch("/download/:filename", verifyToken, async (req, res) => {
     const renameexists = await sftp.exists(newPath);
     console.dir(renameexists);
     if (renameexists)
-      return res.status(409).send("name already exists choose another one");
+      return res
+        .status(409)
+        .send({ error: "name already exists choose another one" });
     await sftp.rename(lastPath, newPath);
     res.status(200).send("name changed succefully");
   } catch (err) {
@@ -379,12 +397,12 @@ app.get("/download", verifyToken, async (req, res) => {
     // Check if req.userId is set correctly
     // console.log('User ID:', req.userId);
     if (!req.userId) {
-      return res.status(401).send("User ID not found");
+      return res.status(401).send({ error: "User ID not found" });
     }
     const user = await User.findById(req.userId);
     // console.log('User:', user);
     if (!user) {
-      return res.status(404).send("User not found");
+      return res.status(404).send({ error: "User not found" });
     }
     let restPath = await sftp.cwd();
     restPath = restPath.slice(1, restPath.length);
@@ -392,7 +410,8 @@ app.get("/download", verifyToken, async (req, res) => {
     const userDir = path.join(restPath, user.DirPath);
     const dirExists = await sftp.exists(userDir);
     // console.log('Directory exists:', dirExists);
-    if (!dirExists) return res.status(415).send("Directory not found");
+    if (!dirExists)
+      return res.status(415).send({ error: "Directory not found" });
     const files = await sftp.list(userDir);
     // console.log('Files:', files);
     res.status(200).send({ files });
@@ -403,7 +422,7 @@ app.get("/download", verifyToken, async (req, res) => {
 
 app.post("/paths/create", verifyToken, async (req, res) => {
   console.log("POST /paths/create hit");
-  const {pathName } = req.body;
+  const { pathName } = req.body;
   console.log("Path:", pathName);
 
   try {
@@ -412,7 +431,7 @@ app.post("/paths/create", verifyToken, async (req, res) => {
     if (!req.userId) {
       return res.status(401).send("User ID not found");
     }
-    
+
     // Find the user by ID
     const user = await User.findById(req.userId);
     if (!user) {
@@ -447,8 +466,9 @@ app.post("/paths/create", verifyToken, async (req, res) => {
     await newPath.save();
 
     console.log("Path saved in MongoDB:", newPath);
-    res.status(201).json({ message: "Directory created and path saved", path: newPath });
-
+    res
+      .status(201)
+      .json({ message: "Directory created and path saved", path: newPath });
   } catch (error) {
     console.error("Error creating path:", error);
     res.status(500).json({ message: "Internal server error" });
@@ -521,7 +541,7 @@ app.get("/tree-files", async (req, res) => {
   try {
     const restPath = await sftp.cwd();
     const fileTree = await buildFileTree(sftp, "");
-    res.json(fileTree);
+    res.status(200).json(fileTree);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Failed to fetch files" });

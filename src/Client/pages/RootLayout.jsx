@@ -8,17 +8,11 @@ import { Outlet, Navigate , useLocation } from "react-router-dom";
 import { useAuth } from '../components/AuthContext'; // Assurez-vous du bon chemin d'importation
 import axios from "axios";
 export default function RootLayout() {
-
-
   const [rotating, setRotating] = useState(false);
   const handleRotateLogo = () => {
     setRotating(true);
     setTimeout(() => setRotating(false), 1000); // Duration should match the animation duration
   };
-
-
-
-
   const { token } = useAuth();
   const [user,setUser] = useState('');
   // Vérifiez l'état d'authentification avant de rendre le contenu
@@ -39,7 +33,6 @@ export default function RootLayout() {
       alert("Error getting user");
     });
   },[]);
-  
   const [open, setOpen] = useState(true);
   const handleToggle = (e) => {
     setOpen((prev) => !prev);
@@ -48,35 +41,27 @@ export default function RootLayout() {
   //-------------- <3 initialisationn de la side bar state <3 -----------------
   const getSidebarParams = (pathname) => {
     const defaultParams = {
-      upload: false,
-      download: false,
-      // admin: false,
+      upload: user.role !== 'download' ? true : false,
+      download: user.role !== 'download' ? false : true,
+      admin: false,
       gestRep: false,
       gestUtils: false,
       creatCompt: false,
       notifs: false,
-      params: false,
-      aide: false,
     };
     switch (pathname) {
       case "/upload":
         return { ...defaultParams, upload: true };
       case "/download":
         return { ...defaultParams, download: true };
-      case "/admin":
-        return { ...defaultParams, admin: true };
-      case "/admin/gestion-repertoires":
-        return { ...defaultParams, gestRep: true };
-      case "/admin/gestion-utilisateurs":
-        return { ...defaultParams, gestUtils: true };
-      case "/admin/creation-comptes":
-        return { ...defaultParams, creatCompt: true };
+      case "/gestion-repertoires":
+        return { ...defaultParams,  admin: true, gestRep: true };
+      case "/gestion-utilisateurs":
+        return { ...defaultParams, admin: true, gestUtils: true };
+      case "/creation-comptes":
+        return { ...defaultParams, admin: true, creatCompt: true };
       case "/notifications":
         return { ...defaultParams, notifs: true };
-      case "/parametres":
-        return { ...defaultParams, params: true };
-      case "/aide":
-        return { ...defaultParams, aide: true };
       default:
         return defaultParams;
     }
