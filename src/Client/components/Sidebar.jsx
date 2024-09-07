@@ -2,16 +2,29 @@ import { useState } from "react";
 import { v4 as uuid } from "uuid";
 import CloudDownloadOutlinedIcon from "@mui/icons-material/CloudDownloadOutlined";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
-import { NavLink } from "react-router-dom";
+import { Navigate, NavLink, useLocation } from "react-router-dom";
 import "../styles/Sidebar.css";
 import Administrateur from "./Administrateur";
 import { useAuth } from "../components/AuthContext";
 
-function Sidebar({ open, handleToggle, params }) {
-  const { token } = useAuth();
+function Sidebar({ open, user, handleToggle, params }) {
+  // Redirection conditionnelle basée sur le rôle de l'utilisateur
+  const location = useLocation();
+  if (location.pathname === "/") {
+    if (user && user.role === "download") {
+      return <Navigate to="/download" />;
+    } else {
+      return <Navigate to="/upload" />;
+    }
+  }
+  const { token, setToken } = useAuth();
   const [navbar, setNavBar] = useState(params);
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setToken(null);
+  };
   const menuItemUp = [
-    {
+    user.role !== "download" && {
       path: "/upload",
       name: "Envoyer un fichier",
       icon: (
@@ -34,8 +47,6 @@ function Sidebar({ open, handleToggle, params }) {
           gestUtils: false,
           creatCompt: false,
           notifs: false,
-          params: false,
-          aide: false,
         });
       },
       couleur: function () {
@@ -43,7 +54,7 @@ function Sidebar({ open, handleToggle, params }) {
       },
       id: uuid(),
     },
-    {
+    user.role !== "upload" && {
       path: "/download",
       name: "Télecharger un fichier",
       icon: (
@@ -64,8 +75,6 @@ function Sidebar({ open, handleToggle, params }) {
           gestUtils: false,
           creatCompt: false,
           notifs: false,
-          params: false,
-          aide: false,
         });
       },
       couleur: function () {
@@ -73,7 +82,7 @@ function Sidebar({ open, handleToggle, params }) {
       },
       id: uuid(),
     },
-    {
+    user.role === "admin" && {
       path: "/admin",
       name: "Administrateur",
       icon: (
@@ -97,8 +106,6 @@ function Sidebar({ open, handleToggle, params }) {
           gestUtils: false,
           creatCompt: false,
           notifs: false,
-          params: false,
-          aide: false,
         }));
       },
       couleur: function () {
@@ -106,9 +113,9 @@ function Sidebar({ open, handleToggle, params }) {
       },
       id: uuid(),
     },
-  ];
+  ].filter(Boolean);
   const menuItemDown = [
-    {
+    user.role === "admin" && {
       path: "/notifications",
       name: "Notifications",
       icon: (
@@ -131,8 +138,6 @@ function Sidebar({ open, handleToggle, params }) {
           gestUtils: false,
           creatCompt: false,
           notifs: true,
-          params: false,
-          aide: false,
         }));
       },
       couleur: function () {
@@ -141,12 +146,12 @@ function Sidebar({ open, handleToggle, params }) {
       id: uuid(),
     },
     {
-      path: "/parametres",
-      name: "Paramétres",
+      path: "/login",
+      name: "Déconnexion",
       icon: (
         <img
-          src="./../../src/assets/setting-2.svg"
-          alt="logo_params"
+          src="./../../src/assets/logo_deconnexion.svg"
+          alt="logo_deconnexion"
           style={
             open
               ? { width: "20px", height: "20px" }
@@ -154,55 +159,13 @@ function Sidebar({ open, handleToggle, params }) {
           }
         />
       ),
-      func: function () {
-        setNavBar({
-          upload: false,
-          download: false,
-          admin: false,
-          gestRep: false,
-          gestUtils: false,
-          creatCompt: false,
-          notifs: false,
-          params: true,
-          aide: false,
-        });
-      },
+      func: handleLogout,
       couleur: function () {
-        return navbar.params;
+        return false;
       },
       id: uuid(),
     },
-    {
-      path: "/aide",
-      name: "Aide",
-      icon: (
-        <HelpOutlineOutlinedIcon
-          style={
-            open
-              ? { width: "20px", height: "20px" }
-              : { width: "23px", height: "23px", paddingLeft: "2px" }
-          }
-        />
-      ),
-      func: function () {
-        setNavBar({
-          upload: false,
-          download: false,
-          admin: false,
-          gestRep: false,
-          gestUtils: false,
-          creatCompt: false,
-          notifs: false,
-          params: false,
-          aide: true,
-        });
-      },
-      couleur: function () {
-        return navbar.aide;
-      },
-      id: uuid(),
-    },
-  ];
+  ].filter(Boolean);
   return (
     <div className="container">
       <div className={open ? "sidebar-open" : "sidebar-close"}>
@@ -236,10 +199,8 @@ function Sidebar({ open, handleToggle, params }) {
           <div className="optionsUp" style={{ gap: open ? "1.2vh" : "2vh" }}>
             {menuItemUp.map((item) => {
               return item.name === "Administrateur" ? (
-                <NavLink
-                  to={item.path}
+                <div
                   key={item.id}
-                  sx={{ all: "unset" }}
                   className={open ? "linkSpe" : "link-close"}
                   onClick={!open ? item.func : null}
                   style={{
@@ -260,8 +221,6 @@ function Sidebar({ open, handleToggle, params }) {
                           gestUtils: false,
                           creatCompt: false,
                           notifs: false,
-                          params: false,
-                          aide: false,
                         }));
                       }}
                       handleGestUtils={() => {
@@ -273,8 +232,6 @@ function Sidebar({ open, handleToggle, params }) {
                           gestUtils: true,
                           creatCompt: false,
                           notifs: false,
-                          params: false,
-                          aide: false,
                         }));
                       }}
                       handleCreatCompte={() => {
@@ -286,15 +243,13 @@ function Sidebar({ open, handleToggle, params }) {
                           gestUtils: false,
                           creatCompt: true,
                           notifs: false,
-                          params: false,
-                          aide: false,
                         }));
                       }}
                     />
                   ) : (
                     <div className="iconUp">{item.icon}</div>
                   )}
-                </NavLink>
+                </div>
               ) : (
                 <NavLink
                   to={item.path}
@@ -314,7 +269,7 @@ function Sidebar({ open, handleToggle, params }) {
           </div>
 
           <div className="optionsDown" style={{ gap: open ? "1.2vh" : "2vh" }}>
-            {menuItemDown.map((item, index) => {
+          {menuItemDown.map((item) => {
               return (
                 <NavLink
                   to={item.path}

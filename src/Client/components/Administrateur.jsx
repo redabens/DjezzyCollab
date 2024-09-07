@@ -111,7 +111,7 @@ export default function Administrateur({
             }}
           >
             <NavLink
-              to="/admin/gestion-repertoires"
+              to="/gestion-repertoires"
               className="linkSpe"
               style={{
                 width: "85%",
@@ -159,7 +159,7 @@ export default function Administrateur({
               </ListItemButton>
             </NavLink>
             <NavLink
-              to="/admin/gestion-utilisateurs"
+              to="/gestion-utilisateurs"
               className="linkSpe"
               style={{
                 width: "85%",
@@ -207,7 +207,7 @@ export default function Administrateur({
               </ListItemButton>
             </NavLink>
             <NavLink
-              to="/admin/creation-comptes"
+              to="/creation-comptes"
               className="linkSpe"
               style={{
                 width: "85%",

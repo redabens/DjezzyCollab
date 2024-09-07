@@ -11,6 +11,23 @@ const DropFileInput = (props) => {
   const { token } = useAuth();
   const navigate = useNavigate();
   const wrapperRef = useRef(null);
+  const [sizeError, setSizeError] = useState("");
+  const [fileList, setFileList] = useState([]);
+  const [uploadedFileList, setUploadedFileList] = useState([]);
+  const allowedFormats = [
+    "txt",
+    "jpeg",
+    "png",
+    "jpj",
+    "svg",
+    "gif",
+    "mp4",
+    "pdf",
+    "psd",
+    "ai",
+    "doc",
+    "ppt",
+  ];
   const onDragEnter = () => {
     wrapperRef.current.classList.add("dragover");
   };
@@ -20,10 +37,35 @@ const DropFileInput = (props) => {
   const onDrop = (e) => {
     wrapperRef.current.classList.remove("dragover");
   };
-  const [sizeError,setSizeError] = useState(false);
-  const [fileList, setFileList] = useState([]);
-  const [uploadedFileList, setUploadedFileList] = useState([]);
-  // const [nombre,setNombre] = useState({uploading:0,uploaded:0});
+
+  const onFileDrop = (e) => {
+    setSizeError("");
+    const maxSize = 25 * 1024 * 1024; // Limite de taille de fichier : 25MB
+    const newFile = e.target.files;
+    console.log(newFile);
+    if (newFile) {
+      const updatedList = [...fileList];
+      for (let i = 0; i < newFile.length; i++) {
+        const fileExtension = newFile[i].name.split(".").pop().toLowerCase();
+        if (newFile[i].size > maxSize) {
+          setSizeError("File size should be less than 25MB");
+        } else if (allowedFormats.includes(fileExtension)) {
+          updatedList.push({ id: uuid(), file: newFile[i], isUploaded: false });
+        } else {
+          setSizeError(
+            `The ${fileExtension} format is not allowed. Supported formates: ${allowedFormats
+              .map((format) => format.toUpperCase())
+              .join(", ")}.`
+          );
+        }
+      }
+      setFileList(updatedList);
+      props.onFileChange(updatedList);
+    }
+  };
+
+  /**
+    
   const onFileDrop = (e) => {
     setSizeError(false);
     const maxSize = 25 * 1024 * 1024; // Limite de taille de fichier : 25MB
@@ -31,17 +73,21 @@ const DropFileInput = (props) => {
     console.log(newFile);
     if (newFile) {
       const updatedList = [...fileList];
-    for (let i = 0; i < newFile.length; i++) {
-      if (newFile[i].size > maxSize) {
-        setSizeError(true);
-      } else{
-        updatedList.push({ id: uuid(), file: newFile[i], isUploaded: false });
+      for (let i = 0; i < newFile.length; i++) {
+        const fileExtension = newFile[i].name.split(".").pop().toLowerCase();
+        if (allowedFormats.includes(fileExtension)) {
+          updatedList.push({ id: uuid(), file: newFile[i], isUploaded: false });
+        } else {
+          alert(`${newFile[i].name} is not a supported format`);
+        }
       }
-    }
       setFileList(updatedList);
       props.onFileChange(updatedList);
     }
   };
+
+   */
+
   const FileListRemove = (id) => {
     setFileList((prev) => prev.filter((item) => item.id !== id));
   };
@@ -58,44 +104,52 @@ const DropFileInput = (props) => {
       });
     });
   };
-  useEffect(function () {
-    setUploadedFileList(fileList.filter((file) => file.isUploaded));
-  },  [fileList]);
-  const SendFiles = async (event)=>{
+  useEffect(
+    function () {
+      setUploadedFileList(fileList.filter((file) => file.isUploaded));
+    },
+    [fileList]
+  );
+  const SendFiles = async (event) => {
     event.preventDefault();
     setFileList([]);
     const formData = new FormData();
-    const addFilesToFormData = async ()=>{
+    const addFilesToFormData = async () => {
       for (let i = 0; i < uploadedFileList.length; i++) {
-        formData.append('files', uploadedFileList[i].file);
+        formData.append("files", uploadedFileList[i].file);
       }
       for (let [key, value] of formData.entries()) {
         console.log(`${key}: ${value}`); // Affiche le nom de chaque fichier ajouté
       }
       setUploadedFileList([]);
-    }
+    };
     await addFilesToFormData();
-    axios.post('http://localhost:3000/upload',
-      formData,{headers: { 'Authorization': token }}
-    ).then(res=>{
-        if(res.status === 200) { 
-          navigate('/upload');
+    axios
+      .post("http://localhost:3000/upload", formData, {
+        headers: { Authorization: token },
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          navigate("/upload");
+          setSizeError("Files uploaded successfully!");
         }
-    }).catch((error) => {
-      if(error.response){
-        if (res.status === 401) return alert("User Id not Found");
-        else if (res.status === 404) return alert("User not found");
-        // else if (res.status === 415) return alert("Directory not found");
-        else if (res.status === 500) return alert("Failed to upload due to server");
-      } else {
-        console.log(error);
-        alert("An unexpected error occurred. Please try again.");
-      }
-    });
-  }
+      })
+      .catch((error) => {
+        if (error.response) {
+          if (res.status === 401) return alert("User Id not Found");
+          else if (res.status === 404) return alert("User not found");
+          // else if (res.status === 415) return alert("Directory not found");
+          else if (res.status === 500)
+            return alert("Failed to upload due to server");
+        } else {
+          console.log(error);
+          alert("An unexpected error occurred. Please try again.");
+        }
+      });
+  };
   return (
     <form className="dropfile" onSubmit={SendFiles}>
-      <div className="drop-file" style={{gap: sizeError? "5px": "20px"}}>
+      <div className="drop-file" style={{ gap: sizeError ? "5px" : "20px" }}>
         <div
           ref={wrapperRef}
           onDragEnter={() => {
@@ -119,19 +173,35 @@ const DropFileInput = (props) => {
               Drag & Drop files or <span>Browse</span>
             </p>
             <p style={{ fontSize: "10px", color: "gray", marginTop: "10px" }}>
-              Supported formates: JPEG, PNG, SVG, GIF, MP4, PDF, Word, PPT, DAT.
+              Supported formates:{" "}
+              {allowedFormats.map((format) => format.toUpperCase()).join(", ")}.
             </p>
           </div>
 
           <input type="file" value="" onChange={onFileDrop} multiple />
         </div>
-        {sizeError && <p style={{color:"red",fontSize:"12px"}}>File size should be less than 25MB</p>}
+        {sizeError !== "" && (
+          <p
+            style={{
+              width:"70%",
+              color:
+                sizeError === "Files uploaded successfully!" ? "green" : "red",
+              backgroundColor:
+                sizeError === "Files uploaded successfully!"
+                  ? "#ccffcc"
+                  : "#ffebeb",
+              fontSize: "12px",
+              padding: "5px",
+              borderRadius: "4px",
+            }}
+          >
+            {sizeError}
+          </p>
+        )}
         <div className="drop-file-preview">
           {fileList.length > 0 ? (
             <div className="drop-file-uploading">
-              <p className="file-uploaded_titles">
-                Uploading
-              </p>
+              <p className="file-uploaded_titles">Uploading</p>
               <div
                 className="drop-file-uploading_items"
                 style={
