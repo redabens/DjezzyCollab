@@ -49,39 +49,20 @@ const sftp = new SFTPClient();
 // sftp.on("debug", (msg) => {
 //   console.log("DEBUG: " + msg);
 // });
-const sftpconfig = {
-  host: "172.25.80.1",
-  port: "22",
-  username: "sarair",
-  password: "sara2004",
-  // debug: console.log,
-};
-
 // const sftpconfig = {
-//   host: "192.168.1.65",
+//   host: "172.25.80.1",
 //   port: "22",
-//   username: "redabens",
-//   password: "Redabens2004..",
+//   username: "sarair",
+//   password: "sara2004",
+//   // debug: console.log,
 // };
 
-// connect to ldap server
-// const connectToLdap = () => {
-//   return new Promise((resolve, reject) => {
-//     client.bind(
-//       "cn=admin,dc=djezzy-collab,dc=com",
-//       "Redabens2004..",
-//       (err) => {
-//         if (err) {
-//           reject("Failed to connect to LDAP server: " + err);
-//         } else {
-//           console.log("Connected to LDAP server");
-//           resolve();
-//         }
-//       }
-//     );
-//   });
-// };
-
+const sftpconfig = {
+  host: "192.168.1.65",
+  port: "22",
+  username: "redabens",
+  password: "Redabens2004..",
+};
 async function connectSFTP() {
   try {
     await sftp.connect(sftpconfig);

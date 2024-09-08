@@ -6,6 +6,8 @@
   height: 100%;
   width: 100%;
   display: grid;
+  justify-content: center;
+  align-items: center;
   grid-template-rows: 5vh 10vh 1fr;
   gap: 1vh;
   font-family: "Mulish", sans-serif;
@@ -72,33 +74,33 @@
   align-items: center;
 }
 .users-box {
-  width: 90%;
+  width: 70vw;
   height: 70vh;
   display: flex;
   flex-direction: column;
-   border-bottom: 1px solid #f8cece;
 }
 .users {
   max-height: 70vh;
   overflow-y: scroll;
 }
-.usersUmpty {
- height: 60vh;
- 
+.usersEmpty {
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  font-size: 0.9em;
-  color: grey;
-
+  justify-content: center; 
+  border-right: 1.5px solid #f8cece;
+  border-bottom: 1.5px solid #f8cece;
+  border-left: 1.5px solid #f8cece;
+  border-top: none;
+  border-radius: 0px 0px 10px 10px; 
 }
 .aucun-user-text{
   text-align: center;
   font-size: 0.9em;
 }
 .popup {
-  /* background-color: rgba(0, 0, 0, 0.5);*/
   position: absolute;
   top: 0;
   left: 0;

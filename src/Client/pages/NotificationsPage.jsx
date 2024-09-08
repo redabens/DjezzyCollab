@@ -18,30 +18,13 @@ function NotificationsPage() {
     fetchUsers();
   }, []);
   return (
-    <div className="notif-page">
-      {/* <NotifComponent/>
-      <NotifComponent/>
-      <NotifComponent/>
-      <NotifComponent/>
-      <NotifComponent/>
-      <NotifComponent/>
-      <NotifComponent/>
-      <NotifComponent/>
-      <NotifComponent/>
-      <NotifComponent/>
-      <NotifComponent/>
-      <NotifComponent/>
-      <NotifComponent/>
-      <NotifComponent/>
-      <NotifComponent/>
-      <NotifComponent/>
-      <NotifComponent/>
-      <NotifComponent/>
-      <NotifComponent/>
-      <NotifComponent/> */}
-      {notifs.map((notif) => (
+    <div className="notif-page" style={ notifs.length === 0 && {justifyContent:'center'}}>
+      
+      {notifs.length > 0 ? notifs.map((notif) => (
         <NotifComponent key={notif._id} notif={notif} />
-      ))}
+      )) : (<div className="aucune">
+        <span>Aucune notification</span>
+      </div>)}
     </div>
   );
 }

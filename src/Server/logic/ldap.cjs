@@ -1,12 +1,12 @@
 var LdapClient = require("ldapjs-client");
 const bcrypt = require("bcryptjs");
-var client = new LdapClient({ url: "ldap://localhost:389" }); //192.168.1.66
+var client = new LdapClient({ url: "ldap://192.168.1.66:389" }); //localhost
 //connect to the server ldap
 async function connectLDAP() {
   try {
     // Bind to the LDAP server
-    await client.bind("cn=admin,dc=djezzy-collab,dc=com", "sara2004"); // Replace with your admin DN and password
-    //await client.bind("cn=admin,dc=djezzy-collab,dc=com", "Redabens2004..");
+    // await client.bind("cn=admin,dc=djezzy-collab,dc=com", "sara2004"); // Replace with your admin DN and password
+    await client.bind("cn=admin,dc=djezzy-collab,dc=com", "Redabens2004..");
     console.log("Connected to LDAP server");
   } catch (err) {
     console.log("LDAP connection error:", err);
