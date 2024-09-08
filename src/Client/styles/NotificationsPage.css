@@ -11,6 +11,15 @@
   overflow-y: scroll;
   padding: 10px;
 }
+.loading-notif {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+}
 
 .notif-accordian {
   width: 98%;
@@ -34,15 +43,15 @@
 }
 .user-name {
   font-weight: 700;
-  color: black;
+  color: rgb(54, 54, 54);
 }
 .repo-name {
   font-weight: 700;
-  color: black;
+  color: rgb(54, 54, 54);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 50%;
+  max-width: 55%;
 }
 .notif-msg {
   color: grey;
@@ -53,5 +62,5 @@
 }
 .body-item span {
   text-decoration: underline;
-  color: #009b9b;
+  color: #a13c3c;
 }

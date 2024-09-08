@@ -8,7 +8,8 @@ function NotificationsPage() {
     const fetchUsers = async () => {
       try {
         const response = await axios.get("http://localhost:3000/notifs");
-        setNotifs(response.data.data);
+          const sortedNotifs = response.data.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        setNotifs(sortedNotifs);
       } catch (err) {
         console.error("Failed to fetch notifs:", err);
         alert("Can't fetch notifs from DB");
@@ -18,6 +19,26 @@ function NotificationsPage() {
   }, []);
   return (
     <div className="notif-page">
+      {/* <NotifComponent/>
+      <NotifComponent/>
+      <NotifComponent/>
+      <NotifComponent/>
+      <NotifComponent/>
+      <NotifComponent/>
+      <NotifComponent/>
+      <NotifComponent/>
+      <NotifComponent/>
+      <NotifComponent/>
+      <NotifComponent/>
+      <NotifComponent/>
+      <NotifComponent/>
+      <NotifComponent/>
+      <NotifComponent/>
+      <NotifComponent/>
+      <NotifComponent/>
+      <NotifComponent/>
+      <NotifComponent/>
+      <NotifComponent/> */}
       {notifs.map((notif) => (
         <NotifComponent key={notif._id} notif={notif} />
       ))}

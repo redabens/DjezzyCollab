@@ -107,6 +107,28 @@ const updateUser = async (req, res) => {
     });
   }
 };
+const getUserById = async (req,res) =>{
+  const userId = req.params.id;
+  try {
+  const user = await User.findById(userId);
+  if (!user) {
+    return res.status(404).json({
+      status: "error",
+      message: "User Not Found",
+    });
+  }
+  res.status(200).json({
+    status: "success",
+    message: "User updated successfully",
+    data: user,
+  });
 
-
-module.exports = { createUser, getAllUsers, deleteUser, updateUser };
+} catch (err) {
+  console.log("Error fetching the user: " + err);
+  res.status(500).json({
+    status: "error",
+    message: "Error fetching user",
+  });
+}
+}
+module.exports = { createUser,getUserById, getAllUsers, deleteUser, updateUser };
