@@ -256,6 +256,7 @@ export default function GestionUsers() {
             message="Voulez-vous vraiment supprimer cet utilisateur?"
             image="./../../src/assets/delete_illustration.svg"
             onConfirmDialog={onConfirmDialog}
+            confirmWord="Supprimer"
           />
         </div>
       )}

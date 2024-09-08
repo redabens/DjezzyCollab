@@ -1,5 +1,5 @@
 import "../styles/YesNoDialog.css";
-const YesNoDialog = ({ titre, message, image, onConfirmDialog }) => {
+const YesNoDialog = ({ titre, message, image, onConfirmDialog,confirmWord }) => {
   return (
     <div className={`dialog ${onConfirmDialog ? "show" : "hide"}`}>
       <div className="dialog-content">
@@ -29,7 +29,7 @@ const YesNoDialog = ({ titre, message, image, onConfirmDialog }) => {
             className="btn-dialog btn-dialog-confirm"
             onClick={() => onConfirmDialog(true)}
           >
-            Supprimer
+            {confirmWord}
           </button>
         </div>
       </div>

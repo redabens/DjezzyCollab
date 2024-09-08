@@ -7,7 +7,7 @@ import "../styles/Sidebar.css";
 import Administrateur from "./Administrateur";
 import { useAuth } from "../components/AuthContext";
 
-function Sidebar({ open, user, handleToggle, params }) {
+function Sidebar({ open, user, handleToggle, params, onLogout }) {
   // Redirection conditionnelle basée sur le rôle de l'utilisateur
   const location = useLocation();
   if (location.pathname === "/") {
