@@ -5,10 +5,8 @@ var client = new LdapClient({ url: "ldap://192.168.1.66:389" }); //localhost
 async function connectLDAP() {
   try {
     // Bind to the LDAP server
-    await client.bind("cn=admin,dc=djezzy-collab,dc=com", "sara2004"); 
-    //await client.bind("cn=admin,dc=djezzy-collab,dc=com", "Redabens2004..");
-    // await client.bind("cn=admin,dc=djezzy-collab,dc=com", "sara2004"); // Replace with your admin DN and password
     await client.bind("cn=admin,dc=djezzy-collab,dc=com", "Redabens2004..");
+    // await client.bind("cn=admin,dc=djezzy-collab,dc=com", "sara2004"); // Replace with your admin DN and password
     console.log("Connected to LDAP server");
   } catch (err) {
     console.log("LDAP connection error:", err);

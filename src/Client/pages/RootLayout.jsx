@@ -4,35 +4,16 @@ import { useState, useEffect } from "react";
 import Sidebar from "./../components/Sidebar";
 import Navbar from "./../components/Navbr";
 import LogoDjezzy from "./../components/LogoDjezzy";
-import { Outlet, Navigate, useLocation } from "react-router-dom";
+import { Outlet, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../components/AuthContext"; // Assurez-vous du bon chemin d'importation
 import axios from "axios";
 import YesNoDialog from "../components/YesNoDialog";
 
 export default function RootLayout() {
-  const [rotating, setRotating] = useState(false);
-  const [logout, setlogout] = useState(false);
-  const onConfirmDialog = async (confirm) => {
-    console.log("onConfirmDialog in rootLayout hit : " + confirm);
-    if (confirm) {
-      await handleLogout();
-    }
-    setShowDialog(false);
-  };
-  const handleLogout = () => {
-    
-  };
-  const showLogoutDialog = () => {
-    setlogout(true);
-    console.log("showLogoutDialog hit in rouutLayout, logout is: ", logout);
-  };
-
-  const handleRotateLogo = () => {
-    setRotating(true);
-    setTimeout(() => setRotating(false), 1000); // Duration should match the animation duration
-  };
-  const { token } = useAuth();
+  const navigate = useNavigate();
+  const { token, setToken} = useAuth();
   const [user, setUser] = useState("");
+  const [rotating, setRotating] = useState(false);
   // Vérifiez l'état d'authentification avant de rendre le contenu
   if (!token) {
     return <Navigate to="/login" />;
@@ -54,6 +35,28 @@ export default function RootLayout() {
         alert("Error getting user");
       });
   }, []);
+  const [logout, setLogout] = useState(false);
+  const onConfirmDialog = async (confirm) => {
+    console.log("onConfirmDialog in rootLayout hit : " + confirm);
+    if (confirm) {
+      handleLogout();
+    }
+    setLogout(false);
+  };
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setToken(null);  
+    navigate("/login");
+  };
+  const showLogoutDialog = () => {
+    setLogout(true);
+    console.log("showLogoutDialog hit in rouutLayout, logout is: ", logout);
+  };
+
+  const handleRotateLogo = () => {
+    setRotating(true);
+    setTimeout(() => setRotating(false), 1000); // Duration should match the animation duration
+  };
   const [open, setOpen] = useState(true);
   const handleToggle = (e) => {
     setOpen((prev) => !prev);
