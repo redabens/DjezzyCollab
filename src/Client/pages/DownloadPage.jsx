@@ -72,10 +72,10 @@ function DownloadPage() {
         />} 
         </div>
       </div>
-      <div className={isGrid ? "grid-preview" : "preview"}>
-        {downloads.map((file, index) => {
+      <div className={downloads.length===0 ? 'default': isGrid ? "grid-preview" : "preview"}>
+        {downloads.length > 0 ? downloads.map((file, index) => {
           return <Fichier key={index} file={file} isGrid={isGrid} />;
-        })}
+        }) : (<div className="aucun">Aucun fichier existant</div>)}
       </div>
     </div>
   );
