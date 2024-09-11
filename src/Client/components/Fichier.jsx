@@ -16,7 +16,7 @@ export default function Fichier({ file, isGrid }) {
     axios
       .get(`http://localhost:3000/download/${file.name}`, {
         headers: { Authorization: token },
-        responseType: "blob",// This tells axios to expect binary data (file)
+        responseType: "blob",
       })
       .then((res) => {
         if (res.status === 200) {
