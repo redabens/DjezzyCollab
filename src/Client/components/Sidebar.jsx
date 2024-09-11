@@ -45,6 +45,7 @@ function Sidebar({ open, user, handleToggle, params, onLogout }) {
           gestRep: false,
           gestUtils: false,
           creatCompt: false,
+          gestSites:false,
           notifs: false,
         });
       },
@@ -73,6 +74,7 @@ function Sidebar({ open, user, handleToggle, params, onLogout }) {
           gestRep: false,
           gestUtils: false,
           creatCompt: false,
+          gestSites:false,
           notifs: false,
         });
       },
@@ -104,6 +106,7 @@ function Sidebar({ open, user, handleToggle, params, onLogout }) {
           gestRep: false,
           gestUtils: false,
           creatCompt: false,
+          gestSites:false,
           notifs: false,
         }));
       },
@@ -136,6 +139,7 @@ function Sidebar({ open, user, handleToggle, params, onLogout }) {
           gestRep: false,
           gestUtils: false,
           creatCompt: false,
+          gestSites:false,
           notifs: true,
         }));
       },
@@ -219,6 +223,7 @@ function Sidebar({ open, user, handleToggle, params, onLogout }) {
                           gestRep: true,
                           gestUtils: false,
                           creatCompt: false,
+                          gestSites:false,
                           notifs: false,
                         }));
                       }}
@@ -230,6 +235,7 @@ function Sidebar({ open, user, handleToggle, params, onLogout }) {
                           gestRep: false,
                           gestUtils: true,
                           creatCompt: false,
+                          gestSites:false,
                           notifs: false,
                         }));
                       }}
@@ -241,6 +247,19 @@ function Sidebar({ open, user, handleToggle, params, onLogout }) {
                           gestRep: false,
                           gestUtils: false,
                           creatCompt: true,
+                          gestSites:false,
+                          notifs: false,
+                        }));
+                      }}
+                      handleGestSites={() => {
+                        setNavBar((prev) => ({
+                          upload: false,
+                          download: false,
+                          admin: true,
+                          gestRep: false,
+                          gestUtils: false,
+                          creatCompt: false,
+                          gestSites:true,
                           notifs: false,
                         }));
                       }}

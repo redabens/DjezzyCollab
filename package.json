@@ -10,11 +10,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@emotion/react": "^11.13.0",
+    "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "@mui/icons-material": "^5.16.7",
     "@mui/lab": "^5.0.0-alpha.173",
-    "@mui/material": "^5.16.5",
+    "@mui/material": "^5.16.7",
+    "@mui/styled-engine-sc": "^6.0.2",
+    "@mui/x-data-grid": "^7.16.0",
     "@mui/x-tree-view": "^7.13.0",
     "@testing-library/jest-dom": "^6.4.8",
     "@testing-library/react": "^16.0.0",
@@ -39,6 +41,7 @@
     "react-hook-form": "^7.52.1",
     "react-router-dom": "^6.25.1",
     "ssh2-sftp-client": "^10.0.3",
+    "styled-components": "^6.1.13",
     "sweetalert2": "^11.6.13",
     "uuid": "^10.0.0"
   },

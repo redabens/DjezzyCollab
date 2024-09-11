@@ -13,6 +13,7 @@ export default function RootLayout() {
   const navigate = useNavigate();
   const { token, setToken} = useAuth();
   const [user, setUser] = useState("");
+  const [userPath,setUserPath] = useState("");
   const [rotating, setRotating] = useState(false);
   // Vérifiez l'état d'authentification avant de rendre le contenu
   if (!token) {
@@ -26,13 +27,16 @@ export default function RootLayout() {
       .then((res) => {
         if (res.status === 200) {
           setUser(res.data.user);
-        } else if (res.status === 401) return alert("User Id not Found");
-        else if (res.status === 404) return alert("User not found");
-        else if (res.status === 500)
-          return alert("Failed to upload due to server");
-      })
-      .catch((error) => {
-        alert("Error getting user");
+          setUserPath(res.data.userPath);
+        }
+      }).catch((error)=>{
+        if(error.response){
+          if (error.response.status === 401) return alert("User Id not Found");
+          else if (error.response.status === 404) return alert("User not found");
+          else if (error.response.status === 500) return alert("Failed to upload due to server");
+        }else{
+          alert("Error getting user");
+        }
       });
   }, []);
   const [logout, setLogout] = useState(false);
@@ -71,6 +75,7 @@ export default function RootLayout() {
       gestRep: false,
       gestUtils: false,
       creatCompt: false,
+      gestSites:false,
       notifs: false,
     };
     switch (pathname) {
@@ -82,6 +87,8 @@ export default function RootLayout() {
         return { ...defaultParams, admin: true, gestRep: true };
       case "/gestion-utilisateurs":
         return { ...defaultParams, admin: true, gestUtils: true };
+        case "/gestion-sites":
+        return { ...defaultParams, admin: true, creatCompt: true };
       case "/creation-comptes":
         return { ...defaultParams, admin: true, creatCompt: true };
       case "/notifications":
@@ -104,7 +111,7 @@ export default function RootLayout() {
       }
     >
       <div className="navbar">
-        <Navbar open={open} user={user} />
+        <Navbar open={open} user={user} userPath={userPath}/>
       </div>
       <div className="Sidebar">
         <Sidebar

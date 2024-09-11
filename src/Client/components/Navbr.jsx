@@ -5,7 +5,7 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 
-export default function Navbar({user}) {
+export default function Navbar({user,userPath}) {
   const [isOpen, setIsOpen] = useState(false);
 
   function togglePopover() {
@@ -45,7 +45,7 @@ export default function Navbar({user}) {
           </div>
           <div className="infoElt">
             <h3>Directory Path:</h3>
-            <h3 className="var">{user.DirPath}</h3>
+            <h3 className="var">{userPath}</h3>
           </div>
           <div className="infoElt">
             <h3>Role:</h3>

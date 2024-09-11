@@ -23,6 +23,8 @@ export default function CreationUser() {
         if (response.status === 200) {
           console.log(response.data);
           setPathList(response.data.paths);
+          reset({path: response.data.paths[0].path,
+            role: "user",})
         }
       })
       .catch((error) => {
@@ -43,7 +45,7 @@ export default function CreationUser() {
       lastName: watch("prenom"),
       email: watch("email"),
       password: watch("password"),
-      DirPath: watch("path"),
+      userPath: watch("path"),
       role: watch("role"),
     };
     axios

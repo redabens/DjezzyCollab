@@ -24,8 +24,14 @@ const userSchema = new Schema({
         default: 'user',
     },
     DirPath:{
-        type: String,
-        default: '/Downloads/public',
+        type: Array,
+        default: [{serveurSFTP:{host: '127.0.0.1',
+            port: 22,
+            username: 'redabens' ,
+            password:'Redabens2004..',
+            defaultPath:'/Downloads/public'}
+            ,path:'/Downloads/public',
+        }],
     },
 })
 

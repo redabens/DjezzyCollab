@@ -8,8 +8,10 @@ import { Fragment } from "react";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import PopupState, { bindTrigger, bindMenu } from "material-ui-popup-state";
+import { useNavigate } from "react-router-dom";
 
 export default function GestionUsers() {
+  const navigate = useNavigate();
   const [query, setQuery] = useState("");
   const [Users, setUsers] = useState([]);
   const [userToDelete, setUserToDelete] = useState(null);
@@ -73,32 +75,25 @@ export default function GestionUsers() {
     }
   };
 
-  const handleEditUser = async (
-    userID,
-    firstName,
-    lastName,
-    email,
-    DirPath,
-    role
-  ) => {
-    console.log("handleEditUser hit : " + userID);
+  const handleEditUser = async (user,firstName,lastName,email,userPath,role) => {
+    console.log("handleEditUser hit : " + user._id);
     try {
       const updatedUserData = {
         firstName,
         lastName,
         email,
-        DirPath,
+        userPath,
         role,
       };
 
       const response = await axios.put(
-        `http://localhost:3000/users/${userID}`,
-        updatedUserData
+        `http://localhost:3000/users/${user._id}`,
+        { updatedUserData, user}
       );
 
       setUsers((prevUsers) =>
-        prevUsers.map((user) =>
-          user._id === userID ? response.data.data : user
+        prevUsers.map((utils) =>
+          utils._id === user._id ? response.data.data : utils,
         )
       );
 
@@ -142,14 +137,15 @@ export default function GestionUsers() {
     firstName,
     lastName,
     email,
-    DirPath,
+    userPath,
     role
   ) => {
     console.log("onConfirmEdit hit : " + confirm);
     if (confirm && userToEdit) {
-      handleEditUser(userToEdit._id, firstName, lastName, email, DirPath, role); // the id
+      handleEditUser(userToEdit, firstName, lastName, email, userPath, role); // the id
     }
     setIsShowEditUser(false);
+    navigate("/gestion-utilisateurs");
   };
   return (
     <div className="gestion-users-page">

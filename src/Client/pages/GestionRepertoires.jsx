@@ -68,7 +68,7 @@ export default function GestionRepertoires() {
     <div className="gestion-rep-page">
       <h1>Gestion des répertoires</h1>
       <div className="add-rep-form">
-        <AddRepoForm path={formPath} renitPath={renitPath} />
+        <AddRepoForm path={formPath} type='1' renitPath={renitPath} />
       </div>
       <div className="existant-repos-box">
         <h3>Répertoires existants:</h3>

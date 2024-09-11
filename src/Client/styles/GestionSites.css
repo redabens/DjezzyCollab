@@ -1,0 +1,59 @@
+.gestion-site-page{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    overflow-y: scroll;
+    max-height: 90vh;
+}
+.partie-choix{
+    width: 90%;
+}
+.partie-ajout{
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+.gestion-site-page h1{
+    text-align: center;
+}
+.add-site-form{
+    width: 90%;
+    display: flex;
+    justify-content: center;
+}
+.existant-repos-box {
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+  }
+.existant-repos-box h3 {
+  padding-top: 20px;
+  padding-bottom: 10px;
+  padding-left: 5%;
+  font-family: "M PLUS Rounded 1c", sans-serif;
+  color: rgb(81, 81, 81);
+  font-weight: 600;
+  font-size: 1em;
+}
+.existant-repos-list {
+  max-height: 50vh;
+  overflow-y: scroll;
+  border: 1px solid rgb(214, 214, 214);
+  border-radius: 10px;
+  /* box-shadow: -1.5px 3px 4.5px rgba(141, 115, 115, 58%); */
+  /* border: 2px solid rebeccapurple; */
+}
+.add-rep-form {
+  width: 90%;
+  height: 16vh;
+}
+.add-repo-form form {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}

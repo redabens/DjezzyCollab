@@ -9,6 +9,7 @@ import axios from "axios";
 
 function NotifComponent({ notif }) {
   const [user, setUser] = useState(null);
+  const [userPath,setUserPath] = useState("");
   const [notifText, setNotifText] = useState("");
 
   useEffect(() => {
@@ -19,6 +20,7 @@ function NotifComponent({ notif }) {
             `http://localhost:3000/users/${notif.userId}`
           );
           setUser(response.data.data);
+          setUserPath(response.data.userPath);
           // the notifi message
           switch (notif.type) {
             case "upload":
@@ -100,7 +102,7 @@ function NotifComponent({ notif }) {
             </p>
             <p className="notif-msg">{notifText}</p>
             <p className="repo-name" title="HAHAHA">
-              {user.DirPath}
+              {userPath}
             </p>
           </div>
           <div className="notif-time">
@@ -111,7 +113,7 @@ function NotifComponent({ notif }) {
       <AccordionDetails>
         <ul className="notif-body">
           <li className="body-item">
-            Path: <span>{user.DirPath}</span>
+            Path: <span>{userPath}</span>
           </li>
           <li className="body-item">
             Nom du fichier: <span>{notif.fileName}</span>

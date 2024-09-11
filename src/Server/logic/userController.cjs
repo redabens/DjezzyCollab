@@ -1,8 +1,9 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const User = require("../models/users.cjs");
+const SiteSFTP = require("../models/sitesftp.cjs");
 const { message } = require("antd");
-const { deleteUserFromLDAP } = require("./ldap.cjs");
+const { deleteUserFromLDAP, client } = require("./ldap.cjs");
 
 const createUser = async (req, res) => {
   const data = req.body;
@@ -76,24 +77,74 @@ const deleteUser = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
-  const userId = req.params.id;
   const data = req.body;
 
   try {
-    const user = await User.findById(userId);
-
-    if (!user) {
-      return res.status(404).json({
-        status: "error",
-        message: "User not found",
-      });
+    //get checked serveur sftp
+    const checkedSite = await SiteSFTP.findOne({checked:true});
+    if(!checkedSite) return res.status(401).send({error: "No site sftp checked"});
+    let newDirPath = data.user.DirPath;
+    // Trouver l'index de l'objet correspondant dans DirPath
+    const index = newDirPath.findIndex((dir) => 
+      dir.serveurSFTP.host === checkedSite.host &&
+      dir.serveurSFTP.port === checkedSite.port &&
+      dir.serveurSFTP.username === checkedSite.username &&
+      dir.serveurSFTP.password === checkedSite.password &&
+      dir.serveurSFTP.defaultPath === checkedSite.defaultPath
+    );
+    if (index === -1) {
+      return res.status(404).send({error: "No matching path found"});
     }
-
-    Object.keys(data).forEach((key) => {
-      user[key] = data[key];
-    });
-
-    await user.save();
+    // Accéder et modifier l'objet à cet index
+    newDirPath[index].path = data.updatedUserData.userPath;
+    const user = await User.findByIdAndUpdate(
+      data.user._id,
+      {firstName: data.updatedUserData.firstName,
+        lastName: data.updatedUserData.lastName,
+        email: data.updatedUserData.email,
+        password: data.updatedUserData.password,
+        DirPath: newDirPath,
+        role: data.updatedUserData.role,
+      },
+      { new: false }
+    );
+    // Update user in LDAP
+    if(data.updatedUserData.firstName !== user.firstName ||
+       data.updatedUserData.lastName !== user.lastName ||
+        data.updatedUserData.email !== user.email){
+          console.log('ici pour changer cn sn et uid et mail');
+          // rechercher et recuperer le dn de l'utilisateur
+          const dn = `ou=users,dc=djezzy-collab,dc=com`;
+          searchOptions = {
+            filter: `(&(uid=${user.email}))`,
+            scope: "sub", // We only need to check the base entry itself
+            attributes: ["uid", "dn"], // We only care about the DN
+          }
+          const result = await client.search(dn, searchOptions);
+          console.log(result);
+          if(data.updatedUserData.email !== user.email){
+            // modifier uid et mail et cn
+            const username = data.updatedUserData.email.split("@")[0];
+            const change = {
+              operation: 'replace', // add, delete, replace
+              modification: {
+                cn: username,
+                mail: data.updatedUserData.email,
+                uid: data.updatedUserData.email,
+              }
+            };
+            await client.modify(result[0].dn, change);
+          } else{
+            // modifier sn
+            const change = {
+              operation: 'replace', // add, delete, replace
+              modification: {
+                sn: `${data.updatedUserData.firstName} ${data.updatedUserData.lastName}`,
+              }
+            };
+            await client.modify(result[0].dn, change);
+          }
+        }
     res.status(200).json({
       status: "success",
       message: "User updated successfully",
@@ -117,10 +168,23 @@ const getUserById = async (req,res) =>{
       message: "User Not Found",
     });
   }
+  //get checked serveur sftp
+  const checkedSite = await SiteSFTP.findOne({checked:true});
+  if(!checkedSite) return res.status(401).send({error: "No site sftp checked"});
+  // recuperer le path du checked site dans user
+  const userPath = user.DirPath.filter((dir)=>{
+    return dir.serveurSFTP.host === checkedSite.host &&
+     dir.serveurSFTP.port === checkedSite.port &&
+      dir.serveurSFTP.username === checkedSite.username &&
+       dir.serveurSFTP.password === checkedSite.password &&
+        dir.serveurSFTP.defaultPath === checkedSite.defaultPath;
+  })[0].path;
+  console.log("User path:", userPath);
   res.status(200).json({
     status: "success",
     message: "User updated successfully",
     data: user,
+    userPath:userPath,
   });
 
 } catch (err) {

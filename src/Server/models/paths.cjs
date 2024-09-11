@@ -1,7 +1,13 @@
 const mongoose = require('mongoose');
+const SiteSftp = require('./sitesftp.cjs');
 var Schema = mongoose.Schema;
 
 const pathSchema = new Schema({
+    serveurSftp:{
+        type:Schema.Types.ObjectId,
+        ref:'SiteSftp',
+        required:true,
+    },
     path: {
         type:String,
         required:true,
