@@ -25,6 +25,7 @@ export default function Administrateur({
   handleGestRep,
   handleGestUtils,
   handleCreatCompte,
+  handleGestSites,
 }) {
   return (
     <>
@@ -201,6 +202,54 @@ export default function Administrateur({
                       }}
                     >
                       Gestion Utilisateurs
+                    </Typography>
+                  }
+                />
+              </ListItemButton>
+            </NavLink>
+            <NavLink
+              to="/gestion-sites"
+              className="linkSpe"
+              style={{
+                width: "85%",
+                borderRadius: "8px 8px 8px 8px",
+                backgroundColor: state.gestSites ? "#f8cece" : "null",
+              }}
+            >
+              <ListItemButton
+                onClick={handleGestSites}
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  gap: "1rem",
+                  pt: 0.5,
+                  pb: 0.5,
+                  alignItems: "center",
+                  borderRadius: "8px 8px 8px 8px",
+                }}
+              >
+                <ListItemIcon sx={{ all: "unset" }}>
+                  <img
+                    className="gestSites"
+                    src="./../../src/assets/gestion-sites.svg"
+                    alt="gestSites"
+                    style={{ width: "24px", height: "24px" }}
+                  />
+                </ListItemIcon>
+                <StyledListItemText
+                  disableTypography
+                  primary={
+                    <Typography
+                      variant="div"
+                      style={{
+                        fontFamily: "Noto Sans, sans-serif",
+                        fontSize: "1.8em",
+                        fontWeight: 500,
+                        color: "#121212",
+                        textDecoration: "none",
+                      }}
+                    >
+                      Gestions Sites
                     </Typography>
                   }
                 />

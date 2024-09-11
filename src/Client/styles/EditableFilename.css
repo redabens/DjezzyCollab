@@ -1,0 +1,31 @@
+.editable{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.titre-nonRename {
+    font-family: "Montserrat", sans-serif !important;
+    background-color: white;
+    border: none;
+    outline: none; /* Enlève la bordure de focus */
+    font-size: 0.9rem;
+    font-weight: 500;
+    user-select: none; /* Empêche la sélection du texte */
+    -webkit-user-select: none; /* Pour les navigateurs WebKit (Chrome, Safari) */
+    -moz-user-select: none; /* Pour Firefox */
+    -ms-user-select: none; /* Pour Internet Explorer/Edge */
+    pointer-events: none; /* Empêche tous les événements de pointeur */
+  }
+  .titre-Rename {
+    font-size: 0.9rem;
+    font-weight: 500;
+    font-family: "Montserrat", sans-serif !important;
+    border: 1px solid black;
+  }
+  .extension{
+    user-select: none; /* Empêche la sélection du texte */
+    -webkit-user-select: none; /* Pour les navigateurs WebKit (Chrome, Safari) */
+    -moz-user-select: none; /* Pour Firefox */
+    -ms-user-select: none; /* Pour Internet Explorer/Edge */
+    pointer-events: none; /* Empêche tous les événements de pointeur */  
+  }

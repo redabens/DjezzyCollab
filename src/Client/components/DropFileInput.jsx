@@ -140,7 +140,7 @@ const DropFileInput = (props) => {
           else if (res.status === 404) return alert("User not found");
           // else if (res.status === 415) return alert("Directory not found");
           else if (res.status === 500)
-            return alert("Failed to upload due to server");
+            return alert(error.response.data);
         } else {
           console.log(error);
           alert("An unexpected error occurred. Please try again.");

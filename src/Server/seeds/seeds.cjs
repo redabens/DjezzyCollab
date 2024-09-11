@@ -5,44 +5,18 @@ var Schema = mongoose.Schema;
 // file import
 const User = require('../models/users.cjs');
 const Path = require('../models/paths.cjs');
+const SiteSFTP = require('../models/sitesftp.cjs');
 
 mongoose.connect('mongodb://localhost:27017/Djezzy-Collab').then(() => console.log('Connected to MongoDB...'))
 .catch(error => console.log(error.message));
-
-// Create a user
-const CreateUsers = async ()=>{
-const user1 = new User({
-    firstName: 'Bensemane',
-    lastName: 'Mohamed Reda',
-    email: 'reda9bens4@gmail.com',
-    password: bcrypt.hashSync('Redabens2004..', 8),
-    role: 'admin',
-});
-const user2 = new User({
-    firstName: 'Iratni',
-    lastName: 'Amina Sara',
-    email: 'ms_iratni@esi.dz',
-    password: bcrypt.hashSync('sarair2004', 8),    
-});
-await user1.save();
-await user2.save();
-}
-const CreatePaths = async ()=>{
-    
-const user1 = await User.findOne({
-    firstName: 'Bensemane',
-    lastName: 'Mohamed Reda',
-    email: 'reda9bens4@gmail.com',    
-});
-    const path1 = new Path({
-        path: '/Downloads/public',
-        createdBy: user1._id,
-    })
-    await path1.save();
-    const path2 = new Path({
-        path: '/Downloads/admin',
-        createdBy: user1._id,
-    })
-    await path2.save();
-}
-
+let checkedSite = null;
+// SiteSFTP.findOne({checked:true}).then((res)=>{
+//     checkedSite = res;
+//     console.log(checkedSite);
+//     Path.updateMany({},{serveurSftp:checkedSite._id}).then((res)=>{
+//         console.log(res);
+//     });
+// });
+// Path.updateMany({},{serveurSftp:checkedSite._id}).then((res)=>{
+//     console.log(res);
+// });

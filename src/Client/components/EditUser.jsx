@@ -15,36 +15,43 @@ function EditUser({ user, onConfirmEdit }) {
   } = useForm();
 
   const [pathList, setPathList] = useState([]);
+  const [userPath,setUserPath] = useState("");
   const roleList = ["user", "admin", "download", "upload"];
   // Initialize form values with user data when the component mounts
-  useEffect(() => {
-    if (user) {
-      reset({
-        nom: user.lastName,
-        prenom: user.firstName,
-        email: user.email,
-        path: user.DirPath,
-        role: user.role,
-      });
-    }
-  }, []);
-
   useEffect(function () {
-    axios
-      .get("http://localhost:3000/creation-compte")
-      .then((response) => {
-        if (response.status === 200) {
-          console.log(response.data);
-          setPathList(response.data.paths);
-        } else if (response.status === 404) {
-          console.log("Erreur 404");
-          return alert(response.data);
-        }
-      })
-      .catch((errors) => {
-        console.log(errors);
-        alert(errors);
-      });
+    if (user) {
+      axios
+        .get("http://localhost:3000/creation-compte")
+        .then((response) => {
+          if (response.status === 200) {
+            console.log(response.data);
+            setPathList(response.data.paths);
+            const UserPath = user.DirPath.filter((dir)=>{
+              return dir.serveurSFTP.host === response.data.checkedSite.host &&
+               dir.serveurSFTP.port === response.data.checkedSite.port &&
+                dir.serveurSFTP.username === response.data.checkedSite.username &&
+                 dir.serveurSFTP.password === response.data.checkedSite.password &&
+                  dir.serveurSFTP.defaultPath === response.data.checkedSite.defaultPath;
+            })[0].path;
+            reset({
+              nom: user.lastName,
+              prenom: user.firstName,
+              email: user.email,
+              path: UserPath,
+              role: user.role,
+            });
+            setUserPath(UserPath);
+          } else if (response.status === 404) {
+            console.log("Erreur 404");
+            return alert(response.data);
+          }
+        })
+        .catch((errors) => {
+          console.log(errors);
+          alert(errors);
+        });
+        
+    }
   }, []);
 
   const handleEdit = () => {
@@ -158,7 +165,7 @@ function EditUser({ user, onConfirmEdit }) {
                 className="btn-dialog2 btn-dialogg-confirm2"
                 type="submit"
               >
-                Sauvgarder
+                Sauvegarder
               </button>
             </div>
           </form>

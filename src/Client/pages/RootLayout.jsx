@@ -4,35 +4,17 @@ import { useState, useEffect } from "react";
 import Sidebar from "./../components/Sidebar";
 import Navbar from "./../components/Navbr";
 import LogoDjezzy from "./../components/LogoDjezzy";
-import { Outlet, Navigate, useLocation } from "react-router-dom";
+import { Outlet, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../components/AuthContext"; // Assurez-vous du bon chemin d'importation
 import axios from "axios";
 import YesNoDialog from "../components/YesNoDialog";
 
 export default function RootLayout() {
-  const [rotating, setRotating] = useState(false);
-  const [logout, setlogout] = useState(false);
-  const onConfirmDialog = async (confirm) => {
-    console.log("onConfirmDialog in rootLayout hit : " + confirm);
-    if (confirm) {
-      await handleLogout();
-    }
-    setShowDialog(false);
-  };
-  const handleLogout = () => {
-    
-  };
-  const showLogoutDialog = () => {
-    setlogout(true);
-    console.log("showLogoutDialog hit in rouutLayout, logout is: ", logout);
-  };
-
-  const handleRotateLogo = () => {
-    setRotating(true);
-    setTimeout(() => setRotating(false), 1000); // Duration should match the animation duration
-  };
-  const { token } = useAuth();
+  const navigate = useNavigate();
+  const { token, setToken} = useAuth();
   const [user, setUser] = useState("");
+  const [userPath,setUserPath] = useState("");
+  const [rotating, setRotating] = useState(false);
   // Vérifiez l'état d'authentification avant de rendre le contenu
   if (!token) {
     return <Navigate to="/login" />;
@@ -45,15 +27,40 @@ export default function RootLayout() {
       .then((res) => {
         if (res.status === 200) {
           setUser(res.data.user);
-        } else if (res.status === 401) return alert("User Id not Found");
-        else if (res.status === 404) return alert("User not found");
-        else if (res.status === 500)
-          return alert("Failed to upload due to server");
-      })
-      .catch((error) => {
-        alert("Error getting user");
+          setUserPath(res.data.userPath);
+        }
+      }).catch((error)=>{
+        if(error.response){
+          if (error.response.status === 401) return alert("User Id not Found");
+          else if (error.response.status === 404) return alert("User not found");
+          else if (error.response.status === 500) return alert("Failed to upload due to server");
+        }else{
+          alert("Error getting user");
+        }
       });
   }, []);
+  const [logout, setLogout] = useState(false);
+  const onConfirmDialog = async (confirm) => {
+    console.log("onConfirmDialog in rootLayout hit : " + confirm);
+    if (confirm) {
+      handleLogout();
+    }
+    setLogout(false);
+  };
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setToken(null);  
+    navigate("/login");
+  };
+  const showLogoutDialog = () => {
+    setLogout(true);
+    console.log("showLogoutDialog hit in rouutLayout, logout is: ", logout);
+  };
+
+  const handleRotateLogo = () => {
+    setRotating(true);
+    setTimeout(() => setRotating(false), 1000); // Duration should match the animation duration
+  };
   const [open, setOpen] = useState(true);
   const handleToggle = (e) => {
     setOpen((prev) => !prev);
@@ -68,6 +75,7 @@ export default function RootLayout() {
       gestRep: false,
       gestUtils: false,
       creatCompt: false,
+      gestSites:false,
       notifs: false,
     };
     switch (pathname) {
@@ -79,6 +87,8 @@ export default function RootLayout() {
         return { ...defaultParams, admin: true, gestRep: true };
       case "/gestion-utilisateurs":
         return { ...defaultParams, admin: true, gestUtils: true };
+        case "/gestion-sites":
+        return { ...defaultParams, admin: true, creatCompt: true };
       case "/creation-comptes":
         return { ...defaultParams, admin: true, creatCompt: true };
       case "/notifications":
@@ -101,7 +111,7 @@ export default function RootLayout() {
       }
     >
       <div className="navbar">
-        <Navbar open={open} user={user} />
+        <Navbar open={open} user={user} userPath={userPath}/>
       </div>
       <div className="Sidebar">
         <Sidebar

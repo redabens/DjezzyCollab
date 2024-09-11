@@ -3,7 +3,7 @@ var Schema = mongoose.Schema;
 
 const notifSchema = new Schema({
   userId: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: "User",
     required: true,
   },

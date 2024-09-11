@@ -20,8 +20,7 @@ function Sidebar({ open, user, handleToggle, params, onLogout }) {
   const { token, setToken } = useAuth();
   const [navbar, setNavBar] = useState(params);
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    setToken(null);
+    onLogout();
   };
   const menuItemUp = [
     user.role !== "download" && {
@@ -46,6 +45,7 @@ function Sidebar({ open, user, handleToggle, params, onLogout }) {
           gestRep: false,
           gestUtils: false,
           creatCompt: false,
+          gestSites:false,
           notifs: false,
         });
       },
@@ -74,6 +74,7 @@ function Sidebar({ open, user, handleToggle, params, onLogout }) {
           gestRep: false,
           gestUtils: false,
           creatCompt: false,
+          gestSites:false,
           notifs: false,
         });
       },
@@ -105,6 +106,7 @@ function Sidebar({ open, user, handleToggle, params, onLogout }) {
           gestRep: false,
           gestUtils: false,
           creatCompt: false,
+          gestSites:false,
           notifs: false,
         }));
       },
@@ -137,6 +139,7 @@ function Sidebar({ open, user, handleToggle, params, onLogout }) {
           gestRep: false,
           gestUtils: false,
           creatCompt: false,
+          gestSites:false,
           notifs: true,
         }));
       },
@@ -220,6 +223,7 @@ function Sidebar({ open, user, handleToggle, params, onLogout }) {
                           gestRep: true,
                           gestUtils: false,
                           creatCompt: false,
+                          gestSites:false,
                           notifs: false,
                         }));
                       }}
@@ -231,6 +235,7 @@ function Sidebar({ open, user, handleToggle, params, onLogout }) {
                           gestRep: false,
                           gestUtils: true,
                           creatCompt: false,
+                          gestSites:false,
                           notifs: false,
                         }));
                       }}
@@ -242,6 +247,19 @@ function Sidebar({ open, user, handleToggle, params, onLogout }) {
                           gestRep: false,
                           gestUtils: false,
                           creatCompt: true,
+                          gestSites:false,
+                          notifs: false,
+                        }));
+                      }}
+                      handleGestSites={() => {
+                        setNavBar((prev) => ({
+                          upload: false,
+                          download: false,
+                          admin: true,
+                          gestRep: false,
+                          gestUtils: false,
+                          creatCompt: false,
+                          gestSites:true,
                           notifs: false,
                         }));
                       }}
@@ -270,7 +288,19 @@ function Sidebar({ open, user, handleToggle, params, onLogout }) {
 
           <div className="optionsDown" style={{ gap: open ? "1.2vh" : "2vh" }}>
           {menuItemDown.map((item) => {
-              return (
+            return item.name === "Déconnexion" ? 
+              <div
+                  className={open ? "link-open" : "link-close"}
+                  activeclassname="active"
+                  onClick={item.func}
+                  style={{
+                    backgroundColor: item.couleur() ? "#f8cece" : "null",
+                  }}
+                >
+                  <div className="iconDown">{item.icon}</div>
+                  {open ? <div className="link_text">{item.name}</div> : null}
+                </div>
+                :(
                 <NavLink
                   to={item.path}
                   key={item.id}

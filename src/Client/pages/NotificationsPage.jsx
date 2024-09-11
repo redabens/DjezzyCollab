@@ -18,7 +18,7 @@ function NotificationsPage() {
     fetchUsers();
   }, []);
   return (
-    <div className="notif-page" style={ notifs.length === 0 && {justifyContent:'center'}}>
+    <div className="notif-page" style={ notifs.length === 0 ? {justifyContent:'center'} : {}}>
       
       {notifs.length > 0 ? notifs.map((notif) => (
         <NotifComponent key={notif._id} notif={notif} />

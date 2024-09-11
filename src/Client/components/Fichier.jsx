@@ -3,6 +3,7 @@ import { useAuth } from "../components/AuthContext";
 import axios from "axios";
 import "./../styles/Fichier.css";
 import AutoResizeInput from "./AutoResizeInput";
+import EditableFilename from "./EditableFilename";
 
 export default function Fichier({ file, isGrid }) {
   const { token } = useAuth();
@@ -62,12 +63,16 @@ export default function Fichier({ file, isGrid }) {
       .then((res) => {
         if (res.status === 200) {
           alert(res.data);
-        } else {
-          handleError(res.status);
         }
       })
       .catch((error) => {
-        alert("Error Renaming files");
+        if(error.response){
+          if (res.status === 401) return alert("User Id not Found");
+          else if (res.status === 404) return alert("User not found");
+          else if (res.status === 409) return alert("name already exists choose another one");
+          else if (res.status === 415) return alert("Directory not found");
+          else if (res.status === 500) return alert("Failed to rename due to server");
+        }else return alert("An unknown error occurred");
       });
     setRename(false);
   };
@@ -87,15 +92,21 @@ export default function Fichier({ file, isGrid }) {
               : { width: "26px", height: "26px" }
           }
         />
-        <div className="file-name">
-          <AutoResizeInput
+        {/* <div className="file-name"> */}
+          <EditableFilename 
+            filename={nom+extension} 
+            handleNom={handleNom} 
+            handleRename={handleRename} 
+            rename={rename}
+          />
+          {/* <AutoResizeInput
             rename={rename}
             nom={nom}
             handleNom={handleNom}
             handleRename={handleRename}
           />
-          <span className="file-extension">{extension}</span>
-        </div>
+          <span className="file-extension">{extension}</span> */}
+        {/* </div> */}
       </div>
       <div className={isGrid ? "bottom" : "right"}>
         <div className="downloadImg" onClick={handleDownload}>

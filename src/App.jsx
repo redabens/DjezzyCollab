@@ -7,13 +7,12 @@ import {
 } from "react-router-dom";
 // pages
 import DownloadPage from "./Client/pages/DownloadPage";
-import ParametresPage from "./Client/pages/ParametresPage";
+import GestionSites from "./Client/pages/GestionSites";
 import NotificationsPage from "./Client/pages/NotificationsPage";
 import UploadPage from "./Client/pages/UploadPage";
 import CreationUser from "./Client/pages/CreationUser";
 import GestionRepertoires from "./Client/pages/GestionRepertoires";
 import GestionUsers from "./Client/pages/GestionUsers";
-import AdminPage from "./Client/pages/AdminPage";
 import LoginPage from "./Client/pages/LoginPage";
 // fixed element
 import { AuthProvider } from "./Client/components/AuthContext"; // Importez le fournisseur de contexte
@@ -28,11 +27,9 @@ const router = createBrowserRouter(
         <Route path="/download" element={<DownloadPage />} />
         <Route path="/notifications" element={<NotificationsPage />} />
         <Route path="/upload" element={<UploadPage />} />
-        <Route
-          path="/gestion-repertoires"
-          element={<GestionRepertoires />}
-        />
+        <Route path="/gestion-repertoires" element={<GestionRepertoires />} />
         <Route path="/gestion-utilisateurs" element={<GestionUsers />} />
+        <Route path="/gestion-sites" element={<GestionSites />} />
         <Route path="/creation-comptes" element={<CreationUser />} />
       </Route>
       <Route path="*" element={<NotFound />} />
