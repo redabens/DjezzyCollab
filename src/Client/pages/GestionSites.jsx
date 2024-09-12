@@ -14,8 +14,9 @@ export default function GestionSites() {
   const [formPath, setFormPath] = useState("/");
   const [fileTree, setFileTree] = useState([]);
   const [siteTable,setSiteTable] = useState([]);
-  const [selectedRow, setSelectedRow] = useState(null);
+  const [selectedRow, setSelectedRow] = useState({ancienId:"",nouveauId:""});
   const [loadingFileTree, setLoadingFileTree] = useState(false);
+  const [visualise,setVisualise] = useState(false);
   useEffect(function() {
     axios.get("http://localhost:3000/sitesftp")
     .then((res)=>{
@@ -24,7 +25,9 @@ export default function GestionSites() {
         setSiteTable(res.data);
         const tableauselectedId = res.data.filter((row)=> (row.checked));
         const selectedId = tableauselectedId.length > 0 ? tableauselectedId[0]._id : null;
-        setSelectedRow(selectedId);
+        setSelectedRow((prev)=>{
+          return {ancienId:"",selectedId:selectedId};
+        });
       }
     }).catch((error) => {
       if (error.response) {
@@ -38,6 +41,7 @@ export default function GestionSites() {
   },[]);
   const handleVisualise = (sftpConfig)=>{
     setLoadingFileTree(true);
+    setVisualise(true);
     axios.post("http://localhost:3000/sitesftp/visualise",sftpConfig)
     .then((res)=>{
       if(res.status === 200){
@@ -95,26 +99,32 @@ export default function GestionSites() {
   return (
     <div className="gestion-site-page">
       <h1>Gestion des sites</h1>
-      <h2>Choisissez un site:</h2>
-      <div className="partie-choix">
-        <SiteTable lignes={siteTable} setSelectedRow={setSelectedRow} selectedRow={selectedRow}/>
+      <div className="choix-site">
+        <h2>Choisissez un site:</h2>
+        <div className="partie-choix">
+          <SiteTable lignes={siteTable} setSelectedRow={setSelectedRow} selectedRow={selectedRow}/>
+        </div>
       </div>
-      <h2>Ajouter un site:</h2>
-      <div className="partie-ajout">
-        <div className="add-site-form">
-          <AddSiteForm handleVisualise={handleVisualise}/>
-        </div>
-        <div className="existant-repos-box">
-          <h3>Répertoires existants:</h3>
-          {loadingFileTree && <LinearProgress />}
-          <Box className="existant-repos-list">
-            <SimpleTreeView>
-              {fileTree.map((treeItem) => renderTree(treeItem))}
-            </SimpleTreeView>
-          </Box>
-        </div>
-        <div className="add-rep-form">
-          <AddRepoForm path={formPath} type='2' renitPath={renitPath} />
+      <div className="ajout-site">
+        <h2>Ajouter un site:</h2>
+        <div className="partie-ajout">
+          <div className="add-site-form">
+            <AddSiteForm handleVisualise={handleVisualise}/>
+          </div>
+          {visualise && (<div className="vis-site">
+            <div className="existant-repos-box">
+              <h3>Répertoires existants:</h3>
+              {loadingFileTree && <LinearProgress />}
+              <Box className="existant-repos-list">
+                <SimpleTreeView>
+                  {fileTree.map((treeItem) => renderTree(treeItem))}
+                </SimpleTreeView>
+              </Box>
+            </div>
+            <div className="add-rep-form">
+              <AddRepoForm path={formPath} type='2' renitPath={renitPath} />
+            </div>
+          </div>)}
         </div>
       </div>
     </div>

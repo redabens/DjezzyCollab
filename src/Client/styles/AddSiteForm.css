@@ -5,6 +5,9 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    border: 2px solid rgb(205, 205, 205);
+    border-radius: 5px;
+    padding-bottom: 20px;
 }
 .form-d{
     width: 80%;

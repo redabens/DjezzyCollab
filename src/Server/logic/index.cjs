@@ -37,7 +37,7 @@ const Sitesftp = require("../models/sitesftp.cjs");
 
 // Connect to MongoDB
 mongoose
-  .connect("mongodb://localhost:27017/Djezzy-Collab")
+  .connect("mongodb+srv://redabens:Redabens2004..@cluster-rs.iwvq9.mongodb.net/Djezzy-Collab")
   .then(async () => {
     console.log("Connected to MongoDB...");
     // Connect to SFTP once when the server starts

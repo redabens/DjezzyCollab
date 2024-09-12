@@ -1,3 +1,8 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c&display=swap");
+
 .gestion-site-page{
     width: 100%;
     height: 100%;
@@ -8,28 +13,41 @@
     overflow-y: scroll;
     max-height: 90vh;
 }
+.gestion-site-page h1{
+  text-align: center;
+}
+.choix-site,.ajout-site{
+  font-family: "M PLUS Rounded 1c", sans-serif;
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 .partie-choix{
-    width: 90%;
 }
 .partie-ajout{
-    width: 90%;
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
     gap: 20px;
 }
-.gestion-site-page h1{
-    text-align: center;
-}
 .add-site-form{
-    width: 90%;
-    display: flex;
-    justify-content: center;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.vis-site{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
 }
 .existant-repos-box {
-    width: 90%;
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
   }
 .existant-repos-box h3 {
   padding-top: 20px;

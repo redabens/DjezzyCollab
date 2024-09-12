@@ -7,7 +7,7 @@ const User = require('../models/users.cjs');
 const Path = require('../models/paths.cjs');
 const SiteSFTP = require('../models/sitesftp.cjs');
 
-mongoose.connect('mongodb://localhost:27017/Djezzy-Collab').then(() => console.log('Connected to MongoDB...'))
+mongoose.connect('mongodb+srv://redabens:Redabens2004..@cluster-rs.iwvq9.mongodb.net/Djezzy-Collab').then(() => console.log('Connected to MongoDB...'))
 .catch(error => console.log(error.message));
 let checkedSite = null;
 // SiteSFTP.findOne({checked:true}).then((res)=>{
