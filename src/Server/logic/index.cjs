@@ -14,7 +14,13 @@ const userRoutes = require("../routes/userRoutes.cjs");
 const notifRoutes = require("../routes/notifRoutes.cjs");
 const sitesftpRoutes = require("../routes/sitesftpRoutes.cjs");
 const notifController = require("./notifController.cjs");
-const {sftp,buildFileTree,connectSFTP,disconnectSFTP} = require("./sitesftpController.cjs");
+
+const {
+  sftp,
+  buildFileTree,
+  connectSFTP,
+  disconnectSFTP,
+} = require("./sitesftpController.cjs");
 
 const { authenticate, addUser } = require("./ldap.cjs"); // Importez le module LDAP
 // express configuration
@@ -35,14 +41,14 @@ mongoose
   .then(async () => {
     console.log("Connected to MongoDB...");
     // Connect to SFTP once when the server starts
-    const checkedSite = await Sitesftp.findOne({checked:true});
-    if(!checkedSite) return console.log("No site sftp checked");
+    const checkedSite = await Sitesftp.findOne({ checked: true });
+    if (!checkedSite) return console.log("No site sftp checked");
     const sftpConfig = {
       host: checkedSite.host,
       port: checkedSite.port,
       username: checkedSite.username,
       password: checkedSite.password,
-    }
+    };
     connectSFTP(sftpConfig);
   })
   .catch((error) => console.log(error.message));
@@ -58,7 +64,7 @@ app.use(
 
 app.use("/users", userRoutes);
 app.use("/notifs", notifRoutes);
-app.use("/sitesftp",sitesftpRoutes);
+app.use("/sitesftp", sitesftpRoutes);
 
 // const sftpconfig = {
 //   host: "127.0.0.1",
@@ -146,11 +152,12 @@ app.post("/login", async (req, res) => {
 app.get("/creation-compte", async (req, res) => {
   try {
     //get checked serveur sftp
-    const checkedSite = await Sitesftp.findOne({checked:true});
-    if(!checkedSite) return res.status(401).send({error: "No site sftp checked"});
-    const paths = await Path.find({serveurSftp:checkedSite._id});
+    const checkedSite = await Sitesftp.findOne({ checked: true });
+    if (!checkedSite)
+      return res.status(401).send({ error: "No site sftp checked" });
+    const paths = await Path.find({ serveurSftp: checkedSite._id });
     if (!paths) return res.status(404).send("no path found");
-    res.status(200).send({ paths,checkedSite });
+    res.status(200).send({ paths, checkedSite });
   } catch {
     console.log("erreur de requete");
     res.status(500).send("serveur error");
@@ -159,33 +166,38 @@ app.get("/creation-compte", async (req, res) => {
 // creation de l'utilisateur
 app.post("/creation-compte", async (req, res) => {
   try {
-    const TabSite = await Sitesftp.find({}); 
+    const TabSite = await Sitesftp.find({});
     //get checked serveur sftp
-    const checkedSite = await Sitesftp.findOne({checked:true});
-    if(!checkedSite) return res.status(401).send({error: "No site sftp checked"});
-    let DirPath = TabSite.map((item)=>{
-      return {serveurSFTP: {
-        host: item.host,
-        port: item.port,
-        username: item.username,
-        password: item.password,
-        defaultPath: item.defaultPath,
-      },path:item.defaultPath}
+    const checkedSite = await Sitesftp.findOne({ checked: true });
+    if (!checkedSite)
+      return res.status(401).send({ error: "No site sftp checked" });
+    let DirPath = TabSite.map((item) => {
+      return {
+        serveurSFTP: {
+          host: item.host,
+          port: item.port,
+          username: item.username,
+          password: item.password,
+          defaultPath: item.defaultPath,
+        },
+        path: item.defaultPath,
+      };
     });
     // Trouver l'index de l'objet correspondant dans DirPath
-    const index = DirPath.findIndex((dir) => 
-      dir.serveurSFTP.host === checkedSite.host &&
-      dir.serveurSFTP.port === checkedSite.port &&
-      dir.serveurSFTP.username === checkedSite.username &&
-      dir.serveurSFTP.password === checkedSite.password &&
-      dir.serveurSFTP.defaultPath === checkedSite.defaultPath
+    const index = DirPath.findIndex(
+      (dir) =>
+        dir.serveurSFTP.host === checkedSite.host &&
+        dir.serveurSFTP.port === checkedSite.port &&
+        dir.serveurSFTP.username === checkedSite.username &&
+        dir.serveurSFTP.password === checkedSite.password &&
+        dir.serveurSFTP.defaultPath === checkedSite.defaultPath
     );
     if (index === -1) {
-      return res.status(404).send({error: "No matching path found"});
+      return res.status(404).send({ error: "No matching path found" });
     }
     // Accéder et modifier l'objet à cet index
     console.log(req.body.userData.userPath);
-    DirPath[index].path = req.body.userData.userPath; 
+    DirPath[index].path = req.body.userData.userPath;
     console.log("DirPath:", DirPath);
     // creer l'utilisateur
     const utilisateur = {
@@ -218,47 +230,6 @@ app.post("/creation-compte", async (req, res) => {
   }
 });
 
-// const utilisateur1 = {
-//   firstName: 'Iratni',
-//   lastName: 'Sara Amina',
-//   email: 'ms_iratni@esi.dz',
-//   password: bcrypt.hashSync('sara2004', 8),
-//   DirPath: '/Downloads/public',
-//   role: 'user',
-// };
-// const utilisateur2 = {
-//   firstName: 'Bensemane',
-//   lastName: 'Mohamed Reda',
-//   email: 'reda9bens4@gmail.com',
-//   password: bcrypt.hashSync('Redabens2004..', 8),
-//   DirPath: '/Downloads/public',
-//   role: 'admin',
-// };
-// const createManualUser = async (utilisateur) => {
-//   try {
-
-//     // Save the user in MongoDB
-//     const newUser = new User(utilisateur);
-//     const savedUser = await newUser.save();
-//     console.log('User created successfully in MongoDB:', savedUser);
-
-//     // Create the user in LDAP
-//     addUser(utilisateur, (success, err) => {
-//       if (success) {
-//         console.log('User created successfully in LDAP');
-//       } else {
-//         console.log('Error creating user in LDAP:', err);
-//       }
-//     });
-//   } catch (error) {
-//     console.error('Error creating user:', error);
-//   }
-// };
-
-// Call the function to create the user
-// createManualUser(utilisateur1);
-// createManualUser(utilisateur2);
-
 //endpoitn to get the user role
 app.get("/user", verifyToken, async (req, res) => {
   try {
@@ -270,17 +241,20 @@ app.get("/user", verifyToken, async (req, res) => {
       return res.status(404).send({ error: "User not found" });
     }
     //get checked serveur sftp
-    const checkedSite = await Sitesftp.findOne({checked:true});
-    if(!checkedSite) return res.status(409).send({error: "No site sftp checked"});
+    const checkedSite = await Sitesftp.findOne({ checked: true });
+    if (!checkedSite)
+      return res.status(409).send({ error: "No site sftp checked" });
     // recuperer le path du checked site dans user
-    const userPath = user.DirPath.filter((dir)=>{
-      return dir.serveurSFTP.host === checkedSite.host &&
-       dir.serveurSFTP.port === checkedSite.port &&
+    const userPath = user.DirPath.filter((dir) => {
+      return (
+        dir.serveurSFTP.host === checkedSite.host &&
+        dir.serveurSFTP.port === checkedSite.port &&
         dir.serveurSFTP.username === checkedSite.username &&
-         dir.serveurSFTP.password === checkedSite.password &&
-          dir.serveurSFTP.defaultPath === checkedSite.defaultPath;
+        dir.serveurSFTP.password === checkedSite.password &&
+        dir.serveurSFTP.defaultPath === checkedSite.defaultPath
+      );
     })[0].path;
-    res.status(200).send({ user,checkedSite,userPath });
+    res.status(200).send({ user, checkedSite, userPath });
   } catch (error) {
     console.error("Error fetching user:", error);
     res.status(500).send({ error: "Server error" });
@@ -299,15 +273,18 @@ app.post("/upload", [verifyToken, upload.array("files")], async (req, res) => {
       return res.status(404).send({ error: "User not found" });
     }
     //get checked serveur sftp
-    const checkedSite = await Sitesftp.findOne({checked:true});
-    if(!checkedSite) return res.status(409).send({error: "No site sftp checked"});
+    const checkedSite = await Sitesftp.findOne({ checked: true });
+    if (!checkedSite)
+      return res.status(409).send({ error: "No site sftp checked" });
     // recuperer le path du checked site dans user
-    const userPath = user.DirPath.filter((dir)=>{
-      return dir.serveurSFTP.host === checkedSite.host &&
-       dir.serveurSFTP.port === checkedSite.port &&
+    const userPath = user.DirPath.filter((dir) => {
+      return (
+        dir.serveurSFTP.host === checkedSite.host &&
+        dir.serveurSFTP.port === checkedSite.port &&
         dir.serveurSFTP.username === checkedSite.username &&
-         dir.serveurSFTP.password === checkedSite.password &&
-          dir.serveurSFTP.defaultPath === checkedSite.defaultPath;
+        dir.serveurSFTP.password === checkedSite.password &&
+        dir.serveurSFTP.defaultPath === checkedSite.defaultPath
+      );
     })[0].path;
     console.log("User path:", userPath);
     // Upload files to SFTP server
@@ -356,15 +333,18 @@ app.get("/download/:filename", verifyToken, async (req, res) => {
       return res.status(404).send({ error: "User not found" });
     }
     //get checked serveur sftp
-    const checkedSite = await Sitesftp.findOne({checked:true});
-    if(!checkedSite) return res.status(409).send({error: "No site sftp checked"});
+    const checkedSite = await Sitesftp.findOne({ checked: true });
+    if (!checkedSite)
+      return res.status(409).send({ error: "No site sftp checked" });
     // recuperer le path du checked site dans user
-    const userPath = user.DirPath.filter((dir)=>{
-      return dir.serveurSFTP.host === checkedSite.host &&
-       dir.serveurSFTP.port === checkedSite.port &&
+    const userPath = user.DirPath.filter((dir) => {
+      return (
+        dir.serveurSFTP.host === checkedSite.host &&
+        dir.serveurSFTP.port === checkedSite.port &&
         dir.serveurSFTP.username === checkedSite.username &&
-         dir.serveurSFTP.password === checkedSite.password &&
-          dir.serveurSFTP.defaultPath === checkedSite.defaultPath;
+        dir.serveurSFTP.password === checkedSite.password &&
+        dir.serveurSFTP.defaultPath === checkedSite.defaultPath
+      );
     })[0].path;
     console.log("User path:", userPath);
     // recuper le path de base puis lui ajouter le path restant du user
@@ -388,8 +368,8 @@ app.patch("/download/:filename", verifyToken, async (req, res) => {
   try {
     const { filename } = req.params;
     const newFilename = req.body.nom;
-    if ( filename === newFilename){
-      return res.status(200).send('Name not changed');
+    if (filename === newFilename) {
+      return res.status(200).send("Name not changed");
     }
     // Check if req.userId is set correctly
     console.log("User ID:", req.userId);
@@ -401,15 +381,18 @@ app.patch("/download/:filename", verifyToken, async (req, res) => {
       return res.status(404).send({ error: "User not found" });
     }
     //get checked serveur sftp
-    const checkedSite = await Sitesftp.findOne({checked:true});
-    if(!checkedSite) return res.status(400).send({error: "No site sftp checked"});
+    const checkedSite = await Sitesftp.findOne({ checked: true });
+    if (!checkedSite)
+      return res.status(400).send({ error: "No site sftp checked" });
     // recuperer le path du checked site dans user
-    const userPath = user.DirPath.filter((dir)=>{
-      return dir.serveurSFTP.host === checkedSite.host &&
-       dir.serveurSFTP.port === checkedSite.port &&
+    const userPath = user.DirPath.filter((dir) => {
+      return (
+        dir.serveurSFTP.host === checkedSite.host &&
+        dir.serveurSFTP.port === checkedSite.port &&
         dir.serveurSFTP.username === checkedSite.username &&
-         dir.serveurSFTP.password === checkedSite.password &&
-          dir.serveurSFTP.defaultPath === checkedSite.defaultPath;
+        dir.serveurSFTP.password === checkedSite.password &&
+        dir.serveurSFTP.defaultPath === checkedSite.defaultPath
+      );
     })[0].path;
     console.log("User path:", userPath);
     // recuper le path de base puis lui ajouter le path restant du user
@@ -425,7 +408,10 @@ app.patch("/download/:filename", verifyToken, async (req, res) => {
     console.log(newPath);
     const renameexists = await sftp.exists(newPath);
     console.dir(renameexists);
-    if (renameexists) return res.status(409).send({ error: "name already exists choose another one" });
+    if (renameexists)
+      return res
+        .status(409)
+        .send({ error: "name already exists choose another one" });
     await sftp.rename(lastPath, newPath);
     res.status(200).send("name changed succefully");
   } catch (err) {
@@ -447,15 +433,18 @@ app.get("/download", verifyToken, async (req, res) => {
       return res.status(404).send({ error: "User not found" });
     }
     //get checked serveur sftp
-    const checkedSite = await Sitesftp.findOne({checked:true});
-    if(!checkedSite) return res.status(400).send({error: "No site sftp checked"});
+    const checkedSite = await Sitesftp.findOne({ checked: true });
+    if (!checkedSite)
+      return res.status(400).send({ error: "No site sftp checked" });
     // recuperer le path du checked site dans user
-    const userPath = user.DirPath.filter((dir)=>{
-      return dir.serveurSFTP.host === checkedSite.host &&
-       dir.serveurSFTP.port === checkedSite.port &&
+    const userPath = user.DirPath.filter((dir) => {
+      return (
+        dir.serveurSFTP.host === checkedSite.host &&
+        dir.serveurSFTP.port === checkedSite.port &&
         dir.serveurSFTP.username === checkedSite.username &&
-         dir.serveurSFTP.password === checkedSite.password &&
-          dir.serveurSFTP.defaultPath === checkedSite.defaultPath;
+        dir.serveurSFTP.password === checkedSite.password &&
+        dir.serveurSFTP.defaultPath === checkedSite.defaultPath
+      );
     })[0].path;
     console.log("User path:", userPath);
     // recuper le path de base puis lui ajouter le path restant du user
@@ -507,8 +496,9 @@ app.post("/paths/create", verifyToken, async (req, res) => {
     //   return res.status(400).json({ message: "Directory already exists" });
     // }
     //get checked serveur sftp
-    const checkedSite = await Sitesftp.findOne({checked:true});
-    if(!checkedSite) return res.status(409).send({error: "No site sftp checked"});
+    const checkedSite = await Sitesftp.findOne({ checked: true });
+    if (!checkedSite)
+      return res.status(409).send({ error: "No site sftp checked" });
     const newPath = new Path({
       serveurSftp: checkedSite._id,
       path: fullPath,
@@ -530,13 +520,77 @@ app.post("/paths/create", verifyToken, async (req, res) => {
 app.get("/tree-files", async (req, res) => {
   try {
     const fileTree = await buildFileTree("");
-    if(!fileTree) return res.status(404).send({error: "failed to build the tree of repositories!"})
+    if (!fileTree)
+      return res
+        .status(404)
+        .send({ error: "failed to build the tree of repositories!" });
     res.status(200).json(fileTree);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Failed to fetch files" });
   }
 });
+
+
+
+//--------------------------------------------------------
+
+const utilisateur1 = {
+  firstName: "Iratni",
+  lastName: "Sara Amina",
+  email: "ms_iratni@esi.dz",
+  password: bcrypt.hashSync("sara2004", 8),
+  role: "admin",
+};
+const utilisateur2 = {
+  firstName: "Bensemane",
+  lastName: "Mohamed Reda",
+  email: "reda9bens4@gmail.com",
+  password: bcrypt.hashSync("Redabens2004..", 8),
+  role: "user",
+};
+const createManualUser = async (utilisateur) => {
+  try {
+    // Save the user in MongoDB
+    const newUser = new User(utilisateur);
+    const savedUser = await newUser.save();
+    console.log("User created successfully in MongoDB:", savedUser);
+
+    // Create the user in LDAP
+    addUser(utilisateur, (success, err) => {
+      if (success) {
+        console.log("User created successfully in LDAP");
+      } else {
+        console.log("Error creating user in LDAP:", err);
+      }
+    });
+  } catch (error) {
+    console.error("Error creating user:", error);
+  }
+};
+
+// createManualUser(utilisateur1);
+// createManualUser(utilisateur2);
+
+const createSiteSFTP = async () => {
+  const newSite = new Sitesftp({
+    host: "localhost",
+    port: 22,
+    username: "sarair",
+    password: "sara2004",
+    defaultPath: "/",
+    // checked: true
+  });
+
+  try {
+    const savedSite = await newSite.save();
+  } catch (error) {
+    console.error("Error creating SFTP site:", error);
+  }
+};
+
+// createSiteSFTP();
+
 app.listen("3000", () => {
   console.log("Server is running on port 3000...");
 });

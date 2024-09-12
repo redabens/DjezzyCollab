@@ -3,6 +3,8 @@ import axios from "axios";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import "./../styles/CreationUser.css";
+import Switch from "@mui/material/Switch";
+
 export default function CreationUser() {
   const navigate = useNavigate();
   const {
@@ -12,9 +14,10 @@ export default function CreationUser() {
     reset,
     formState: { errors },
   } = useForm();
-  const roleList = [ "user","admin", "download", "upload"];
+  const roleList = ["user", "admin", "download", "upload"];
   const [pathList, setPathList] = useState([]);
   const [role, setRole] = useState("user");
+  const [ableToDelete, setAbleToDelete] = useState(true);
   //------ useEffect -------
   useEffect(function () {
     axios
@@ -23,17 +26,16 @@ export default function CreationUser() {
         if (response.status === 200) {
           console.log(response.data);
           setPathList(response.data.paths);
-          reset({path: response.data.paths[0].path,
-            role: "user",})
+          reset({ path: response.data.paths[0].path, role: "user" });
         }
       })
       .catch((error) => {
         if (error.response.status === 404) {
           console.log("Erreur 404");
           return alert(error.response.data);
-        } else{
-        console.log(error);
-        alert("error inconnue");
+        } else {
+          console.log(error);
+          alert("error inconnue");
         }
       });
   }, []);
@@ -47,6 +49,7 @@ export default function CreationUser() {
       password: watch("password"),
       userPath: watch("path"),
       role: watch("role"),
+      ableToDelete: ableToDelete,
     };
     axios
       .post("http://localhost:3000/creation-compte", { userData })
@@ -89,6 +92,10 @@ export default function CreationUser() {
     },
     path: { required: "Path est obligatoire" },
     role: { required: "Role est obligatoire" },
+  };
+  //switch able to delete
+  const handleSwitchChange = (event) => {
+    setAbleToDelete(event.target.checked);
   };
   return (
     <div className="creation-user-page">
@@ -170,6 +177,14 @@ export default function CreationUser() {
                   </option>
                 ))}
               </select>
+            </div>
+            <div className="delete-files-switch">
+              <p>Permission de supression des fichiers:</p>
+              <Switch
+                checked={ableToDelete}
+                onChange={handleSwitchChange}
+                inputProps={{ "aria-label": "Switch demo" }}
+              />
             </div>
           </div>
         </div>

@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import axios from "axios";
+import Switch from "@mui/material/Switch";
 
 function EditUser({ user, onConfirmEdit }) {
   const {
@@ -15,8 +16,10 @@ function EditUser({ user, onConfirmEdit }) {
   } = useForm();
 
   const [pathList, setPathList] = useState([]);
-  const [userPath,setUserPath] = useState("");
+  const [userPath, setUserPath] = useState("");
   const roleList = ["user", "admin", "download", "upload"];
+  const [ableToDelete, setAbleToDelete] = useState(false);
+
   // Initialize form values with user data when the component mounts
   useEffect(function () {
     if (user) {
@@ -26,12 +29,17 @@ function EditUser({ user, onConfirmEdit }) {
           if (response.status === 200) {
             console.log(response.data);
             setPathList(response.data.paths);
-            const UserPath = user.DirPath.filter((dir)=>{
-              return dir.serveurSFTP.host === response.data.checkedSite.host &&
-               dir.serveurSFTP.port === response.data.checkedSite.port &&
-                dir.serveurSFTP.username === response.data.checkedSite.username &&
-                 dir.serveurSFTP.password === response.data.checkedSite.password &&
-                  dir.serveurSFTP.defaultPath === response.data.checkedSite.defaultPath;
+            const UserPath = user.DirPath.filter((dir) => {
+              return (
+                dir.serveurSFTP.host === response.data.checkedSite.host &&
+                dir.serveurSFTP.port === response.data.checkedSite.port &&
+                dir.serveurSFTP.username ===
+                  response.data.checkedSite.username &&
+                dir.serveurSFTP.password ===
+                  response.data.checkedSite.password &&
+                dir.serveurSFTP.defaultPath ===
+                  response.data.checkedSite.defaultPath
+              );
             })[0].path;
             reset({
               nom: user.lastName,
@@ -40,6 +48,7 @@ function EditUser({ user, onConfirmEdit }) {
               path: UserPath,
               role: user.role,
             });
+            setAbleToDelete(user.ableToDelete);
             setUserPath(UserPath);
           } else if (response.status === 404) {
             console.log("Erreur 404");
@@ -50,7 +59,6 @@ function EditUser({ user, onConfirmEdit }) {
           console.log(errors);
           alert(errors);
         });
-        
     }
   }, []);
 
@@ -61,7 +69,8 @@ function EditUser({ user, onConfirmEdit }) {
       watch("nom"),
       watch("email"),
       watch("path"),
-      watch("role")
+      watch("role"),
+      ableToDelete
     );
   };
 
@@ -87,6 +96,10 @@ function EditUser({ user, onConfirmEdit }) {
     },
   };
 
+  const handleSwitchChange = (event) => {
+    setAbleToDelete(event.target.checked);
+  };
+
   return (
     <div className={`dialog2 ${onConfirmEdit ? "show" : "hide"}`}>
       <div className="dialog-content2">
@@ -96,7 +109,17 @@ function EditUser({ user, onConfirmEdit }) {
           </h2>
           <button
             className="btn-dialog-close2"
-            onClick={() => onConfirmEdit(false)}
+            onClick={() =>
+              onConfirmEdit(
+                false,
+                watch("prenom"),
+                watch("nom"),
+                watch("email"),
+                watch("path"),
+                watch("role"),
+                ableToDelete
+              )
+            }
           >
             <img src="./../../src/assets/Vector.svg" alt="cancel" />
           </button>
@@ -159,6 +182,14 @@ function EditUser({ user, onConfirmEdit }) {
                   </option>
                 ))}
               </select>
+              <div className="delete-files">
+                <p>Permission de supression des fichiers:</p>
+                <Switch
+                  checked={ableToDelete}
+                  onChange={handleSwitchChange}
+                  inputProps={{ "aria-label": "Switch demo" }}
+                />
+              </div>
             </div>
             <div className="dialog-footer2">
               <button

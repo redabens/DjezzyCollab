@@ -1,10 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, Fragment } from "react";
 import "./../styles/GestionUsers.css";
 import axios from "axios";
 import DisplayUserComponent from "../components/DisplayUserComponent";
 import YesNoDialog from "../components/YesNoDialog";
 import EditUser from "../components/EditUser";
-import { Fragment } from "react";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import PopupState, { bindTrigger, bindMenu } from "material-ui-popup-state";
@@ -17,11 +16,11 @@ export default function GestionUsers() {
   const [userToDelete, setUserToDelete] = useState(null);
   const [userToEdit, setUserToEdit] = useState(null);
   const [filterKey, setFilterKey] = useState("Tous les utilisateurs");
-  // dialog boxes
   const [showDialog, setShowDialog] = useState(false);
   const [isShowEditUser, setIsShowEditUser] = useState(false);
+  const [refreshUsers, setRefreshUsers] = useState(false); //variable to refrech the page every time editing a user
 
-  // Getting users from DB
+  // Fetching users from DB
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -33,9 +32,9 @@ export default function GestionUsers() {
       }
     };
     fetchUsers();
-  }, []);
+  }, [refreshUsers]); // Add refreshUsers as a dependency
 
-  // filter users fonctionality
+  // Filter users functionality
   const applyRoleFilter = (data) => {
     switch (filterKey) {
       case "Administrateur":
@@ -50,6 +49,7 @@ export default function GestionUsers() {
         return data;
     }
   };
+
   // Search functionality
   const searchKeys = ["firstName", "lastName", "email"];
   const search = (data) => {
@@ -61,11 +61,11 @@ export default function GestionUsers() {
       return pseudoquery.match(regxp);
     });
   };
+
   const filteredUsers = search(applyRoleFilter(Users));
 
   // Handle delete user
   const handleDeleteUser = async (id) => {
-    console.log("handleDeleteUser hit : " + id);
     try {
       await axios.delete(`http://localhost:3000/users/${id}`);
       setUsers(Users.filter((user) => user._id !== id));
@@ -75,29 +75,42 @@ export default function GestionUsers() {
     }
   };
 
-  const handleEditUser = async (user,firstName,lastName,email,userPath,role) => {
-    console.log("handleEditUser hit : " + user._id);
+  const handleEditUser = async (
+    user,
+    firstName,
+    lastName,
+    email,
+    userPath,
+    role,
+    ableToDelete
+  ) => {
     try {
+      setRefreshUsers(false);
       const updatedUserData = {
         firstName,
         lastName,
         email,
         userPath,
         role,
+        ableToDelete,
       };
 
       const response = await axios.put(
         `http://localhost:3000/users/${user._id}`,
-        { updatedUserData, user}
+        { updatedUserData, user }
       );
 
       setUsers((prevUsers) =>
         prevUsers.map((utils) =>
-          utils._id === user._id ? response.data.data : utils,
+          utils._id === user._id ? response.data.data : utils
         )
       );
 
-      if (response.status === 200) console.log("User updated successfully");
+      if (response.status === 200) {
+        console.log("User updated successfully");
+        // Trigger a refresh
+        setRefreshUsers(!refreshUsers);
+      }
     } catch (err) {
       console.error("Failed to edit user:", err);
       alert("Failed to edit user");
@@ -107,46 +120,45 @@ export default function GestionUsers() {
   // Show confirmation dialog
   const showDeleteDialog = (userId) => {
     setShowDialog(true);
-    console.log(
-      "showDeleteDialog hit in gestion users, showDialog is: ",
-      showDialog
-    );
     setUserToDelete(userId);
   };
 
   const showEditUser = (user) => {
     setIsShowEditUser(true);
-    console.log(
-      "showEditUser hit in gestion users, showEditUser is: ",
-      isShowEditUser
-    );
     setUserToEdit(user);
   };
 
   // Handle confirmation from dialog
   const onConfirmDialog = async (confirm) => {
-    console.log("onConfirmDialog hit : " + confirm);
     if (confirm && userToDelete) {
-      await handleDeleteUser(userToDelete); // the id
+      await handleDeleteUser(userToDelete);
     }
     setShowDialog(false);
   };
 
-  const onConfirmEdit = (
+  const onConfirmEdit = async (
     confirm,
     firstName,
     lastName,
     email,
     userPath,
-    role
+    role,
+    ableToDelete
   ) => {
-    console.log("onConfirmEdit hit : " + confirm);
     if (confirm && userToEdit) {
-      handleEditUser(userToEdit, firstName, lastName, email, userPath, role); // the id
+      await handleEditUser(
+        userToEdit,
+        firstName,
+        lastName,
+        email,
+        userPath,
+        role,
+        ableToDelete
+      );
     }
     setIsShowEditUser(false);
-    navigate("/gestion-utilisateurs");
   };
+
   return (
     <div className="gestion-users-page">
       <h2>Gestion des utilisateurs</h2>
@@ -213,7 +225,7 @@ export default function GestionUsers() {
                           popupState.close();
                         }}
                       >
-                        upload role
+                        Upload role
                       </MenuItem>
                       <MenuItem
                         onClick={() => {

@@ -138,7 +138,7 @@ const DropFileInput = (props) => {
         if (error.response) {
           if (res.status === 401) return alert("User Id not Found");
           else if (res.status === 404) return alert("User not found");
-          // else if (res.status === 415) return alert("Directory not found");
+           else if (res.status === 415) return alert("Directory not found");
           else if (res.status === 500)
             return alert(error.response.data);
         } else {

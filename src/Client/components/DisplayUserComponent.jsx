@@ -48,7 +48,7 @@ export default function DisplayUserComponent({ user, onDelete, onEdit }) {
               <MenuItem onClick={() => handleOndelete(popupState)}>
                 Supprimer
               </MenuItem>
-              <MenuItem onClick={popupState.close}>Bloquer</MenuItem>
+              {/* <MenuItem onClick={popupState.close}>Bloquer</MenuItem> */}
             </Menu>
           </Fragment>
         )}

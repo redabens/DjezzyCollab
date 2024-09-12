@@ -127,7 +127,7 @@ export default function RootLayout() {
         <LogoDjezzy rotating={rotating} />
       </div>
       <div className="containers">
-        <Outlet context={open} />
+        <Outlet context={{open,user}} />
         {logout && (
           <div className="popup">
             <YesNoDialog

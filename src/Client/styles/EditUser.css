@@ -201,3 +201,16 @@ small {
   font-size: 0.75em;
   font-weight: 500;
 }
+.delete-files {
+  width: 250px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10%;
+  font-size: 0.8em;
+  justify-content: start;
+  color: #474747;
+  font-weight: 500;
+  font-family: "Montserrat", sans-serif !important;
+  padding-top: 15px;
+}

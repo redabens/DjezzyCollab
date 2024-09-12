@@ -5,7 +5,7 @@ import "./../styles/Fichier.css";
 import AutoResizeInput from "./AutoResizeInput";
 import EditableFilename from "./EditableFilename";
 
-export default function Fichier({ file, isGrid }) {
+export default function Fichier({ file, isGrid, onDelete, user }) {
   const { token } = useAuth();
   const [nom, setNom] = useState(
     file.name.slice(0, file.name.lastIndexOf("."))
@@ -24,9 +24,9 @@ export default function Fichier({ file, isGrid }) {
           const url = window.URL.createObjectURL(new Blob([res.data]));
           const link = document.createElement("a"); // creates a link that is manageable programarly
           link.href = url;
-          link.setAttribute("download", file.name);  
-          document.body.appendChild(link); //add the link to the list of html objects 
-          link.click(); 
+          link.setAttribute("download", file.name);
+          document.body.appendChild(link); //add the link to the list of html objects
+          link.click();
           document.body.removeChild(link);
         } else {
           handleError(res.status);
@@ -66,13 +66,15 @@ export default function Fichier({ file, isGrid }) {
         }
       })
       .catch((error) => {
-        if(error.response){
+        if (error.response) {
           if (res.status === 401) return alert("User Id not Found");
           else if (res.status === 404) return alert("User not found");
-          else if (res.status === 409) return alert("name already exists choose another one");
+          else if (res.status === 409)
+            return alert("name already exists choose another one");
           else if (res.status === 415) return alert("Directory not found");
-          else if (res.status === 500) return alert("Failed to rename due to server");
-        }else return alert("An unknown error occurred");
+          else if (res.status === 500)
+            return alert("Failed to rename due to server");
+        } else return alert("An unknown error occurred");
       });
     setRename(false);
   };
@@ -92,14 +94,16 @@ export default function Fichier({ file, isGrid }) {
               : { width: "26px", height: "26px" }
           }
         />
-        {/* <div className="file-name"> */}
-          <EditableFilename 
-            filename={nom+extension} 
-            handleNom={handleNom} 
-            handleRename={handleRename} 
-            rename={rename}
-          />
-          {/* <AutoResizeInput
+
+        <EditableFilename
+          filename={nom + extension}
+          handleNom={handleNom}
+          handleRename={handleRename}
+          rename={rename}
+        
+        />
+
+        {/* <AutoResizeInput
             rename={rename}
             nom={nom}
             handleNom={handleNom}
@@ -108,7 +112,18 @@ export default function Fichier({ file, isGrid }) {
           <span className="file-extension">{extension}</span> */}
         {/* </div> */}
       </div>
-      <div className={isGrid ? "bottom" : "right"}>
+       <div className={isGrid ? "bottom" : "right"}>
+      {user.ableToDelete &&  <div className="downloadImg" onClick={() => onDelete(file.name)}>
+          <img
+            src="./../../src/assets/delete.svg"
+            alt="DownloadIcon"
+            style={
+              isGrid
+                ? { width: "20px", height: "20px" }
+                : { width: "23px", height: "23px" }
+            }
+          />
+        </div>}
         <div className="downloadImg" onClick={handleDownload}>
           <img
             src="./../../src/assets/download.svg"

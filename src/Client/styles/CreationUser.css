@@ -111,7 +111,8 @@ small {
   display: flex;
   flex-direction: column;
 }
-#path,#role {
+#path,
+#role {
   border: 1px solid #adadad;
   background-color: #ffffff;
   border-radius: 4px;
@@ -122,4 +123,16 @@ small {
   font-family: "Montserrat", sans-serif !important;
   font-size: 0.75em;
   font-weight: 500;
+}
+.delete-files-switch {
+  width: 250px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 40px;
+  font-size: 0.8em;
+  justify-content: start;
+  color: #474747;
+  font-weight: 500;
+  font-family: "Montserrat", sans-serif !important;
 }

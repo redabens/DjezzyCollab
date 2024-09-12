@@ -78,73 +78,86 @@ const deleteUser = async (req, res) => {
 
 const updateUser = async (req, res) => {
   const data = req.body;
-
   try {
+    // Update user in LDAP
+    if (
+      data.updatedUserData.firstName !== data.user.firstName ||
+      data.updatedUserData.lastName !== data.user.lastName ||
+      data.updatedUserData.email !== data.user.email
+    ) {
+      console.log("ici pour changer cn sn et uid et mail");
+      // rechercher et recuperer le dn de l'utilisateur
+      const dn = `ou=users,dc=djezzy-collab,dc=com`;
+      searchOptions = {
+        filter: `(&(uid=${data.user.email}))`,
+        scope: "sub", // We only need to check the base entry itself
+        attributes: ["uid", "dn"], // We only care about the DN
+      };
+      const result = await client.search(dn, searchOptions);
+      if (!result || result.length === 0) {
+        return res.status(404).send({ error: "User not found in LDAP" });
+      }
+      console.log(result);
+      const userDn = result[0].dn; // Extract the DN from the search result
+      if (data.updatedUserData.email !== data.user.email) {
+        // modifier uid et mail et cn
+        const username = data.updatedUserData.email.split("@")[0];
+        // Handle renaming (modifying the DN)
+        const newDn = `uid=${data.updatedUserData.email},ou=users,dc=djezzy-collab,dc=com`;
+        // Renaming the entry
+        await client.modifyDN(userDn, newDn);
+        const change = {
+          operation: "replace", // add, delete, replace
+          modification: {
+            cn: username,
+            mail: data.updatedUserData.email,
+            uid: data.updatedUserData.email,
+          },
+        };
+        await client.modify(newDn, change);
+      } else {
+        // modifier sn
+        const change = {
+          operation: "replace", // add, delete, replace
+          modification: {
+            sn: `${data.updatedUserData.firstName} ${data.updatedUserData.lastName}`,
+          },
+        };
+        await client.modify(userDn, change);
+      }
+    }
     //get checked serveur sftp
-    const checkedSite = await SiteSFTP.findOne({checked:true});
-    if(!checkedSite) return res.status(401).send({error: "No site sftp checked"});
+    const checkedSite = await SiteSFTP.findOne({ checked: true });
+    if (!checkedSite)
+      return res.status(401).send({ error: "No site sftp checked" });
     let newDirPath = data.user.DirPath;
     // Trouver l'index de l'objet correspondant dans DirPath
-    const index = newDirPath.findIndex((dir) => 
-      dir.serveurSFTP.host === checkedSite.host &&
-      dir.serveurSFTP.port === checkedSite.port &&
-      dir.serveurSFTP.username === checkedSite.username &&
-      dir.serveurSFTP.password === checkedSite.password &&
-      dir.serveurSFTP.defaultPath === checkedSite.defaultPath
+    const index = newDirPath.findIndex(
+      (dir) =>
+        dir.serveurSFTP.host === checkedSite.host &&
+        dir.serveurSFTP.port === checkedSite.port &&
+        dir.serveurSFTP.username === checkedSite.username &&
+        dir.serveurSFTP.password === checkedSite.password &&
+        dir.serveurSFTP.defaultPath === checkedSite.defaultPath
     );
     if (index === -1) {
-      return res.status(404).send({error: "No matching path found"});
+      return res.status(404).send({ error: "No matching path found" });
     }
     // Accéder et modifier l'objet à cet index
     newDirPath[index].path = data.updatedUserData.userPath;
     const user = await User.findByIdAndUpdate(
       data.user._id,
-      {firstName: data.updatedUserData.firstName,
+      {
+        firstName: data.updatedUserData.firstName,
         lastName: data.updatedUserData.lastName,
         email: data.updatedUserData.email,
         password: data.updatedUserData.password,
         DirPath: newDirPath,
         role: data.updatedUserData.role,
+        ableToDelete: data.updatedUserData.ableToDelete,
       },
       { new: false }
     );
-    // Update user in LDAP
-    if(data.updatedUserData.firstName !== user.firstName ||
-       data.updatedUserData.lastName !== user.lastName ||
-        data.updatedUserData.email !== user.email){
-          console.log('ici pour changer cn sn et uid et mail');
-          // rechercher et recuperer le dn de l'utilisateur
-          const dn = `ou=users,dc=djezzy-collab,dc=com`;
-          searchOptions = {
-            filter: `(&(uid=${user.email}))`,
-            scope: "sub", // We only need to check the base entry itself
-            attributes: ["uid", "dn"], // We only care about the DN
-          }
-          const result = await client.search(dn, searchOptions);
-          console.log(result);
-          if(data.updatedUserData.email !== user.email){
-            // modifier uid et mail et cn
-            const username = data.updatedUserData.email.split("@")[0];
-            const change = {
-              operation: 'replace', // add, delete, replace
-              modification: {
-                cn: username,
-                mail: data.updatedUserData.email,
-                uid: data.updatedUserData.email,
-              }
-            };
-            await client.modify(result[0].dn, change);
-          } else{
-            // modifier sn
-            const change = {
-              operation: 'replace', // add, delete, replace
-              modification: {
-                sn: `${data.updatedUserData.firstName} ${data.updatedUserData.lastName}`,
-              }
-            };
-            await client.modify(result[0].dn, change);
-          }
-        }
     res.status(200).json({
       status: "success",
       message: "User updated successfully",
@@ -158,41 +171,50 @@ const updateUser = async (req, res) => {
     });
   }
 };
-const getUserById = async (req,res) =>{
+
+const getUserById = async (req, res) => {
   const userId = req.params.id;
   try {
-  const user = await User.findById(userId);
-  if (!user) {
-    return res.status(404).json({
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        status: "error",
+        message: "User Not Found",
+      });
+    }
+    //get checked serveur sftp
+    const checkedSite = await SiteSFTP.findOne({ checked: true });
+    if (!checkedSite)
+      return res.status(401).send({ error: "No site sftp checked" });
+    // recuperer le path du checked site dans user
+    const userPath = user.DirPath.filter((dir) => {
+      return (
+        dir.serveurSFTP.host === checkedSite.host &&
+        dir.serveurSFTP.port === checkedSite.port &&
+        dir.serveurSFTP.username === checkedSite.username &&
+        dir.serveurSFTP.password === checkedSite.password &&
+        dir.serveurSFTP.defaultPath === checkedSite.defaultPath
+      );
+    })[0].path;
+    console.log("User path:", userPath);
+    res.status(200).json({
+      status: "success",
+      message: "User updated successfully",
+      data: user,
+      userPath: userPath,
+    });
+  } catch (err) {
+    console.log("Error fetching the user: " + err);
+    res.status(500).json({
       status: "error",
-      message: "User Not Found",
+      message: "Error fetching user",
     });
   }
-  //get checked serveur sftp
-  const checkedSite = await SiteSFTP.findOne({checked:true});
-  if(!checkedSite) return res.status(401).send({error: "No site sftp checked"});
-  // recuperer le path du checked site dans user
-  const userPath = user.DirPath.filter((dir)=>{
-    return dir.serveurSFTP.host === checkedSite.host &&
-     dir.serveurSFTP.port === checkedSite.port &&
-      dir.serveurSFTP.username === checkedSite.username &&
-       dir.serveurSFTP.password === checkedSite.password &&
-        dir.serveurSFTP.defaultPath === checkedSite.defaultPath;
-  })[0].path;
-  console.log("User path:", userPath);
-  res.status(200).json({
-    status: "success",
-    message: "User updated successfully",
-    data: user,
-    userPath:userPath,
-  });
-
-} catch (err) {
-  console.log("Error fetching the user: " + err);
-  res.status(500).json({
-    status: "error",
-    message: "Error fetching user",
-  });
-}
-}
-module.exports = { createUser,getUserById, getAllUsers, deleteUser, updateUser };
+};
+module.exports = {
+  createUser,
+  getUserById,
+  getAllUsers,
+  deleteUser,
+  updateUser,
+};
