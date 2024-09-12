@@ -23,8 +23,6 @@
   flex-direction: column;
   justify-content: center;
 }
-.partie-choix{
-}
 .partie-ajout{
     display: flex;
     flex-direction: column;
