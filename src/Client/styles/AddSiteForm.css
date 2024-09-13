@@ -1,50 +1,48 @@
-.form-g{
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border: 2px solid rgb(205, 205, 205);
-    border-radius: 5px;
-    padding-bottom: 20px;
+.form-g {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 5px;
 }
-.form-d{
-    width: 80%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+.form-d {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
-.visualise{
-    text-align: center;
-    width: 20%;
+.visualise {
+  text-align: center;
+  width: 20%;
 }
-.input-group{
-    display: flex;
-    flex-direction: row;
-    gap: 40px;
+.input-group {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  gap: 40px;
 }
 .input-component {
-    display: flex;
-    flex-direction: column;
-  }
-  .input-component input {
-    border: none;
-    background-color: #ececec;
-    border-radius: 4px;
-    height: 30px;
-    width: 100%;
-    padding-left: 10px;
-    padding-right: 10px;
-    font-family: "Montserrat", sans-serif !important;
-    font-size: 0.75em;
-  }
-  .input-component input:focus {
-    outline: none;
-  }
-  .input-component label {
-    font-size: 0.65em;
-    color: #6a6a6a;
-    font-weight: 500;
-  }
+  display: flex;
+  flex-direction: column;
+}
+.input-component input {
+  border: none;
+  background-color: #ececec;
+  border-radius: 4px;
+  height: 30px;
+  width: 100%;
+  padding-left: 10px;
+  padding-right: 10px;
+  font-family: "Montserrat", sans-serif !important;
+  font-size: 0.75em;
+}
+.input-component input:focus {
+  outline: none;
+}
+.input-component label {
+  font-size: 0.65em;
+  color: #6a6a6a;
+  font-weight: 500;
+}
