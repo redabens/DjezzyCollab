@@ -9,6 +9,7 @@
 /* Largeur de la barre de défilement */
 ::-webkit-scrollbar {
   width: 8px;
+  height: 8px;
 }
 
 /* Apparence du track (piste) */

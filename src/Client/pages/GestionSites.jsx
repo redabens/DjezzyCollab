@@ -105,40 +105,38 @@ export default function GestionSites() {
     <div className="gestion-site-page">
       <h1>Gestion des sites</h1>
       <div className="gestion-site-body">
-      <div className="choix-site">
-        <h2 className="subheader">1. Choisissez un site:</h2>
-        <div className="partie-choix">
-          <SiteTable
-            lignes={siteTable}
-            setSelectedRow={setSelectedRow}
-            selectedRow={selectedRow}
-          />
-        </div>
-      </div>
-      <div className="ajout-site">
-        <h2 className="subheader">2. Ajouter un site:</h2>
-        <div className="partie-ajout">
-          <div className="add-site-form">
-            <AddSiteForm handleVisualise={handleVisualise} />
+        <div className="choix-site">
+          <h2 className="subheader">1. Choisissez un site:</h2>
+          <div className="partie-choix">
+            <SiteTable
+              lignes={siteTable}
+              setSelectedRow={setSelectedRow}
+              selectedRow={selectedRow}
+            />
           </div>
-          {visualise && (
-            <div className="vis-site">
-              <div className="existant-repos-box">
-                <h3>Répertoires existants:</h3>
-                {loadingFileTree && <LinearProgress />}
-                <Box className="existant-repos-list">
-                  <SimpleTreeView>
-                    {fileTree.map((treeItem) => renderTree(treeItem))}
-                  </SimpleTreeView>
-                </Box>
-              </div>
-              <div className="add-rep-form">
-                <AddRepoForm path={formPath} type="2" renitPath={renitPath} />
-              </div>
-            </div>
-          )}
         </div>
-      </div>
+        <div className="ajout-site">
+          <h2 className="subheader">2. Ajouter un site:</h2>
+          <div className="partie-ajout">
+            <AddSiteForm handleVisualise={handleVisualise} />
+            {visualise && (
+              <div className="vis-site">
+                <div className="existant-repos-box">
+                  <h3>Répertoires existants:</h3>
+                  {loadingFileTree && <LinearProgress />}
+                  <Box className="existant-repos-list">
+                    <SimpleTreeView>
+                      {fileTree.map((treeItem) => renderTree(treeItem))}
+                    </SimpleTreeView>
+                  </Box>
+                </div>
+                <div className="add-rep-form">
+                  <AddRepoForm path={formPath} type="2" renitPath={renitPath} />
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );

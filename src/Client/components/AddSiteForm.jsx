@@ -42,7 +42,6 @@ export default function AddSiteForm({ handleVisualise }) {
   };
   return (
     <div className="form-g">
-      {/* <h1>Formulaire d'ajout de site SFTP</h1> */}
       <form
         className="form-d"
         onSubmit={handleSubmit(handleSuccess, handleError)}
