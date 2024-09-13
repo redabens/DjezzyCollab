@@ -121,16 +121,16 @@ export default function GestionSites() {
             <AddSiteForm handleVisualise={handleVisualise} />
             {visualise && (
               <div className="vis-site">
-                <div className="existant-repos-box">
+                <div className="existant-repos-box2">
                   <h3>Répertoires existants:</h3>
                   {loadingFileTree && <LinearProgress />}
-                  <Box className="existant-repos-list">
+                  <Box className="existant-repos-list2">
                     <SimpleTreeView>
                       {fileTree.map((treeItem) => renderTree(treeItem))}
                     </SimpleTreeView>
                   </Box>
                 </div>
-                <div className="add-rep-form">
+                <div className="add-rep-form2">
                   <AddRepoForm path={formPath} type="2" renitPath={renitPath} />
                 </div>
               </div>
