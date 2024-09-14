@@ -86,9 +86,12 @@ export default function SiteTable({ lignes, selectedRow, setSelectedRow }) {
       radio: ligne.checked,
     };
   });
+
   const handleSauv = async (ancienId, nouveauId) => {
     axios
-      .patch(`http://localhost:3000/siteSftp/edit/${nouveauId}`, ancienId)
+      .patch(`http://localhost:3000/sitesftp/${nouveauId}`, {
+        ancienId: ancienId,
+      })
       .then((res) => {
         if (res.status === 200) {
           console.log("Site SFTP checked");

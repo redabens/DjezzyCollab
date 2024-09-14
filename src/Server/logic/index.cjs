@@ -576,7 +576,7 @@ const createSiteSFTP = async () => {
     port: 22,
     username: "sarair",
     password: "sara2004",
-    defaultPath: "/",
+    defaultPath: "/AppData",
     // checked: true
   });
 
@@ -587,7 +587,7 @@ const createSiteSFTP = async () => {
   }
 };
 
-// createSiteSFTP();
+ //createSiteSFTP();
 
 app.listen("3000", () => {
   console.log("Server is running on port 3000...");

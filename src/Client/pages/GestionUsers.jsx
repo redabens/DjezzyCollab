@@ -32,7 +32,7 @@ export default function GestionUsers() {
       }
     };
     fetchUsers();
-  }, [refreshUsers]); // Add refreshUsers as a dependency
+  }, [refreshUsers]);
 
   // Filter users functionality
   const applyRoleFilter = (data) => {

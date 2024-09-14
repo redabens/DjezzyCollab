@@ -18,6 +18,7 @@ export default function GestionSites() {
     ancienId: "",
     nouveauId: "",
   });
+
   const [loadingFileTree, setLoadingFileTree] = useState(false);
   const [visualise, setVisualise] = useState(false);
   useEffect(function () {
@@ -46,6 +47,7 @@ export default function GestionSites() {
         }
       });
   }, []);
+  
   const handleVisualise = (sftpConfig) => {
     setLoadingFileTree(true);
     setVisualise(true);
