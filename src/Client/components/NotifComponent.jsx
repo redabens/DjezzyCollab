@@ -102,7 +102,7 @@ function NotifComponent({ notif }) {
             </p>
             <p className="notif-msg">{notifText}</p>
             <p className="repo-name" title="HAHAHA">
-              {userPath}
+              {notif.path}
             </p>
           </div>
           <div className="notif-time">
@@ -113,7 +113,7 @@ function NotifComponent({ notif }) {
       <AccordionDetails>
         <ul className="notif-body">
           <li className="body-item">
-            Path: <span>{userPath}</span>
+            Path: <span>{notif.path}</span>
           </li>
           <li className="body-item">
             Nom du fichier: <span>{notif.fileName}</span>

@@ -255,6 +255,7 @@ app.post("/upload", [verifyToken, upload.array("files")], async (req, res) => {
       const notifData = {
         userId: req.userId,
         type: "upload",
+        path:userPath,
         fileName: file.originalname,
       };
       await notifController.addNotif({
