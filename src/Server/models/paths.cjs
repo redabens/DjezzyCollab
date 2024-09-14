@@ -11,7 +11,6 @@ const pathSchema = new Schema({
     path: {
         type:String,
         required:true,
-        unique:true,
     },
     createdAt: {
         type:Date,

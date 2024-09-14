@@ -26,6 +26,8 @@ export default function RootLayout() {
       })
       .then((res) => {
         if (res.status === 200) {
+          console.log(res.data.user);
+          console.log(res.data.userPath);
           setUser(res.data.user);
           setUserPath(res.data.userPath);
         }

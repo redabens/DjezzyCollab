@@ -92,14 +92,41 @@ const getSiteSFTP = async (req,res)=>{
 
 const addSiteSFTP = async (req,res)=>{
     try{
-        const sftpConfig = req.body;
-        const site = new siteSFTP(sftpConfig);
-        const saved = await site.save();
-        if(!saved) return res.status(404).send({error:"Failed to add site SFTP"});
-        const users = await User.updateMany({},{DirPath:[...DirPath,{serveurSFTP:{...sftpConfig,defaultPath:site.defaultPath},path:site.defaultPath}]});
-        if(!users) return res.status(409).send({error:"Failed to update users"});
-        res.status(200).send("site SFTP added");
+      const {sftpconfig,defaultPath} = req.body;
+      const sitesftp = {...sftpconfig,defaultPath:defaultPath};
+      const site = new siteSFTP(sitesftp);
+      const Ssaved = await site.save();
+      if(!Ssaved) return res.status(404).send({error:"Failed to add site SFTP"});
+      const path = new Path({
+        serveurSftp: Ssaved._id,
+        path: Ssaved.defaultPath,
+        createdBy: req.userId,
+      })
+      const Psaved = await path.save();
+      if(!Psaved) return res.status(409).send({error:"Failed to add path"});
+      const users = await User.updateMany(
+        {},
+        {
+          $push: {
+            DirPath: {
+              $each: [
+                {
+                  serveurSFTP: {
+                    ...sftpconfig,
+                    port:parseInt(sftpconfig.port),
+                    defaultPath: site.defaultPath,
+                  },
+                  path: site.defaultPath
+                }
+              ]
+            }
+          }
+        }
+      );
+      if(!users) return res.status(409).send({error:"Failed to update users"});
+      res.status(200).send("site SFTP added");
     }catch(err){
+        console.log(err);      
         res.status(500).send({error:"Error adding site SFTP"+err});
     }
 }
@@ -135,6 +162,18 @@ const visualiseSiteSFTP = async (req,res)=>{
         res.status(200).json(fileTree);
     }catch(err){
         res.status(500).send({error:"Error visualising site SFTP"+err});
+    }finally{
+      await disconnectSFTP();
+      // Connect to SFTP once when the server starts
+      const checkedSite = await siteSFTP.findOne({ checked: true });
+      if (!checkedSite) return console.log("No site sftp checked");
+      const sftpConfig = {
+        host: checkedSite.host,
+        port: checkedSite.port,
+        username: checkedSite.username,
+        password: checkedSite.password,
+      };
+      await connectSFTP(sftpConfig);
     }
 }
 process.on("SIGINT", () => {

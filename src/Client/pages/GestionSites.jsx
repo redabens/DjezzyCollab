@@ -19,6 +19,7 @@ export default function GestionSites() {
     nouveauId: "",
   });
   const [loadingFileTree, setLoadingFileTree] = useState(false);
+  const [sftpconfig,setSftpconfig] = useState(null);
   const [visualise, setVisualise] = useState(false);
   useEffect(function () {
     axios
@@ -48,6 +49,7 @@ export default function GestionSites() {
   }, []);
   const handleVisualise = (sftpConfig) => {
     setLoadingFileTree(true);
+    setSftpconfig(sftpConfig);
     setVisualise(true);
     axios
       .post("http://localhost:3000/sitesftp/visualise", sftpConfig)
@@ -131,7 +133,7 @@ export default function GestionSites() {
                   </Box>
                 </div>
                 <div className="add-rep-form">
-                  <AddRepoForm path={formPath} type="2" renitPath={renitPath} />
+                  <AddRepoForm path={formPath} type="2" renitPath={renitPath} sftpconfig={sftpconfig}/>
                 </div>
               </div>
             )}
