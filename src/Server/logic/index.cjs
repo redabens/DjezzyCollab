@@ -367,6 +367,56 @@ app.patch("/download/:filename", verifyToken, async (req, res) => {
     console.log(err);
   }
 });
+//delete file from sftp
+app.delete("/delete/:id", verifyToken, async (req, res) => {
+  try {
+    const filename = req.params.id;
+    console.log(filename);
+    if (!req.userId) {
+      return res.status(401).send({ error: "User ID not found" });
+    }
+    const user = await User.findById(req.userId);
+    if (!user) {
+      return res.status(404).send({ error: "User not found" });
+    }
+
+    const checkedSite = await Sitesftp.findOne({ checked: true });
+    if (!checkedSite)
+      return res.status(400).send({ error: "No SFTP site checked" });
+
+    const userPath = user.DirPath.filter((dir) => {
+      return (
+        dir.serveurSFTP.host === checkedSite.host &&
+        dir.serveurSFTP.port === checkedSite.port &&
+        dir.serveurSFTP.username === checkedSite.username &&
+        dir.serveurSFTP.password === checkedSite.password &&
+        dir.serveurSFTP.defaultPath === checkedSite.defaultPath
+      );
+    })[0].path;
+
+    // Construct the full path to the file to be deleted
+    let restPath = await sftp.cwd();
+
+    restPath = restPath.slice(1, restPath.length);
+    console.log("1", restPath);
+
+    const userDir = path.join(restPath, userPath);
+    console.log("2", userDir);
+
+    const filePath = path.join(userDir, filename);
+    console.log("3", filePath);
+
+    const fileExists = await sftp.exists(filePath);
+    if (!fileExists) return res.status(404).send({ error: "File not found" });
+    await sftp.delete(filePath);
+    res.status(200).send({ message: `File ${filename} deleted successfully. `});
+  } catch (err) {
+    console.log("Error deleting file:", err);
+    res
+      .status(500)
+      .send({ error: "Failed to delete file due to a server error." });
+  }
+});
 
 // pour afficher les fichier
 app.get("/download", verifyToken, async (req, res) => {

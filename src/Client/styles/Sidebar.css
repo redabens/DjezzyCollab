@@ -11,7 +11,8 @@
   background-color: #fff7f7;
   /* background-color: rgba(248, 206, 206, 35%); */
   border-top-right-radius: 10px;
-  width: 18%;
+  width: 18lvw;
+  min-width: 197px;
   height: 100%;
   padding-top: 0.7%;
   padding-bottom: 1.7%;
@@ -30,7 +31,8 @@
   background-color: #fff7f7;/*#fff7f7*/
   /* background-color: rgba(248, 206, 206, 35%); */
   border-top-right-radius: 10px;
-  width: 4%;
+  width: 4lvw;
+  min-width: 4lvw;
   height: 100%;
   padding-top: 0.7%;
   padding-bottom: 1.7%;
