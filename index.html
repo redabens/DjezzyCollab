@@ -23,6 +23,13 @@
       html,
       body {
         overflow: hidden; /* Empêche le scrolling */
+        min-width: 1024px;
+      }
+      @media (max-width: 1024px) {
+        body {
+          width: 1024px;
+          overflow-x: hidden;
+        }
       }
     </style>
 

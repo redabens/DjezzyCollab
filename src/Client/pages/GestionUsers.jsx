@@ -7,7 +7,7 @@ import EditUser from "../components/EditUser";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import PopupState, { bindTrigger, bindMenu } from "material-ui-popup-state";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 
 export default function GestionUsers() {
   const navigate = useNavigate();
@@ -19,6 +19,7 @@ export default function GestionUsers() {
   const [showDialog, setShowDialog] = useState(false);
   const [isShowEditUser, setIsShowEditUser] = useState(false);
   const [refreshUsers, setRefreshUsers] = useState(false); //variable to refrech the page every time editing a user
+  const { refreshUserData } = useOutletContext();
 
   // Fetching users from DB
   useEffect(() => {
@@ -155,6 +156,7 @@ export default function GestionUsers() {
         role,
         ableToDelete
       );
+      refreshUserData();
     }
     setIsShowEditUser(false);
   };
@@ -270,7 +272,11 @@ export default function GestionUsers() {
       )}
       {isShowEditUser && (
         <div className="popup">
-          <EditUser user={userToEdit} onConfirmEdit={onConfirmEdit} />
+          <EditUser
+            user={userToEdit}
+            onConfirmEdit={onConfirmEdit}
+            refreshUserData={refreshUserData}
+          />
         </div>
       )}
     </div>

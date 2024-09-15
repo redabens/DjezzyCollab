@@ -25,6 +25,7 @@ export default function GestionSites() {
   const [loadingFileTree, setLoadingFileTree] = useState(false);
   const [sftpconfig, setSftpconfig] = useState(null);
   const [visualise, setVisualise] = useState(false);
+  const [addedSite, setAddedSite] = useState(false);
   useEffect(function () {
     axios
       .get("http://localhost:3000/sitesftp")
@@ -38,6 +39,7 @@ export default function GestionSites() {
           setSelectedRow((prev) => {
             return { ancienId: "", selectedId: selectedId };
           });
+          setAddedSite(false);
         }
       })
       .catch((error) => {
@@ -50,8 +52,7 @@ export default function GestionSites() {
           alert("An unexpected error occurred. Please try again.");
         }
       });
-  }, []);
-
+  }, [addedSite]);
   const handleVisualise = (sftpConfig) => {
     setLoadingFileTree(true);
     setSftpconfig(sftpConfig);
@@ -126,7 +127,7 @@ export default function GestionSites() {
         <div className="ajout-site">
           <h2 className="subheader">2. Ajouter un site:</h2>
           <div className="partie-ajout">
-            <AddSiteForm handleVisualise={handleVisualise} />
+            <AddSiteForm handleVisualise={handleVisualise} addedSite={addedSite}/>
             {visualise && (
               <div className="vis-site">
                 <div className="existant-repos-box2">
@@ -139,12 +140,7 @@ export default function GestionSites() {
                   </Box>
                 </div>
                 <div className="add-rep-form">
-                  <AddRepoForm
-                    path={formPath}
-                    type="2"
-                    renitPath={renitPath}
-                    sftpconfig={sftpconfig}
-                  />
+                  <AddRepoForm path={formPath} type="2" renitPath={renitPath} sftpconfig={sftpconfig} addedSite={()=>{setAddedSite(true);setVisualise(false);setFileTree([]);}}/>
                 </div>
               </div>
             )}

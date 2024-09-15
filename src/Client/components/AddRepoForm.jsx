@@ -4,13 +4,13 @@ import { useForm} from "react-hook-form";
 import axios from "axios";
 import { useAuth } from "./AuthContext";
 import { useNavigate } from "react-router-dom";
-export default function AddRepoForm({ path,renitPath,type,sftpconfig}) {
+export default function AddRepoForm({ path,renitPath,type,sftpconfig,addedSite}) {
   const { token } = useAuth();
   const navigate = useNavigate();
   const {
-    // register,
+    register,
     handleSubmit,
-    // watch,
+    watch,
     reset,
     formState: { errors },
   } = useForm();
@@ -44,7 +44,10 @@ export default function AddRepoForm({ path,renitPath,type,sftpconfig}) {
         )
         .then((res)=>{
           if(res.status === 200){
-            return navigate('/gestion-sites');
+            setError("");
+            renitPath();
+            addedSite();
+            alert("Site SFTP added successfully!");
           }
         }).catch((error) => {
           if (error.response) {
