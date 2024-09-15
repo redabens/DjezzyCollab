@@ -135,7 +135,7 @@ export default function GestionSites() {
                   </Box>
                 </div>
                 <div className="add-rep-form">
-                  <AddRepoForm path={formPath} type="2" renitPath={renitPath} sftpconfig={sftpconfig} addedSite={()=>{setAddedSite(true);setVisualise(false)}}/>
+                  <AddRepoForm path={formPath} type="2" renitPath={renitPath} sftpconfig={sftpconfig} addedSite={()=>{setAddedSite(true);setVisualise(false);setFileTree([]);}}/>
                 </div>
               </div>
             )}
