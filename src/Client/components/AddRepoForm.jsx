@@ -8,9 +8,9 @@ export default function AddRepoForm({ path,renitPath,type,sftpconfig,addedSite})
   const { token } = useAuth();
   const navigate = useNavigate();
   const {
-    // register,
+    register,
     handleSubmit,
-    // watch,
+    watch,
     reset,
     formState: { errors },
   } = useForm();
@@ -44,7 +44,8 @@ export default function AddRepoForm({ path,renitPath,type,sftpconfig,addedSite})
         )
         .then((res)=>{
           if(res.status === 200){
-            reset();
+            setError("");
+            renitPath();
             addedSite();
             alert("Site SFTP added successfully!");
           }
