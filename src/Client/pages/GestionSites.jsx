@@ -122,7 +122,7 @@ export default function GestionSites() {
         <div className="ajout-site">
           <h2 className="subheader">2. Ajouter un site:</h2>
           <div className="partie-ajout">
-            <AddSiteForm handleVisualise={handleVisualise} />
+            <AddSiteForm handleVisualise={handleVisualise} addedSite={addedSite}/>
             {visualise && (
               <div className="vis-site">
                 <div className="existant-repos-box">

@@ -1,16 +1,20 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import "./../styles/AddSiteForm.css";
 
-export default function AddSiteForm({ handleVisualise }) {
+export default function AddSiteForm({ handleVisualise, addedSite }) {
   const {
+    reset,
     register,
     handleSubmit,
     watch,
     formState: { errors },
   } = useForm();
   const [viseErr, setViseErr] = useState(false);
+  useEffect(function (){
+    reset();
+  },[addedSite]);
   //------ validations -------
   const registerOptions = {
     host: {
