@@ -15,17 +15,26 @@ export default function RootLayout() {
   const [user, setUser] = useState("");
   const [userPath, setUserPath] = useState("");
   const [rotating, setRotating] = useState(false);
+  const [refresh, setRefresh] = useState(false);
+
+  const refreshUserData = () =>{
+    setRefresh(true);
+  }
+  
   // Vérifiez l'état d'authentification avant de rendre le contenu
   if (!token) {
     return <Navigate to="/login" />;
   }
   useEffect(function () {
+    setRefresh(false);
     axios
       .get("http://localhost:3000/user", {
         headers: { Authorization: token },
       })
       .then((res) => {
         if (res.status === 200) {
+          console.log(res.data.user);
+          console.log(res.data.userPath);
           setUser(res.data.user);
           setUserPath(res.data.userPath);
         }
@@ -41,7 +50,7 @@ export default function RootLayout() {
           alert("Error getting user");
         }
       });
-  }, []);
+  }, [refresh]);
   const [logout, setLogout] = useState(false);
   const onConfirmDialog = async (confirm) => {
     console.log("onConfirmDialog in rootLayout hit : " + confirm);
@@ -130,7 +139,7 @@ export default function RootLayout() {
         <LogoDjezzy rotating={rotating} />
       </div>
       <div className="containers">
-        <Outlet context={{ open, user }} />
+        <Outlet context={{ open, user,refreshUserData }} />
         {logout && (
           <div className="popup">
             <YesNoDialog

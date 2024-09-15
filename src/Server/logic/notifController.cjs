@@ -1,7 +1,8 @@
 const Notif = require("../models/notifs.cjs");
+const User = require("../models/users.cjs");
 
 const addNotif = async (req, res = null) => {
-    const { userId, type, fileName } = req.body; 
+    const { userId, type, fileName,path } = req.body; 
     if (!userId || !type || !fileName) {
       if (res) {
         return res.status(400).json({
@@ -17,6 +18,7 @@ const addNotif = async (req, res = null) => {
       await Notif.create({
         userId,
         type,
+        path,
         fileName,
         createdAt: new Date(),
       });
@@ -43,7 +45,7 @@ const addNotif = async (req, res = null) => {
   
 const getAllNotifs = async (req, res) => {
     try {
-      const notifs = await Notif.find();
+      const notifs = await Notif.find({});
       res.status(200).json({
         status: "success",
         data: notifs,

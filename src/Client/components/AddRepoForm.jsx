@@ -3,8 +3,10 @@ import { useState } from "react";
 import { useForm} from "react-hook-form";
 import axios from "axios";
 import { useAuth } from "./AuthContext";
-export default function AddRepoForm({ path,renitPath,type}) {
+import { useNavigate } from "react-router-dom";
+export default function AddRepoForm({ path,renitPath,type,sftpconfig}) {
   const { token } = useAuth();
+  const navigate = useNavigate();
   const {
     // register,
     handleSubmit,
@@ -37,10 +39,12 @@ export default function AddRepoForm({ path,renitPath,type}) {
     } else{
       // type 2 pour gestion site pour ajouter le site serveur sftp
       try{
-        axios.post("http://localhost:3000/sitesftp/add")
+        axios.post("http://localhost:3000/sitesftp/add",{sftpconfig:sftpconfig,defaultPath:path},
+           { headers: { Authorization: token },}
+        )
         .then((res)=>{
           if(res.status === 200){
-            return alert("Site SFTP added");
+            return navigate('/gestion-sites');
           }
         }).catch((error) => {
           if (error.response) {
@@ -59,28 +63,6 @@ export default function AddRepoForm({ path,renitPath,type}) {
 
   return (
     <div className="add-repo-form">
-      {/* <button
-        className="ajouterBtn"
-        onClick={() => setFormDisplayed(!formDisplayed)}
-      >
-        <img
-          src="./../../src/assets/add.svg"
-          alt="add_icon"
-          style={{ width: "18px", height: "18px" }}
-        />
-        <span>Ajouter</span>
-        <img
-          src="./../../src/assets/arrow_down.svg"
-          alt="show_icon"
-          style={{
-            width: "18px",
-            height: "18px",
-            transition: "transform 0.3s ease",
-          }}
-          className={formDisplayed ? "rotate-icon" : ""}
-        />
-      </button> */}
-
       <form onSubmit={handleSubmit(handleAddRepo)} className="form-area">
         <div className="add-repo-component">
           <label htmlFor="repo">Nom du répertoire:</label>

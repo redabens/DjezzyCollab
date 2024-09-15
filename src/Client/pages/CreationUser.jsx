@@ -88,7 +88,7 @@ export default function CreationUser() {
       },
     },
     password: {
-      required: "Enrer le mot de passe",
+      required: "Entrer le mot de passe",
     },
     path: { required: "Path est obligatoire" },
     role: { required: "Role est obligatoire" },

@@ -14,7 +14,7 @@ const userRoutes = require("../routes/userRoutes.cjs");
 const notifRoutes = require("../routes/notifRoutes.cjs");
 const sitesftpRoutes = require("../routes/sitesftpRoutes.cjs");
 const notifController = require("./notifController.cjs");
-
+const { verifyToken, verifyExistance } = require("./functions.cjs");
 const {
   sftp,
   buildFileTree,
@@ -49,7 +49,7 @@ mongoose
       username: checkedSite.username,
       password: checkedSite.password,
     };
-    connectSFTP(sftpConfig);
+    await connectSFTP(sftpConfig);
   })
   .catch((error) => console.log(error.message));
 
@@ -66,58 +66,6 @@ app.use("/users", userRoutes);
 app.use("/notifs", notifRoutes);
 app.use("/sitesftp", sitesftpRoutes);
 
-// const sftpconfig = {
-//   host: "127.0.0.1",
-//   port: "22",
-//   username: "redabens",
-//   password: "Redabens2004..",
-// };
-
-// // Connect to SFTP once when the server starts
-// connectSFTP(sftpconfig);
-
-// Middleware to verify token
-function verifyToken(req, res, next) {
-  const token = req.headers["authorization"];
-  if (!token) return res.status(403).send("No token provided");
-
-  jwt.verify(token, secret, (err, decoded) => {
-    if (err) return res.status(500).send("Failed to authenticate token");
-    req.userId = decoded._id;
-    next();
-  });
-}
-// recursive function to verify if name of the file exist and change the name before the upload
-async function verifyExistance(file, userDir, remotePath, i) {
-  try {
-    let fichier = file;
-    const filExists = await sftp.exists(remotePath);
-    if (!filExists) return await sftp.put(fichier.buffer, remotePath);
-    else {
-      const indexDot = fichier.originalname.lastIndexOf(".");
-      if (
-        fichier.originalname[indexDot - 3] === "(" &&
-        fichier.originalname[indexDot - 1] === ")" &&
-        fichier.originalname[indexDot - 2] === `${i - 1}`
-      ) {
-        fichier.originalname =
-          fichier.originalname.slice(0, indexDot - 3) +
-          `(${i})` +
-          fichier.originalname.slice(indexDot, fichier.originalname.length);
-      } else {
-        fichier.originalname =
-          fichier.originalname.slice(0, indexDot) +
-          `(${i})` +
-          fichier.originalname.slice(indexDot, fichier.originalname.length);
-      }
-      const newRemotePath = path.posix.join(userDir, file.originalname);
-      console.log("Remote path:", newRemotePath);
-      await verifyExistance(file, userDir, newRemotePath, i + 1);
-    }
-  } catch (err) {
-    console.log(err);
-  }
-}
 // pour connecter les utilisateurs
 app.post("/login", async (req, res) => {
   try {
@@ -230,7 +178,7 @@ app.post("/creation-compte", async (req, res) => {
   }
 });
 
-//endpoitn to get the user role
+//endpoint to get the user role
 app.get("/user", verifyToken, async (req, res) => {
   try {
     if (!req.userId) {
@@ -245,7 +193,7 @@ app.get("/user", verifyToken, async (req, res) => {
     if (!checkedSite)
       return res.status(409).send({ error: "No site sftp checked" });
     // recuperer le path du checked site dans user
-    const userPath = user.DirPath.filter((dir) => {
+    const userPath = await user.DirPath.filter((dir) => {
       return (
         dir.serveurSFTP.host === checkedSite.host &&
         dir.serveurSFTP.port === checkedSite.port &&
@@ -307,6 +255,7 @@ app.post("/upload", [verifyToken, upload.array("files")], async (req, res) => {
       const notifData = {
         userId: req.userId,
         type: "upload",
+        path: userPath,
         fileName: file.originalname,
       };
       await notifController.addNotif({
@@ -463,6 +412,58 @@ app.get("/download", verifyToken, async (req, res) => {
     console.log("Erreur de requete" + err);
   }
 });
+
+//delete file from sftp
+app.delete("/delete/:id", verifyToken, async (req, res) => {
+  try {
+    const filename = req.params.id;
+    console.log(filename);
+    if (!req.userId) {
+      return res.status(401).send({ error: "User ID not found" });
+    }
+    const user = await User.findById(req.userId);
+    if (!user) {
+      return res.status(404).send({ error: "User not found" });
+    }
+
+    const checkedSite = await Sitesftp.findOne({ checked: true });
+    if (!checkedSite)
+      return res.status(400).send({ error: "No SFTP site checked" });
+
+    const userPath = user.DirPath.filter((dir) => {
+      return (
+        dir.serveurSFTP.host === checkedSite.host &&
+        dir.serveurSFTP.port === checkedSite.port &&
+        dir.serveurSFTP.username === checkedSite.username &&
+        dir.serveurSFTP.password === checkedSite.password &&
+        dir.serveurSFTP.defaultPath === checkedSite.defaultPath
+      );
+    })[0].path;
+
+    // Construct the full path to the file to be deleted
+    let restPath = await sftp.cwd();
+
+    restPath = restPath.slice(1, restPath.length);
+    console.log("1", restPath);
+
+    const userDir = path.join(restPath, userPath);
+    console.log("2", userDir);
+
+    const filePath = path.join(userDir, filename);
+    console.log("3", filePath);
+
+    const fileExists = await sftp.exists(filePath);
+    if (!fileExists) return res.status(404).send({ error: "File not found" });
+    await sftp.delete(filePath);
+    res.status(200).send({ message: `File ${filename} deleted successfully.` });
+  } catch (err) {
+    console.log("Error deleting file:", err);
+    res
+      .status(500)
+      .send({ error: "Failed to delete file due to a server error." });
+  }
+});
+
 // definition d'un repertoire existant dans le serveur comme un repertoire de depot sftp
 app.post("/paths/create", verifyToken, async (req, res) => {
   const { pathName } = req.body;
@@ -530,64 +531,6 @@ app.get("/tree-files", async (req, res) => {
     res.status(500).json({ error: "Failed to fetch files" });
   }
 });
-
-//--------------------------------------------------------
-
-const utilisateur1 = {
-  firstName: "Iratni",
-  lastName: "Sara Amina",
-  email: "ms_iratni@esi.dz",
-  password: bcrypt.hashSync("sara2004", 8),
-  role: "admin",
-};
-const utilisateur2 = {
-  firstName: "Bensemane",
-  lastName: "Mohamed Reda",
-  email: "reda9bens4@gmail.com",
-  password: bcrypt.hashSync("Redabens2004..", 8),
-  role: "user",
-};
-const createManualUser = async (utilisateur) => {
-  try {
-    // Save the user in MongoDB
-    const newUser = new User(utilisateur);
-    const savedUser = await newUser.save();
-    console.log("User created successfully in MongoDB:", savedUser);
-
-    // Create the user in LDAP
-    addUser(utilisateur, (success, err) => {
-      if (success) {
-        console.log("User created successfully in LDAP");
-      } else {
-        console.log("Error creating user in LDAP:", err);
-      }
-    });
-  } catch (error) {
-    console.error("Error creating user:", error);
-  }
-};
-
-// createManualUser(utilisateur1);
-// createManualUser(utilisateur2);
-
-const createSiteSFTP = async () => {
-  const newSite = new Sitesftp({
-    host: "localhost",
-    port: 22,
-    username: "sarair",
-    password: "sara2004",
-    defaultPath: "/AppData",
-    // checked: true
-  });
-
-  try {
-    const savedSite = await newSite.save();
-  } catch (error) {
-    console.error("Error creating SFTP site:", error);
-  }
-};
-
- //createSiteSFTP();
 
 app.listen("3000", () => {
   console.log("Server is running on port 3000...");

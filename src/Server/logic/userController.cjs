@@ -5,27 +5,6 @@ const SiteSFTP = require("../models/sitesftp.cjs");
 const { message } = require("antd");
 const { deleteUserFromLDAP, client } = require("./ldap.cjs");
 
-const createUser = async (req, res) => {
-  const data = req.body;
-  const hashedPassword = await bcrypt.hash(data.password, 10);
-  try {
-    await User.create({
-      ...data,
-      password: hashedPassword,
-    });
-    res.status(201).json({
-      status: "success",
-      message: "User created",
-    });
-  } catch (err) {
-    console.log("error createUser: " + err);
-    res.status(500).json({
-      status: "error",
-      message: "Can't create the user",
-    });
-  }
-};
-
 const getAllUsers = async (req, res) => {
   try {
     const users = await User.find();
@@ -212,7 +191,6 @@ const getUserById = async (req, res) => {
   }
 };
 module.exports = {
-  createUser,
   getUserById,
   getAllUsers,
   deleteUser,

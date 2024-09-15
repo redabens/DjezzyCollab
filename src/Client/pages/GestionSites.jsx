@@ -4,6 +4,7 @@ import LinearProgress from "@mui/material/LinearProgress";
 import Box from "@mui/material/Box";
 import { SimpleTreeView } from "@mui/x-tree-view/SimpleTreeView";
 import { TreeItem2 } from "@mui/x-tree-view/TreeItem2";
+import { useOutletContext } from "react-router-dom";
 // ------- Components -------
 import AddSiteForm from "../components/AddSiteForm";
 import SiteTable from "../components/SiteTable";
@@ -14,12 +15,15 @@ export default function GestionSites() {
   const [formPath, setFormPath] = useState("/");
   const [fileTree, setFileTree] = useState([]);
   const [siteTable, setSiteTable] = useState([]);
+  const { refreshUserData } = useOutletContext();
+
   const [selectedRow, setSelectedRow] = useState({
     ancienId: "",
     nouveauId: "",
   });
 
   const [loadingFileTree, setLoadingFileTree] = useState(false);
+  const [sftpconfig, setSftpconfig] = useState(null);
   const [visualise, setVisualise] = useState(false);
   useEffect(function () {
     axios
@@ -47,9 +51,10 @@ export default function GestionSites() {
         }
       });
   }, []);
-  
+
   const handleVisualise = (sftpConfig) => {
     setLoadingFileTree(true);
+    setSftpconfig(sftpConfig);
     setVisualise(true);
     axios
       .post("http://localhost:3000/sitesftp/visualise", sftpConfig)
@@ -114,6 +119,7 @@ export default function GestionSites() {
               lignes={siteTable}
               setSelectedRow={setSelectedRow}
               selectedRow={selectedRow}
+              refreshUserData={refreshUserData}
             />
           </div>
         </div>
@@ -132,8 +138,13 @@ export default function GestionSites() {
                     </SimpleTreeView>
                   </Box>
                 </div>
-                <div className="add-rep-form2">
-                  <AddRepoForm path={formPath} type="2" renitPath={renitPath} />
+                <div className="add-rep-form">
+                  <AddRepoForm
+                    path={formPath}
+                    type="2"
+                    renitPath={renitPath}
+                    sftpconfig={sftpconfig}
+                  />
                 </div>
               </div>
             )}
