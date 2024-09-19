@@ -1,0 +1,50 @@
+.LogoWithName {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  user-select: none; /* Empêche la sélection du texte */
+  -webkit-user-select: none; /* Pour les navigateurs WebKit (Chrome, Safari) */
+  -moz-user-select: none; /* Pour Firefox */
+  -ms-user-select: none; /* Pour Internet Explorer/Edge */
+  pointer-events: none; /* Empêche tous les événements de pointeur */
+}
+
+/* animation logo  */
+@keyframes rotateImage {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(1080deg); /* 3 rounds = 360 * 3 */
+  }
+}
+.logo {
+  display: inline-block;
+  width: 2.3rem;
+  height: 2.3rem;
+}
+.logo.rotate {
+  animation: rotateImage 1s ease-in-out;
+}
+
+.Nom {
+  font-family: "Secular One", sans-serif;
+  font-weight: 400;
+  font-size: 9px;
+  line-height: 13px;
+  text-align: center;
+}
+#arabe {
+  font-family: "Noto Sans Arabic", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings: "wdth" 100;
+}
+/* white logo style */
+.whiteLogoWithName {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}

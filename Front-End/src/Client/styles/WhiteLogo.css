@@ -1,0 +1,30 @@
+.WhiteLogoWithName {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  user-select: none; /* Empêche la sélection du texte */
+  -webkit-user-select: none; /* Pour les navigateurs WebKit (Chrome, Safari) */
+  -moz-user-select: none; /* Pour Firefox */
+  -ms-user-select: none; /* Pour Internet Explorer/Edge */
+  pointer-events: none; /* Empêche tous les événements de pointeur */
+}
+.Whitelogo {
+  display: inline-block;
+  width: 4rem;
+  height: 4rem;
+}
+.WhiteNom {
+  font-family: "Secular One", sans-serif;
+  font-weight: 300;
+  font-size: 15px;
+  line-height: 18px;
+  text-align: center;
+  color: white;
+}
+#arabe {
+  font-family: "Noto Sans Arabic", sans-serif;
+  font-weight: 300;
+  font-style: normal;
+  font-variation-settings: "wdth" 100;
+}

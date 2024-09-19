@@ -1,0 +1,80 @@
+@import url("https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c&display=swap");
+.navbr {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  height: 85%;
+  width: 100%;
+  font-family: "Noto Sans", sans-serif;
+  font-weight: 100;
+  font-size: 0.85em;
+  background-color: white;
+  box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);
+  user-select: none; /* Empêche la sélection du texte */
+  -webkit-user-select: none; /* Pour les navigateurs WebKit (Chrome, Safari) */
+  -moz-user-select: none; /* Pour Firefox */
+  -ms-user-select: none; /* Pour Internet Explorer/Edge */
+}
+.navbarElt {
+  position: relative;
+  right: 30px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 2vw;
+  font-family: "M PLUS Rounded 1c";
+}
+.pdp {
+  width: 5vh;
+  height: 5vh;
+  border-radius: 50%;
+}
+.infoBox {
+  position: absolute;
+  top: 8vh;
+  right: 1vw;
+  border: #cecece solid 1px;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  width: 20vw;
+  align-items: flex-start;
+  gap: 15px;
+  padding: 15px;
+
+  font-size: 80%;
+  background-color: white;
+  z-index: 1;
+}
+.infoElt {
+  font-family: "M PLUS Rounded 1c";
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 10px;
+  gap: 1vw;
+}
+.infoElt h3 {
+  margin: 0;
+  padding: 0;
+}
+.infoElt:not(:last-child) {
+  border-bottom: 1px solid #c6c6c6;
+  padding-bottom: 15px;
+}
+
+.infoBoxImg {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+.var {
+  font-weight: 500;
+  color: #a0a0a0;
+}

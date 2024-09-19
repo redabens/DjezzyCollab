@@ -1,0 +1,112 @@
+@import url("https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c&display=swap");
+.download-page {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+h1 {
+  padding-bottom: 20px;
+  padding-top: 10px;
+  font-family: "M PLUS Rounded 1c", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  user-select: none; /* Empêche la sélection du texte */
+  -webkit-user-select: none; /* Pour les navigateurs WebKit (Chrome, Safari) */
+  -moz-user-select: none; /* Pour Firefox */
+  -ms-user-select: none; /* Pour Internet Explorer/Edge */
+  pointer-events: none; /* Empêche tous les événements de pointeur */
+}
+.preview {
+  width: 70vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  max-height: 70vh;
+  overflow-y: scroll; /* Permet le défilement vertical */
+  padding: 10px;
+  border-right: 1.5px solid #f8cece;
+  border-bottom: 1.5px solid #f8cece;
+  border-left: 1.5px solid #f8cece;
+  border-top: none;
+  border-radius: 0px 0px 10px 10px;
+  box-sizing: border-box;
+}
+.display-params {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 20px;
+  width: 70vw;
+  height: 30px;
+  background-color: #f2efef;
+  border: 1.5px solid #f8cece;
+  border-radius: 10px 10px 0px 0px;
+}
+.display-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  padding: 2px 2px 2px 2px;
+}
+
+/*******************************/
+.display-grid {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  padding: 2px 2px 2px 2px;
+}
+.grid-preview {
+  display: grid;
+  width: 70vw;
+  grid-template-columns: 12vw 12vw 12vw 12vw 12vw;
+  justify-content: center;
+  align-items: center;
+  row-gap: 20px;
+  max-height: 70vh;
+  overflow-y: auto; /* Permet le défilement vertical */
+  padding: 10px;
+  border-right: 1.5px solid #f8cece;
+  border-bottom: 1.5px solid #f8cece;
+  border-left: 1.5px solid #f8cece;
+  border-top: none;
+  border-radius: 0px 0px 10px 10px;
+  padding-left: 5%;
+}
+.default {
+  width: 70vw;
+  height: 70vh;
+  border-right: 1.5px solid #f8cece;
+  border-bottom: 1.5px solid #f8cece;
+  border-left: 1.5px solid #f8cece;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-top: none;
+  border-radius: 0px 0px 10px 10px;
+}
+.aucun {
+  color: rgb(101, 101, 101);
+  font-size: 1.1em;
+  font-family: "Noto Sans", sans-serif;
+  padding: 10px;
+  border-radius: 8px;
+}
+.popup {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+}
