@@ -4,7 +4,6 @@ import LinearProgress from "@mui/material/LinearProgress";
 import Box from "@mui/material/Box";
 import { SimpleTreeView } from "@mui/x-tree-view/SimpleTreeView";
 import { TreeItem2 } from "@mui/x-tree-view/TreeItem2";
-import { useOutletContext } from "react-router-dom";
 // ------- Components -------
 import AddSiteForm from "../components/AddSiteForm";
 import SiteTable from "../components/SiteTable";
@@ -15,15 +14,12 @@ export default function GestionSites() {
   const [formPath, setFormPath] = useState("/");
   const [fileTree, setFileTree] = useState([]);
   const [siteTable, setSiteTable] = useState([]);
-  const { refreshUserData } = useOutletContext();
-
   const [selectedRow, setSelectedRow] = useState({
     ancienId: "",
     nouveauId: "",
   });
-
   const [loadingFileTree, setLoadingFileTree] = useState(false);
-  const [sftpconfig, setSftpconfig] = useState(null);
+  const [sftpconfig,setSftpconfig] = useState(null);
   const [visualise, setVisualise] = useState(false);
   const [addedSite, setAddedSite] = useState(false);
   useEffect(function () {
@@ -120,7 +116,6 @@ export default function GestionSites() {
               lignes={siteTable}
               setSelectedRow={setSelectedRow}
               selectedRow={selectedRow}
-              refreshUserData={refreshUserData}
             />
           </div>
         </div>
@@ -130,10 +125,10 @@ export default function GestionSites() {
             <AddSiteForm handleVisualise={handleVisualise} addedSite={addedSite}/>
             {visualise && (
               <div className="vis-site">
-                <div className="existant-repos-box2">
+                <div className="existant-repos-box">
                   <h3>Répertoires existants:</h3>
                   {loadingFileTree && <LinearProgress />}
-                  <Box className="existant-repos-list2">
+                  <Box className="existant-repos-list">
                     <SimpleTreeView>
                       {fileTree.map((treeItem) => renderTree(treeItem))}
                     </SimpleTreeView>

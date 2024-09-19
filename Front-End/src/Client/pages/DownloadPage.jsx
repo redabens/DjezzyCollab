@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../components/AuthContext";
-import { useOutletContext, useNavigate } from "react-router-dom";
+import { useOutletContext,useNavigate } from "react-router-dom";
 import axios from "axios";
 import Fichier from "../components/Fichier";
 import "./../styles/DownloadPage.css";
@@ -11,40 +11,34 @@ function DownloadPage() {
   const [isGrid, setIsGrid] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
   const { user } = useOutletContext();
-  
-  const [refreshFiles, setRefreshFiles] = useState(false);
 
   const navigate = useNavigate();
-  useEffect(
-    function () {
-      setRefreshFiles(false);
-      axios
-        .get("http://localhost:3000/download", {
-          headers: { Authorization: token },
-        })
-        .then((res) => {
-          if (res.status === 200) {
-            console.log(res.data.files);
-            setDownloads(res.data.files);
-          }
-        })
-        .catch((error) => {
-          if (error.response) {
-            if (res.status === 401) return alert("User Id not Found");
-            else if (res.status === 404) return alert("User not found");
-            else if (res.status === 415) return alert("Directory not found");
-            else if (res.status === 500)
-              return alert("Failed to upload due to server");
-          } else {
-            console.log(error);
-            alert("An unexpected error occurred. Please try again.");
-          }
-        });
-    },
-    [refreshFiles]
-  );
+  useEffect(function () {
+    axios
+      .get("http://localhost:3000/download", {
+        headers: { Authorization: token },
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          console.log(res.data.files);
+          setDownloads(res.data.files);
+        }
+      })
+      .catch((error) => {
+        if (error.response) {
+          if (res.status === 401) return alert("User Id not Found");
+          else if (res.status === 404) return alert("User not found");
+          else if (res.status === 415) return alert("Directory not found");
+          else if (res.status === 500)
+            return alert("Failed to upload due to server");
+        } else {
+          console.log(error);
+          alert("An unexpected error occurred. Please try again.");
+        }
+      });
+  }, []);
   // deleting file
-  const [fileToDelete, setFileToDelete] = useState("");
+  const [fileToDelete, setFileToDelete] = useState(null);
   const showDeleteDialog = (filename) => {
     setShowDelete(true);
     setFileToDelete(filename);
@@ -54,7 +48,7 @@ function DownloadPage() {
   const onConfirmDialog = async (confirm) => {
     console.log("onConfirmDialog hit in download page : " + confirm);
     if (confirm && fileToDelete) {
-      await handleDelete(fileToDelete);
+      await handleDelete(fileToDelete); // the filename
     }
     setShowDelete(false);
   };
@@ -67,10 +61,9 @@ function DownloadPage() {
         })
         .then((res) => {
           if (res.status === 200) {
-            // setDownloads(downloads.filter((file) => file.name !== filename));
+            setDownloads(downloads.filter((file) => file.name !== filename));
             // alert(`File ${filename} deleted successfully.`);
             setShowDelete(false);
-            setRefreshFiles(true);
           }
         })
         .catch((error) => {

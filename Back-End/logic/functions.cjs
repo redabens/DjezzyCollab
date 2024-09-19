@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const secret = "Abdelhak_kaid_El_Hadj_Andjechairi"; 
+const secret = "Abdelhak_kaid_El_Hadj_Andjechairi"; // Change to a strong secret
 const path = require("path");
 const {sftp} = require("./sitesftpController.cjs");
 // Middleware to verify token

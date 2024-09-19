@@ -13,7 +13,7 @@
   overflow-y: scroll;
   max-height: 90vh;
 }
-.gestion-site-body {
+.gestion-site-body{
   width: 73.4lvw;
   display: flex;
   flex-direction: column;
@@ -48,34 +48,33 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-
+  align-items: center;
   gap: 20px;
 }
-.existant-repos-box2 {
-  width: 100%;
+.existant-repos-box {
   display: flex;
   flex-direction: column;
 }
-.existant-repos-box2 h3 {
+.existant-repos-box h3 {
   padding-top: 20px;
   padding-bottom: 10px;
   padding-left: 5%;
   font-family: "M PLUS Rounded 1c", sans-serif;
   color: rgb(81, 81, 81);
   font-weight: 600;
-  font-size: 0.9em;
+  font-size: 1em;
 }
-.existant-repos-list2 {
+.existant-repos-list {
   max-height: 50vh;
-  width: 100%;
   overflow-y: scroll;
   border: 1px solid rgb(214, 214, 214);
   border-radius: 10px;
   /* box-shadow: -1.5px 3px 4.5px rgba(141, 115, 115, 58%); */
   /* border: 2px solid rebeccapurple; */
 }
-.add-rep-form2 {
-  height: 20vh;
+.add-rep-form {
+  width: 90%;
+  height: 30vh;
 }
 .add-repo-form form {
   display: flex;

@@ -1,7 +1,7 @@
 require('dotenv').config(); // Charger les variables d'environnement depuis .env
 var LdapClient = require("ldapjs-client");
 const bcrypt = require("bcryptjs");
-var client = new LdapClient({ url: process.env.LDAP_URL }); //192.168.220.1 192.168.1.66
+var client = new LdapClient({ url: process.env.LDAP_URL}); //192.168.11.1 192.168.1.66
 //connect to the server ldap
 async function connectLDAP() {
   try {
@@ -27,7 +27,7 @@ async function disconnectLDAP() {
 // authenticate user
 async function authenticate(username, password) {
   try {
-    const dn = process.env.LDAP_USER_DN;
+    const dn = process.env.LDAP_USERS_DN;
     searchOptions = {
       filter: `(&(uid=${username}))`,
       scope: "sub", // We only need to check the base entry itself
@@ -58,40 +58,6 @@ async function authenticate(username, password) {
     console.log("error", err);
   }
 }
-/*// Fonction d'authentification
-function authenticate(username, password, callback) {
-  // Recherchez l'utilisateur pour obtenir le DN
-  const searchOptions = {
-    filter: `(sAMAccountName=${username})`, // Filtre de recherche basé sur le nom d'utilisateur
-    scope: 'sub'
-  };
-
-  client.search('dc=example,dc=com', searchOptions, (err, res) => {
-    if (err) {
-      return callback(err);
-    }
-
-    res.on('searchEntry', (entry) => {
-      const userDn = entry.objectName;
-
-      // Essayez de vous connecter avec le DN et le mot de passe
-      client.bind(userDn, password, (err) => {
-        if (err) {
-          return callback(new Error('Authentification échouée'));
-        }
-        callback(null, 'Authentification réussie');
-      });
-    });
-
-    res.on('error', (err) => {
-      callback(err);
-    });
-
-    res.on('end', () => {
-      callback(new Error('Utilisateur non trouvé'));
-    });
-  });
-} */
 // verify if ou existe in root
 async function ensureOUExists(dn, searchOptions) {
   try {

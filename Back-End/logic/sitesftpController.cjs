@@ -8,87 +8,87 @@ const path = require("path");
 const sftp = new SFTPClient();
 
 async function connectSFTP(sftpConfig) {
-  try {
-    await sftp.connect(sftpConfig);
-    console.log("Connected to SFTP server");
-  } catch (err) {
-    console.log("SFTP connection error:", err);
-  }
+    try {
+      await sftp.connect(sftpConfig);
+      console.log("Connected to SFTP server");
+    } catch (err) {
+      console.log("SFTP connection error:", err);
+    }
 }
 
 async function disconnectSFTP() {
-  try {
-    await sftp.end();
-    console.log("Disconnected from SFTP server");
-  } catch (err) {
-    console.log("SFTP disconnection error:", err);
-  }
+    try {
+      await sftp.end();
+      console.log("Disconnected from SFTP server");
+    } catch (err) {
+      console.log("SFTP disconnection error:", err);
+    }
 }
 
 // pour l'affichage de l'arbore
 async function canReadPath(path) {
-  try {
-    const files = await sftp.list(path);
-    console.log("Dossier listé avec succès:", files);
-    return true;
-  } catch (err) {
-    if (err.code === 5) {
-      // Vérifie le code d'erreur
-      console.error("Permission refusée pour lire ce chemin:", path);
-    } else {
-      console.error("Erreur lors de l'accès au chemin:", err.message);
+    try {
+      const files = await sftp.list(path);
+      console.log("Dossier listé avec succès:", files);
+      return true;
+    } catch (err) {
+      if (err.code === 5) {
+        // Vérifie le code d'erreur
+        console.error("Permission refusée pour lire ce chemin:", path);
+      } else {
+        console.error("Erreur lors de l'accès au chemin:", err.message);
+      }
+      return false;
     }
-    return false;
-  }
 }
 
 const buildFileTree = async (dirPath) => {
-  try {
-    let restPath = await sftp.cwd();
-    restPath = restPath.slice(1, restPath.length);
-    const Path = path.join(restPath, dirPath);
-    const access = await canReadPath(Path);
-    if (access) {
-      const items = await sftp.list(Path);
-      const tree = [];
-
-      for (let item of items) {
-        if (item.type === "d") {
-          let children = await buildFileTree(`${dirPath}/${item.name}`);
-          tree.push({
-            id: `${dirPath}/${item.name}`,
-            label: item.name,
-            type: "d",
-            children,
-          });
-        } else {
-          tree.push({
-            id: `${dirPath}/${item.name}`,
-            label: item.name,
-            type: "f",
-          });
+    try {
+      let restPath = await sftp.cwd();
+      restPath = restPath.slice(1, restPath.length);
+      const Path = path.join(restPath, dirPath);
+      const access = await canReadPath(Path);
+      if (access) {
+        const items = await sftp.list(Path);
+        const tree = [];
+  
+        for (let item of items) {
+          if (item.type === "d") {
+            let children = await buildFileTree(`${dirPath}/${item.name}`);
+            tree.push({
+              id: `${dirPath}/${item.name}`,
+              label: item.name,
+              type: "d",
+              children,
+            });
+          } else {
+            tree.push({
+              id: `${dirPath}/${item.name}`,
+              label: item.name,
+              type: "f",
+            });
+          }
         }
+        return tree;
+      } else {
+        return null; // for uneccessible directories
       }
-      return tree;
-    } else {
-      return null; // for uneccessible directories
+    } catch (err) {
+      // Skip directories that can't be accessed due to permission issues
+      console.error(`Skipped directory ${dirPath} due to error:`, err.message);
+      return null;
     }
-  } catch (err) {
-    // Skip directories that can't be accessed due to permission issues
-    console.error(`Skipped directory ${dirPath} due to error:`, err.message);
-    return null;
-  }
-};
+  };
 
-const getSiteSFTP = async (req, res) => {
-  try {
-    const sites = await siteSFTP.find({});
-    if (!sites) return res.status(404).send({ error: "No site SFTP found" });
-    res.status(200).send(sites);
-  } catch (err) {
-    res.status(500).send({ error: "Error getting site SFTP" + err });
-  }
-};
+const getSiteSFTP = async (req,res)=>{
+    try{
+        const sites = await siteSFTP.find({});
+        if(!sites) return res.status(404).send({error:"No site SFTP found"});
+        res.status(200).send(sites);
+    }catch(err){
+        res.status(500).send({error:"Error getting site SFTP"+err});
+    }
+}
 
 const addSiteSFTP = async (req,res)=>{
     try{
@@ -152,7 +152,6 @@ const editSiteSftp = async (req,res)=>{
         res.status(500).send({error:"Error updating site SFTP"+err});
     }
 }
-
 const visualiseSiteSFTP = async (req,res)=>{
     try{
         const sftpConfig = req.body;
@@ -182,13 +181,4 @@ process.on("SIGINT", () => {
     process.exit();
   });
 });
-module.exports = {
-  connectSFTP,
-  disconnectSFTP,
-  getSiteSFTP,
-  editSiteSftp,
-  addSiteSFTP,
-  visualiseSiteSFTP,
-  buildFileTree,
-  sftp,
-};
+module.exports = {connectSFTP,disconnectSFTP,getSiteSFTP,editSiteSftp,addSiteSFTP,visualiseSiteSFTP,buildFileTree,sftp};

@@ -5,12 +5,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import "./../styles/SiteTable.css";
 
-export default function SiteTable({
-  lignes,
-  selectedRow,
-  setSelectedRow,
-  refreshUserData,
-}) {
+export default function SiteTable({ lignes, selectedRow, setSelectedRow }) {
   const [change, setChange] = useState(false);
   const handleRadioChange = (nouveauId) => {
     setSelectedRow((prev) => {
@@ -91,17 +86,13 @@ export default function SiteTable({
       radio: ligne.checked,
     };
   });
-
   const handleSauv = async (ancienId, nouveauId) => {
     axios
-      .patch(`http://localhost:3000/sitesftp/edit/${nouveauId}`, {
-        ancienId: ancienId,
-      })
+      .patch(`http://localhost:3000/sitesftp/edit/${nouveauId}`, {ancienId:ancienId})
       .then((res) => {
         if (res.status === 200) {
           setChange(false);
           console.log("Site SFTP checked");
-          refreshUserData();
         }
       })
       .catch((error) => {
