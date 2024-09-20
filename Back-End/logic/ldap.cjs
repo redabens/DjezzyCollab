@@ -58,7 +58,46 @@ async function authenticate(username, password) {
     console.log("error", err);
   }
 }
-// verify if ou existe in root
+
+/*// Fonction d'authentification
+async function authenticate(username, password, callback) {
+  try {
+    // Connexion au serveur LDAP
+    await client.bind(process.env.LDAP_ADMIN_DN, process.env.LDAP_ADMIN_PASSWORD); // Remplacez par vos informations d'admin
+
+    // Recherchez l'utilisateur pour obtenir le DN
+    const opts = {
+      filter: `(sAMAccountName=${username})`, // Filtrez selon l'attribut utilisateur (uid, cn, sAMAccountName, etc.)
+      scope: 'sub',
+      attributes: ['dn'] // On cherche juste le DN 
+    };
+
+    const result = await client.search(process.env.LDAP_USERS_DN, opts); // Remplacez par le DN de base
+
+    if (result.length === 0) {
+      return 'Utilisateur non trouvé';
+    }
+
+    const userDn = result[0].dn; // Récupérez le DN de l'utilisateur
+
+    // Tentez de vous connecter avec le DN de l'utilisateur et le mot de passe fourni
+    const connecter = await client.bind(userDn, password);
+    if (connecter) {
+      return 'Authentification réussie';
+    } else {
+      return 'Mot de passe incorrect';
+    }
+  } catch (error) {
+    console.error('Erreur d\'authentification:', error.message);
+    return 'Erreur d\'authentification';
+  } finally {
+    // Déconnectez-vous du serveur LDAP
+    await client.unbind();
+  }
+}*/
+
+
+/*// verify if ou existe in root
 async function ensureOUExists(dn, searchOptions) {
   try {
     const result = await client.search(dn, searchOptions);
@@ -138,10 +177,10 @@ async function deleteUserFromLDAP(email, callback) {
     console.log("failed to delete user from ldap: ", err);
     callback(false, err);
   }
-}
+}*/
 process.on("SIGINT", () => {
   disconnectLDAP().then(() => {
     process.exit();
   });
 });
-module.exports = { authenticate, addUser, deleteUserFromLDAP, client };
+module.exports = { authenticate, client }; //  addUser, deleteUserFromLDAP,

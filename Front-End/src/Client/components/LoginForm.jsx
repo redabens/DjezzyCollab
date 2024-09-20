@@ -21,7 +21,7 @@ export default function LoginForm() {
   const handleLogin = () => {
     axios
       .post("http://localhost:3000/login", {
-        email: watch("email"),
+        username: watch("username"),
         password: watch("password"),
       })
       .then((result) => {
@@ -53,7 +53,7 @@ export default function LoginForm() {
 
   //------ validations -------
   const registerOptions = {
-    email: {
+    username: {
       required: "Entrer une adresse email",
       pattern: {
         value: /^[^\s@]+@[^\s@]+.[^\s@]+$/,
@@ -73,18 +73,18 @@ export default function LoginForm() {
       </div>
       <form onSubmit={handleSubmit(handleLogin, handleError)}>    
         {credentialsErr && (<div className="credentialsErr">
-          <p>Email ou mot de passe incorrect. Veuillez réessayez!</p>
+          <p>UserName ou Mot De Passe incorrect. Veuillez réessayez!</p>
         </div>)}
         <div className="input-component">
-          <label htmlFor="email">Email:</label>
+          <label htmlFor="username">Nom d'utilisateur:</label>
           <input
-            name="email"
+            name="username"
             type="text"
             placeholder="saisir l'email..."
-            {...register("email", registerOptions.email)}
+            {...register("username", registerOptions.username)}
           />
           <small className="text-danger">
-            {errors?.email && errors.email.message}
+            {errors?.username && errors.username.message}
           </small>
         </div>
         <div className="input-component">

@@ -1,3 +1,4 @@
+require('dotenv').config(); // Charger les variables d'environnement depuis .env
 const mongoose = require("mongoose");
 const express = require("express");
 const methodOverride = require("method-override");
@@ -5,7 +6,6 @@ const bodyParser = require("body-parser");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const multer = require("multer");
-const secret = "Abdelhak_kaid_El_Hadj_Andjechairi"; // Change to a strong secret
 const path = require("path");
 const os = require("os");
 const cors = require("cors");
@@ -22,7 +22,7 @@ const {
   disconnectSFTP,
 } = require("./sitesftpController.cjs");
 
-const { authenticate, addUser } = require("./ldap.cjs"); // Importez le module LDAP
+const { authenticate } = require("./ldap.cjs"); // Importez le module LDAP , addUser
 // express configuration
 const app = express();
 
@@ -37,7 +37,7 @@ const Sitesftp = require("../models/sitesftp.cjs");
 
 // Connect to MongoDB
 mongoose
-  .connect("mongodb://localhost:27017/Djezzy-Collab")
+  .connect(process.env.MONGO_URI)
   .then(async () => {
     console.log("Connected to MongoDB...");
     // Connect to SFTP once when the server starts
@@ -69,13 +69,13 @@ app.use("/sitesftp", sitesftpRoutes);
 // pour connecter les utilisateurs
 app.post("/login", async (req, res) => {
   try {
-    const { email, password } = req.body;
-    const credentials = await authenticate(email, password);
+    const { username, password } = req.body;
+    const credentials = await authenticate(username, password);
     console.log(credentials);
 
     if (credentials) {
       const user = await User.findOne({
-        email: req.body.email,
+        email: username,
       });
       if (!user) return res.status(404).send("user not found");
       const validPassword = await bcrypt.compare(
@@ -85,18 +85,27 @@ app.post("/login", async (req, res) => {
       if (!validPassword)
         return res.status(401).send("the password is incorrect");
 
-      const token = jwt.sign({ _id: user._id }, secret, { expiresIn: 86400 });
+      const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET, { expiresIn: 86400 });
       return res.status(200).send({ token });
     } else {
       return res.status(401).send({ error: "Invalid credentials" });
     }
+    /*if (credentials === 'Authentification réussie') {
+      const user = await User.findOne({
+        username: username,
+      }); 
+      const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET, { expiresIn: 86400 });
+      return res.status(200).send({ token });
+    } else {
+      return res.status(401).send({ error: "Invalid credentials" });
+    }*/
   } catch (error) {
     console.error(error);
     return res.status(500).send({ error: "Error logging in" });
   }
 });
 
-// recuperer les paths de la database
+// recuperer les paths de la database pour les afficher dans le formulaire de creation de compte
 app.get("/creation-compte", async (req, res) => {
   try {
     //get checked serveur sftp
