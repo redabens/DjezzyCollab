@@ -1,18 +1,48 @@
 var LdapClient = require("ldapjs-client");
 const bcrypt = require("bcryptjs");
-var client = new LdapClient({ url: "ldap://localhost:389" }); //192.168.11.1 192.168.1.66
-//connect to the server ldap
-async function connectLDAP() {
+const Ldap = require("../models/ldapModel.cjs");
+
+// var client = new LdapClient({ url: "ldap://localhost:389" }); //192.168.11.1 192.168.1.66
+
+var client;
+async function getLdapConfig() {
   try {
-    // Bind to the LDAP server
-    await client.bind("cn=admin,dc=djezzy-collab,dc=com", "sara2004"); // Replace with your admin DN and password
-    console.log("Connected to LDAP server");
-  } catch (err) {
-    console.log("LDAP connection error:", err);
+    const ldapConfig = await Ldap.findOne();
+    if (!ldapConfig) {
+      throw new Error("LDAP configuration not found in the database.");
+    }
+    return ldapConfig;
+  } catch (error) {
+    console.error("Error fetching LDAP configuration:", error);
+    throw error;
   }
 }
-
+async function connectLDAP() {
+  try {
+    const ldapConfig = await getLdapConfig();
+    const ldapUrl = `${ldapConfig.url}:${ldapConfig.port}`;
+    client = new LdapClient({ url: ldapUrl });
+    console.log(client);
+    // Bind to the LDAP server
+    await client.bind(ldapConfig.adminDN, ldapConfig.password);
+    console.log("Connected to LDAP server");
+  } catch (err) {
+    console.error("LDAP connection error:", err);
+  }
+}
 connectLDAP();
+// //connect to the server ldap
+// async function connectLDAP() {
+//   try {
+//     // Bind to the LDAP server
+//     await client.bind("cn=admin,dc=djezzy-collab,dc=com", "sara2004"); // Replace with your admin DN and password
+//     console.log("Connected to LDAP server");
+//   } catch (err) {
+//     console.log("LDAP connection error:", err);
+//   }
+// }
+
+
 
 async function disconnectLDAP() {
   try {
