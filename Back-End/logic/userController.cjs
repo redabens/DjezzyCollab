@@ -2,7 +2,6 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const User = require("../models/users.cjs");
 const SiteSFTP = require("../models/sitesftp.cjs");
-const { message } = require("antd");
 const { deleteUserFromLDAP, client } = require("./ldap.cjs");
 
 const getAllUsers = async (req, res) => {

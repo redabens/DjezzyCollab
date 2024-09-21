@@ -86,6 +86,7 @@ app.post("/login", async (req, res) => {
         return res.status(401).send("the password is incorrect");
 
       const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET, { expiresIn: 86400 });
+      console.log(token);
       return res.status(200).send({ token });
     } else {
       return res.status(401).send({ error: "Invalid credentials" });

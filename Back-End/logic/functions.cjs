@@ -1,5 +1,5 @@
+require('dotenv').config(); // Charger les variables d'environnement depuis .env
 const jwt = require("jsonwebtoken");
-const secret = "Abdelhak_kaid_El_Hadj_Andjechairi"; // Change to a strong secret
 const path = require("path");
 const {sftp} = require("./sitesftpController.cjs");
 // Middleware to verify token
@@ -7,7 +7,7 @@ function verifyToken(req, res, next) {
     const token = req.headers["authorization"];
     if (!token) return res.status(403).send("No token provided");
   
-    jwt.verify(token, secret, (err, decoded) => {
+    jwt.verify(token, process.env.TOKEN_SECRET, (err, decoded) => {
       if (err) return res.status(500).send("Failed to authenticate token");
       req.userId = decoded._id;
       next();
