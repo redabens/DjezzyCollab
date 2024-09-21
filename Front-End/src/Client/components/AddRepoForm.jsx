@@ -51,7 +51,7 @@ export default function AddRepoForm({ path,renitPath,type,sftpconfig,addedSite})
           }
         }).catch((error) => {
           if (error.response) {
-            if (error.response.status === 404) return alert("Failed to add site SFTP"); 
+            if (error.response.status === 404) return alert("Failed to add site SFTP");
             else if (error.response.status === 500) return alert("Failed to add site SFTP due to server");
           } else {
             console.log(error);

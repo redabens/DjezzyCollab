@@ -1,48 +1,25 @@
+require("dotenv").config(); // Charger les variables d'environnement depuis .env
 var LdapClient = require("ldapjs-client");
 const bcrypt = require("bcryptjs");
-const Ldap = require("../models/ldapModel.cjs");
+console.log("LDAP_URL:", process.env.LDAP_URL);
+var client = new LdapClient({ url: process.env.LDAP_URL }); //192.168.11.1 192.168.1.66
 
-// var client = new LdapClient({ url: "ldap://localhost:389" }); //192.168.11.1 192.168.1.66
-
-var client;
-async function getLdapConfig() {
-  try {
-    const ldapConfig = await Ldap.findOne();
-    if (!ldapConfig) {
-      throw new Error("LDAP configuration not found in the database.");
-    }
-    return ldapConfig;
-  } catch (error) {
-    console.error("Error fetching LDAP configuration:", error);
-    throw error;
-  }
-}
+//connect to the server ldap
 async function connectLDAP() {
+  console.log("LDAP_URL:", process.env.LDAP_URL);
   try {
-    const ldapConfig = await getLdapConfig();
-    const ldapUrl = `${ldapConfig.url}:${ldapConfig.port}`;
-    client = new LdapClient({ url: ldapUrl });
-    console.log(client);
     // Bind to the LDAP server
-    await client.bind(ldapConfig.adminDN, ldapConfig.password);
+    await client.bind(
+      process.env.LDAP_ADMIN_DN,
+      process.env.LDAP_ADMIN_PASSWORD
+    ); // Replace with your admin DN and password
     console.log("Connected to LDAP server");
   } catch (err) {
-    console.error("LDAP connection error:", err);
+    console.log("LDAP connection error:", err);
   }
 }
+
 connectLDAP();
-// //connect to the server ldap
-// async function connectLDAP() {
-//   try {
-//     // Bind to the LDAP server
-//     await client.bind("cn=admin,dc=djezzy-collab,dc=com", "sara2004"); // Replace with your admin DN and password
-//     console.log("Connected to LDAP server");
-//   } catch (err) {
-//     console.log("LDAP connection error:", err);
-//   }
-// }
-
-
 
 async function disconnectLDAP() {
   try {
@@ -56,7 +33,7 @@ async function disconnectLDAP() {
 // authenticate user
 async function authenticate(username, password) {
   try {
-    const dn = `ou=users,dc=djezzy-collab,dc=com`;
+    const dn = process.env.LDAP_USERS_DN;
     searchOptions = {
       filter: `(&(uid=${username}))`,
       scope: "sub", // We only need to check the base entry itself
@@ -87,7 +64,45 @@ async function authenticate(username, password) {
     console.log("error", err);
   }
 }
-// verify if ou existe in root
+
+/*// Fonction d'authentification
+async function authenticate(username, password, callback) {
+  try {
+    // Connexion au serveur LDAP
+    await client.bind(process.env.LDAP_ADMIN_DN, process.env.LDAP_ADMIN_PASSWORD); // Remplacez par vos informations d'admin
+
+    // Recherchez l'utilisateur pour obtenir le DN
+    const opts = {
+      filter: `(sAMAccountName=${username})`, // Filtrez selon l'attribut utilisateur (uid, cn, sAMAccountName, etc.)
+      scope: 'sub',
+      attributes: ['dn'] // On cherche juste le DN 
+    };
+
+    const result = await client.search(process.env.LDAP_USERS_DN, opts); // Remplacez par le DN de base
+
+    if (result.length === 0) {
+      return 'Utilisateur non trouvé';
+    }
+
+    const userDn = result[0].dn; // Récupérez le DN de l'utilisateur
+
+    // Tentez de vous connecter avec le DN de l'utilisateur et le mot de passe fourni
+    const connecter = await client.bind(userDn, password);
+    if (connecter) {
+      return 'Authentification réussie';
+    } else {
+      return 'Mot de passe incorrect';
+    }
+  } catch (error) {
+    console.error('Erreur d\'authentification:', error.message);
+    return 'Erreur d\'authentification';
+  } finally {
+    // Déconnectez-vous du serveur LDAP
+    await client.unbind();
+  }
+}*/
+
+/*// verify if ou existe in root
 async function ensureOUExists(dn, searchOptions) {
   try {
     const result = await client.search(dn, searchOptions);
@@ -167,10 +182,10 @@ async function deleteUserFromLDAP(email, callback) {
     console.log("failed to delete user from ldap: ", err);
     callback(false, err);
   }
-}
+}*/
 process.on("SIGINT", () => {
   disconnectLDAP().then(() => {
     process.exit();
   });
 });
-module.exports = { authenticate, addUser, deleteUserFromLDAP, client };
+module.exports = { authenticate, client }; //  addUser, deleteUserFromLDAP,
