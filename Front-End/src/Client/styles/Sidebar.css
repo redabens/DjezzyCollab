@@ -20,10 +20,10 @@
   padding-right: 2%;
   display: grid;
   grid-template-rows: auto 1fr;
-  user-select: none; /* Empêche la sélection du texte */
   -webkit-user-select: none; /* Pour les navigateurs WebKit (Chrome, Safari) */
   -moz-user-select: none; /* Pour Firefox */
   -ms-user-select: none; /* Pour Internet Explorer/Edge */
+  user-select: none; /* Empêche la sélection du texte */
 }
 .sidebar-close {
   border-top: 1px solid rgba(161, 60, 60, 10%);
@@ -40,10 +40,10 @@
   padding-right: 0.5%;
   display: grid;
   grid-template-rows: auto 1fr;
-  user-select: none; /* Empêche la sélection du texte */
   -webkit-user-select: none; /* Pour les navigateurs WebKit (Chrome, Safari) */
   -moz-user-select: none; /* Pour Firefox */
   -ms-user-select: none; /* Pour Internet Explorer/Edge */
+  user-select: none; /* Empêche la sélection du texte */
 }
 .top-logo {
   padding-bottom: 4vh;
