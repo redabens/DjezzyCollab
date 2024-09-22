@@ -1,11 +1,8 @@
 import "../styles/Navbar.css";
 import { useState } from "react";
-import Popover from "@mui/material/Popover";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 
-export default function Navbar({user,userPath}) {
+export default function Navbar({ user, userPath }) {
   const [isOpen, setIsOpen] = useState(false);
 
   function togglePopover() {
@@ -16,11 +13,11 @@ export default function Navbar({user,userPath}) {
   return (
     <nav className="navbr">
       <div className="navbarElt">
-        <h3 style={{ fontSize: "0.9em" }}>{`${user.firstName} ${user.lastName}`}</h3>
+        <h3 style={{ fontSize: "0.9em" }}>{`${user.username}`}</h3>
         <div onClick={togglePopover}>
           <img
             className="pdp"
-            src="../src/assets/anonyme.png"
+            src="../src/assets/profile-circle.svg"
             alt="photo_profil"
           />
         </div>
@@ -31,21 +28,23 @@ export default function Navbar({user,userPath}) {
           <div className="infoBoxImg">
             <img
               style={{ width: "6.5vh", height: "6.5vh", borderRadius: "50%" }}
-              src="../src/assets/anonyme.png"
+              src="../src/assets/profile-circle.svg"
               alt="photo_profil"
             />
           </div>
           <div className="infoElt">
-            <h3>Nom:</h3>
-            <h3 className="var">{`${user.firstName} ${user.lastName}`}</h3>
-          </div>
-          <div className="infoElt">
-            <h3>Email:</h3>
-            <h3 className="var">{user.email}</h3>
+            <h3>Nom d'utilisateur:</h3>
+            <h3 className="var">{`${user.username}`}</h3>
           </div>
           <div className="infoElt">
             <h3>Directory Path:</h3>
             <h3 className="var">{userPath}</h3>
+          </div>
+          <div className="infoElt">
+            <h3>Supression des fichiers:</h3>
+            <h3 className="var">
+              {user.ableToDelete ? "autorisé" : "non autorisé"}
+            </h3>
           </div>
           <div className="infoElt">
             <h3>Role:</h3>

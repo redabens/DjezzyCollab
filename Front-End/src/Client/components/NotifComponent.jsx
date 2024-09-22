@@ -98,7 +98,7 @@ function NotifComponent({ notif }) {
         <div className="notif-header">
           <div className="notif-sub-header">
             <p className="user-name">
-              {user.firstName} {user.lastName}
+              {user.username}
             </p>
             <p className="notif-msg">{notifText}</p>
             <p className="repo-name" title="HAHAHA">
@@ -119,7 +119,7 @@ function NotifComponent({ notif }) {
             Nom du fichier: <span>{notif.fileName}</span>
           </li>
           <li className="body-item">
-            Email de l'utilisateur: <span>{user.email}</span>
+            Nom d'utilisateur: <span>{user.username}</span>
           </li>
         </ul>
       </AccordionDetails>

@@ -63,31 +63,10 @@ function EditUser({ user, onConfirmEdit }) {
   }, []);
 
   const handleEdit = () => {
-    onConfirmEdit(
-      true,
-      watch("prenom"),
-      watch("nom"),
-      watch("email"),
-      watch("path"),
-      watch("role"),
-      ableToDelete
-    );
+    onConfirmEdit(true, watch("path"), watch("role"), ableToDelete);
   };
 
   const registerOptions = {
-    nom: {
-      required: "Nom manquant",
-    },
-    prenom: {
-      required: "Prénom manquant",
-    },
-    email: {
-      required: "Entrer une adresse email",
-      pattern: {
-        value: /^[^\s@]+@[^\s@]+.[^\s@]+$/,
-        message: "Adresse email invalide",
-      },
-    },
     path: {
       required: "Path est obligatoire",
     },
@@ -110,15 +89,7 @@ function EditUser({ user, onConfirmEdit }) {
           <button
             className="btn-dialog-close2"
             onClick={() =>
-              onConfirmEdit(
-                false,
-                watch("prenom"),
-                watch("nom"),
-                watch("email"),
-                watch("path"),
-                watch("role"),
-                ableToDelete
-              )
+              onConfirmEdit(false, watch("path"), watch("role"), ableToDelete)
             }
           >
             <img src="./../../src/assets/Vector.svg" alt="cancel" />
@@ -132,35 +103,15 @@ function EditUser({ user, onConfirmEdit }) {
           <form onSubmit={handleSubmit(handleEdit)} className="edit-user-form">
             <div className="formComp">
               <input
-                name="nom"
-                type="text"
-                placeholder="Saisir le nom..."
-                {...register("nom", registerOptions.nom)}
-              />
-              <small className="text-danger">
-                {errors?.nom && errors.nom.message}
-              </small>
-            </div>
-            <div className="formComp">
-              <input
-                name="prenom"
-                type="text"
-                placeholder="Saisir le prénom..."
-                {...register("prenom", registerOptions.prenom)}
-              />
-              <small className="text-danger">
-                {errors?.prenom && errors.prenom.message}
-              </small>
-            </div>
-            <div className="formComp">
-              <input
-                name="email"
+                readOnly
+                name="username"
                 type="email"
-                placeholder="Saisir l'email..."
-                {...register("email", registerOptions.email)}
+                value={user.username}
+                placeholder="Nom d'utilisateur..."
+                {...register("username", registerOptions.username)}
               />
               <small className="text-danger">
-                {errors?.email && errors.email.message}
+                {errors?.username && errors.username.message}
               </small>
             </div>
             <div className="formComp">

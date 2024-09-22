@@ -51,7 +51,7 @@ export default function GestionUsers() {
   };
 
   // Search functionality
-  const searchKeys = ["firstName", "lastName", "email"];
+  const searchKeys = ["username"];
   const search = (data) => {
     const regxp = new RegExp(query, "gi");
     return data.filter((item) => {
@@ -71,15 +71,12 @@ export default function GestionUsers() {
       setUsers(Users.filter((user) => user._id !== id));
     } catch (err) {
       console.error("Failed to delete user:", err);
-      alert("Failed to delete user");
+      alert("Failed to delete user",err);
     }
   };
 
   const handleEditUser = async (
     user,
-    firstName,
-    lastName,
-    email,
     userPath,
     role,
     ableToDelete
@@ -87,9 +84,6 @@ export default function GestionUsers() {
     try {
       setRefreshUsers(false);
       const updatedUserData = {
-        firstName,
-        lastName,
-        email,
         userPath,
         role,
         ableToDelete,
@@ -136,25 +130,9 @@ export default function GestionUsers() {
     setShowDialog(false);
   };
 
-  const onConfirmEdit = async (
-    confirm,
-    firstName,
-    lastName,
-    email,
-    userPath,
-    role,
-    ableToDelete
-  ) => {
+  const onConfirmEdit = async (confirm, userPath, role, ableToDelete) => {
     if (confirm && userToEdit) {
-      await handleEditUser(
-        userToEdit,
-        firstName,
-        lastName,
-        email,
-        userPath,
-        role,
-        ableToDelete
-      );
+      await handleEditUser(userToEdit, userPath, role, ableToDelete);
     }
     setIsShowEditUser(false);
   };

@@ -14,6 +14,7 @@ export default function GestionSites() {
   const [formPath, setFormPath] = useState("/");
   const [fileTree, setFileTree] = useState([]);
   const [siteTable, setSiteTable] = useState([]);
+
   const [selectedRow, setSelectedRow] = useState({
     ancienId: "",
     nouveauId: "",
@@ -135,7 +136,12 @@ export default function GestionSites() {
                   </Box>
                 </div>
                 <div className="add-rep-form">
-                  <AddRepoForm path={formPath} type="2" renitPath={renitPath} sftpconfig={sftpconfig} addedSite={()=>{setAddedSite(true);setVisualise(false);setFileTree([]);}}/>
+                  <AddRepoForm
+                    path={formPath}
+                    type="2"
+                    renitPath={renitPath}
+                    sftpconfig={sftpconfig}
+                  />
                 </div>
               </div>
             )}

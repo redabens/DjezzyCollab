@@ -29,7 +29,7 @@ async function disconnectSFTP() {
 async function canReadPath(path) {
     try {
       const files = await sftp.list(path);
-      console.log("Dossier listé avec succès:", files);
+      // console.log("Dossier listé avec succès:", files);
       return true;
     } catch (err) {
       if (err.code === 5) {

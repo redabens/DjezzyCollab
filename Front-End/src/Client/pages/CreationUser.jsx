@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import "./../styles/CreationUser.css";
 import Switch from "@mui/material/Switch";
+import SearchLdapBar from "../components/SearchLdapBar";
 
 export default function CreationUser() {
   const navigate = useNavigate();
@@ -12,12 +13,20 @@ export default function CreationUser() {
     handleSubmit,
     watch,
     reset,
+    setValue,
     formState: { errors },
   } = useForm();
   const roleList = ["user", "admin", "download", "upload"];
   const [pathList, setPathList] = useState([]);
-  const [role, setRole] = useState("user");
+  const [userExistError, setUserExistError] = useState("");
   const [ableToDelete, setAbleToDelete] = useState(true);
+
+  const [usernamee, setUsername] = useState("");
+
+  const handleUserName = (u) => {
+    setUsername(u);
+    setValue("username", u);
+  };
   //------ useEffect -------
   useEffect(function () {
     axios
@@ -26,7 +35,11 @@ export default function CreationUser() {
         if (response.status === 200) {
           console.log(response.data);
           setPathList(response.data.paths);
-          reset({ path: response.data.paths[0].path, role: "user" });
+          reset({
+            username: "",
+            path: response.data.paths[0].path,
+            role: "user",
+          });
         }
       })
       .catch((error) => {
@@ -43,53 +56,65 @@ export default function CreationUser() {
   const handleError = (errors) => {};
   const handleSignUp = async () => {
     const userData = {
-      firstName: watch("nom"),
-      lastName: watch("prenom"),
-      email: watch("email"),
-      password: watch("password"),
+      // firstName: watch("nom"),
+      // lastName: watch("prenom"),
+      // password: watch("password"),
+      username: usernamee,
       userPath: watch("path"),
       role: watch("role"),
       ableToDelete: ableToDelete,
     };
-    axios
-      .post("http://localhost:3000/creation-compte", { userData })
-      .then((res) => {
-        if (res.status === 200) {
-          //alert("Utilisateur créé avec succès");
-          reset();
-        } else if (res.status === 401) {
-          alert(res.data);
-        } else if (res.status === 404) {
-          alert(res.data);
-        } else if (res.status === 500) {
-          alert(res.data);
-        }
-      })
-      .catch((errors) => {
-        console.log(errors);
-        alert(errors);
+
+    try {
+      const res = await axios.post("http://localhost:3000/creation-compte", {
+        userData,
       });
+
+      if (res.status === 201) {
+        setUserExistError("");
+        reset();
+        setUsername("");
+        navigate("/creation-comptes");
+      }
+    } catch (error) {
+      if (error.response) {
+        if (error.response.status === 401) {
+          alert(error.response.data.error);
+        } else if (error.response.status === 404) {
+          alert(error.response.data.error);
+        } else if (error.response.status === 409) {
+          setUserExistError(
+            "Cet utilisateur existe déja. Veillez choisir un autre."
+          );
+        } else if (error.response.status === 500) {
+          alert(error.response.data.error);
+        }
+      } else {
+        console.log(error);
+        alert("An error occurred. Please try again.");
+      }
+    }
   };
 
   //------ validations -------
   const registerOptions = {
-    nom: {
-      required: "Nom manquant",
-    },
-    prenom: {
-      required: "Prénom manquant",
+    //     nom: {
+    //       required: "Nom manquant",
+    //     },
+    //     prenom: {
+    //       required: "Prénom manquant",
+    //     },
+    //  password: {
+    //       required: "Entrer le mot de passe",
+    //     },
+    username: {
+      required: "Selectionner un utilisateur",
+      // pattern: {
+      //   value: /^[a-zA-Z]+\.[a-zA-Z]+$/,
+      //   message: "Le nom d'utilisateur doit être au format prénom.nom",
+      // },
     },
 
-    email: {
-      required: "Entrer une adresse email",
-      pattern: {
-        value: /^[^\s@]+@[^\s@]+.[^\s@]+$/,
-        message: "Adresse email invalide",
-      },
-    },
-    password: {
-      required: "Entrer le mot de passe",
-    },
     path: { required: "Path est obligatoire" },
     role: { required: "Role est obligatoire" },
   };
@@ -106,7 +131,35 @@ export default function CreationUser() {
       >
         <div className="sections">
           <div className="section-one">
-            <div className="formElt">
+            <div className="search-area">
+              <SearchLdapBar handleUserName={handleUserName} />
+              <small className="text-danger">{userExistError}</small>
+            </div>
+
+            <div className="formElt2">
+              <label htmlFor="username">Username:</label>
+              <input
+                readOnly
+                className="username-input"
+                name="username"
+                value={usernamee}
+                type="text"
+                placeholder="username..."
+                {...register("username", registerOptions.username)}
+              />
+              <small className="text-danger">
+                {errors?.username && errors.username.message}
+              </small>
+            </div>
+            <div className="delete-files-switch">
+              <p>Permission de supression des fichiers:</p>
+              <Switch
+                checked={ableToDelete}
+                onChange={handleSwitchChange}
+                inputProps={{ "aria-label": "Switch demo" }}
+              />
+            </div>
+            {/* <div className="formElt">
               <label htmlFor="nom">Nom:</label>
               <input
                 name="nom"
@@ -141,10 +194,10 @@ export default function CreationUser() {
               <small className="text-danger">
                 {errors?.email && errors.email.message}
               </small>
-            </div>
+            </div> */}
           </div>
           <div className="section-two">
-            <div className="formElt">
+            {/* <div className="formElt">
               <label htmlFor="password">Mot de passe:</label>
               <input
                 name="password"
@@ -155,7 +208,7 @@ export default function CreationUser() {
               <small className="text-danger">
                 {errors?.password && errors.password.message}
               </small>
-            </div>
+            </div> */}
             <div className="formElt">
               <label htmlFor="path">Path des fichiers:</label>
               <select name="path" id="path" {...register("path")}>
@@ -177,14 +230,6 @@ export default function CreationUser() {
                   </option>
                 ))}
               </select>
-            </div>
-            <div className="delete-files-switch">
-              <p>Permission de supression des fichiers:</p>
-              <Switch
-                checked={ableToDelete}
-                onChange={handleSwitchChange}
-                inputProps={{ "aria-label": "Switch demo" }}
-              />
             </div>
           </div>
         </div>

@@ -1,18 +1,12 @@
-require("dotenv").config(); // Charger les variables d'environnement depuis .env
+require('dotenv').config(); // Charger les variables d'environnement depuis .env
 var LdapClient = require("ldapjs-client");
 const bcrypt = require("bcryptjs");
-console.log("LDAP_URL:", process.env.LDAP_URL);
-var client = new LdapClient({ url: process.env.LDAP_URL }); //192.168.11.1 192.168.1.66
-
+var client = new LdapClient({ url: process.env.LDAP_URL}); //192.168.11.1 192.168.1.66
 //connect to the server ldap
 async function connectLDAP() {
-  console.log("LDAP_URL:", process.env.LDAP_URL);
   try {
     // Bind to the LDAP server
-    await client.bind(
-      process.env.LDAP_ADMIN_DN,
-      process.env.LDAP_ADMIN_PASSWORD
-    ); // Replace with your admin DN and password
+    await client.bind(process.env.LDAP_ADMIN_DN, process.env.LDAP_ADMIN_PASSWORD); // Replace with your admin DN and password
     console.log("Connected to LDAP server");
   } catch (err) {
     console.log("LDAP connection error:", err);
@@ -101,6 +95,7 @@ async function authenticate(username, password, callback) {
     await client.unbind();
   }
 }*/
+
 
 /*// verify if ou existe in root
 async function ensureOUExists(dn, searchOptions) {

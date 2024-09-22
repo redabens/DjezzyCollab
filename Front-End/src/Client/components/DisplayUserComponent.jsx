@@ -5,8 +5,6 @@ import MenuItem from "@mui/material/MenuItem";
 import PopupState, { bindTrigger, bindMenu } from "material-ui-popup-state";
 
 export default function DisplayUserComponent({ user, onDelete, onEdit }) {
-  const userName = `${user.firstName} ${user.lastName}`;
-
   // const handleDeleteClick = () => {
   //   onDelete(user._id);
   // };
@@ -29,8 +27,8 @@ export default function DisplayUserComponent({ user, onDelete, onEdit }) {
         width="35px"
         height="35px"
       />
-      <p className="username">{userName}</p>
-      <p className="user-email">{user.email}</p>
+      <p className="username">{user.username}</p>
+      <p className="user-email">{user.role}</p>
       <PopupState variant="popover" popupId="demo-popup-menu">
         {(popupState) => (
           <Fragment>

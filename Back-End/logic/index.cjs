@@ -1,4 +1,4 @@
-require('dotenv').config(); // Charger les variables d'environnement depuis .env
+require("dotenv").config(); // Charger les variables d'environnement depuis .env
 const mongoose = require("mongoose");
 const express = require("express");
 const methodOverride = require("method-override");
@@ -14,7 +14,7 @@ const userRoutes = require("../routes/userRoutes.cjs");
 const notifRoutes = require("../routes/notifRoutes.cjs");
 const sitesftpRoutes = require("../routes/sitesftpRoutes.cjs");
 const notifController = require("./notifController.cjs");
-const {verifyToken,verifyExistance} = require("./functions.cjs");
+const { verifyToken, verifyExistance } = require("./functions.cjs");
 const {
   sftp,
   buildFileTree,
@@ -77,6 +77,12 @@ app.post("/login", async (req, res) => {
       const user = await User.findOne({
         email: username,
       });
+      console.log(
+        "FFFFFFFFFFFFFFFFFFFFF ",
+        user,
+        "userpasss : ",
+        user.password
+      );
       if (!user) return res.status(404).send("user not found");
       const validPassword = await bcrypt.compare(
         req.body.password,
@@ -84,7 +90,9 @@ app.post("/login", async (req, res) => {
       );
       if (!validPassword)
         return res.status(401).send("the password is incorrect");
-      const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET, { expiresIn: 86400 });
+      const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET, {
+        expiresIn: 86400,
+      });
       return res.status(200).send({ token });
     } else {
       return res.status(401).send({ error: "Invalid credentials" });
@@ -123,23 +131,22 @@ app.get("/creation-compte", async (req, res) => {
 app.post("/creation-compte", async (req, res) => {
   try {
     const TabSite = await Sitesftp.find({});
-    //get checked serveur sftp
     const checkedSite = await Sitesftp.findOne({ checked: true });
-    if (!checkedSite)
-      return res.status(401).send({ error: "No site sftp checked" });
-    let DirPath = TabSite.map((item) => {
-      return {
-        serveurSFTP: {
-          host: item.host,
-          port: item.port,
-          username: item.username,
-          password: item.password,
-          defaultPath: item.defaultPath,
-        },
-        path: item.defaultPath,
-      };
-    });
-    // Trouver l'index de l'objet correspondant dans DirPath
+    if (!checkedSite) {
+      return res.status(401).send({ error: "No site SFTP checked" });
+    }
+
+    let DirPath = TabSite.map((item) => ({
+      serveurSFTP: {
+        host: item.host,
+        port: item.port,
+        username: item.username,
+        password: item.password,
+        defaultPath: item.defaultPath,
+      },
+      path: item.defaultPath,
+    }));
+
     const index = DirPath.findIndex(
       (dir) =>
         dir.serveurSFTP.host === checkedSite.host &&
@@ -148,44 +155,47 @@ app.post("/creation-compte", async (req, res) => {
         dir.serveurSFTP.password === checkedSite.password &&
         dir.serveurSFTP.defaultPath === checkedSite.defaultPath
     );
+
     if (index === -1) {
       return res.status(404).send({ error: "No matching path found" });
     }
-    // Accéder et modifier l'objet à cet index
-    console.log(req.body.userData.userPath);
+
     DirPath[index].path = req.body.userData.userPath;
-    console.log("DirPath:", DirPath);
-    // creer l'utilisateur
+
+    const existingUser = await User.findOne({ username: req.body.userData.username });
+    if (existingUser) {
+      return res.status(409).send({ error: "User already exists" });
+    }
+
     const utilisateur = {
-      firstName: req.body.userData.firstName,
-      lastName: req.body.userData.lastName,
-      email: req.body.userData.email,
-      password: bcrypt.hashSync(req.body.userData.password, 8),
+      username: req.body.userData.username,
       DirPath: DirPath,
       role: req.body.userData.role,
     };
+
     const newUser = new User(utilisateur);
     const saved = await newUser.save();
-    console.log("saved:", saved);
 
-    if (!saved) return res.status(404).send("Failed to add user");
-
-    addUser(utilisateur, (success, err) => {
-      if (success) {
-        return res.status(200).send("User added successfully");
-      } else {
-        console.error("Error adding user to LDAP:", err);
-        return res
-          .status(401)
-          .send("Error adding user to LDAP: " + err.message);
-      }
-    });
+    if (saved) {
+      return res.status(201).send({ message: "User created successfully" });
+    } else {
+      return res.status(404).send({ error: "Failed to add user" });
+    }
   } catch (error) {
     console.error("Error adding user:", error);
-    return res.status(500).send("Error adding user");
+    return res.status(500).send({ error: "Internal server error" });
   }
 });
-
+// addUser(utilisateur, (success, err) => {
+//   if (success) {
+//     return res.status(200).send("User added successfully");
+//   } else {
+//     console.error("Error adding user to LDAP:", err);
+//     return res
+//       .status(401)
+//       .send("Error adding user to LDAP: " + err.message);
+//   }
+// });
 //endpoint to get the user role
 app.get("/user", verifyToken, async (req, res) => {
   try {
@@ -263,7 +273,7 @@ app.post("/upload", [verifyToken, upload.array("files")], async (req, res) => {
       const notifData = {
         userId: req.userId,
         type: "upload",
-        path:userPath,
+        path: userPath,
         fileName: file.originalname,
       };
       await notifController.addNotif({
@@ -417,7 +427,9 @@ app.delete("/delete/:id", verifyToken, async (req, res) => {
     const fileExists = await sftp.exists(filePath);
     if (!fileExists) return res.status(404).send({ error: "File not found" });
     await sftp.delete(filePath);
-    res.status(200).send({ message: `File ${filename} deleted successfully. `});
+    res
+      .status(200)
+      .send({ message: `File ${filename} deleted successfully. ` });
   } catch (err) {
     console.log("Error deleting file:", err);
     res
