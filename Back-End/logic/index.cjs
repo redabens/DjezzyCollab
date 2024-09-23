@@ -22,7 +22,7 @@ const {
   disconnectSFTP,
 } = require("./sitesftpController.cjs");
 
-const { authenticate } = require("./ldap.cjs"); // Importez le module LDAP , addUser
+const { authenticate} = require("./ldap.cjs"); // Importez le module LDAP , addUser
 // express configuration
 const app = express();
 
@@ -70,39 +70,42 @@ app.use("/sitesftp", sitesftpRoutes);
 app.post("/login", async (req, res) => {
   try {
     const { username, password } = req.body;
+    // await connectLDAP();
     const credentials = await authenticate(username, password);
     console.log(credentials);
 
-    if (credentials) {
-      const user = await User.findOne({
-        username: username,
-      });
-      console.log(
-        "FFFFFFFFFFFFFFFFFFFFF ",
-        user,
-        "userpasss : ",
-        user.password
-      );
-      if (!user) return res.status(404).send("user not found");
-      const validPassword =  await bcrypt.compare(password, user.password);
-      if (!validPassword)
-        return res.status(401).send("the password is incorrect");
-      const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET, {
-        expiresIn: 86400,
-      });
-      return res.status(200).send({ token });
-    } else {
-      return res.status(401).send({ error: "Invalid credentials" });
-    }
-    /*if (credentials === 'Authentification réussie') {
+    // if (credentials) {
+    //   const user = await User.findOne({
+    //     username: username,
+    //   });
+    //   console.log(
+    //     "FFFFFFFFFFFFFFFFFFFFF ",
+    //     user,
+    //     "userpasss : ",
+    //     user.password
+    //   );
+    //   if (!user) return res.status(404).send("user not found");
+    //   const validPassword =  await bcrypt.compare(password, user.password);
+    //   if (!validPassword)
+    //     return res.status(401).send("the password is incorrect");
+    //   const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET, {
+    //     expiresIn: 86400,
+    //   });
+    //   return res.status(200).send({ token });
+    // } else {
+    //   return res.status(401).send({ error: "Invalid credentials" });
+    // }
+    if (credentials === 'Authentification réussie') {
       const user = await User.findOne({
         username: username,
       }); 
       const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET, { expiresIn: 86400 });
       return res.status(200).send({ token });
-    } else {
-      return res.status(401).send({ error: "Invalid credentials" });
-    }*/
+    }else if (credentials === 'Utilisateur non trouvé'){
+      return res.status(401).send({ error: "Nom d'utilisateur incorrect. Veuillez réessayer!" });
+    } else if (credentials === 'Mot de passe incorrect'){
+      return res.status(401).send({ error: "Mot de passe incorrect. Veuillez réessayer!" });
+    }
   } catch (error) {
     console.error(error);
     return res.status(500).send({ error: "Error logging in" });

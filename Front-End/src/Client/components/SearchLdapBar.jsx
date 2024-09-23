@@ -9,6 +9,8 @@ import { useState } from "react";
 import CheckIcon from "@mui/icons-material/Check";
 import CancelIcon from "@mui/icons-material/Cancel";
 import CircularProgress from "@mui/material/CircularProgress";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -60,50 +62,66 @@ const StatusWrapper = styled("div")(({ theme }) => ({
 }));
 
 export default function SearchLdapBar({ handleUserName,searchTerm,setSearchTerm,setShowForm }) {
-  const initusers = [
-    { username: "iratni.sara", role: "admin" },
-    { username: "bensalem.reda", role: "user" },
-    { username: "benamrouche.nadia", role: "user" },
-    { username: "boukhatem.mohamed", role: "user" },
-    { username: "laabidi.amine", role: "user" },
-    { username: "merzoug.ahmed", role: "user" },
-    { username: "messaoudi.fatima", role: "user" },
-    { username: "allam.soumaya", role: "user" },
-    { username: "kamel.noureddine", role: "user" },
-    { username: "zeroual.meriem", role: "user" },
-    { username: "sahraoui.riad", role: "user" },
-    { username: "benkhalifa.hassan", role: "user" },
-    { username: "djabali.yasmine", role: "user" },
-    { username: "hamidi.farouk", role: "user" },
-    { username: "bendahmane.nour", role: "user" },
-    { username: "boussaid.ilyes", role: "user" },
-    { username: "saidi.ikram", role: "user" },
-    { username: "abdelkader.mohamed", role: "user" },
-    { username: "larbi.rachid", role: "user" },
-    { username: "benkacem.fatima", role: "user" },
-    { username: "cherifi.ahmed", role: "user" },
-    { username: "laghmar.amine", role: "user" },
-  ];
+  const navigate = useNavigate();
+  // const initusers = [
+  //   { username: "iratni.sara", role: "admin" },
+  //   { username: "bensalem.reda", role: "user" },
+  //   { username: "benamrouche.nadia", role: "user" },
+  //   { username: "boukhatem.mohamed", role: "user" },
+  //   { username: "laabidi.amine", role: "user" },
+  //   { username: "merzoug.ahmed", role: "user" },
+  //   { username: "messaoudi.fatima", role: "user" },
+  //   { username: "allam.soumaya", role: "user" },
+  //   { username: "kamel.noureddine", role: "user" },
+  //   { username: "zeroual.meriem", role: "user" },
+  //   { username: "sahraoui.riad", role: "user" },
+  //   { username: "benkhalifa.hassan", role: "user" },
+  //   { username: "djabali.yasmine", role: "user" },
+  //   { username: "hamidi.farouk", role: "user" },
+  //   { username: "bendahmane.nour", role: "user" },
+  //   { username: "boussaid.ilyes", role: "user" },
+  //   { username: "saidi.ikram", role: "user" },
+  //   { username: "abdelkader.mohamed", role: "user" },
+  //   { username: "larbi.rachid", role: "user" },
+  //   { username: "benkacem.fatima", role: "user" },
+  //   { username: "cherifi.ahmed", role: "user" },
+  //   { username: "laghmar.amine", role: "user" },
+  // ];
 
-  const [users] = useState(initusers);
+  // const [users] = useState(initusers);
   const [loading, setLoading] = useState(false);
   const [searchSuccess, setSearchSuccess] = useState(null);
 
   const handleSearch = (username) => {
+    console.log(username);
     //la recherche se fait dans ldap au lieu de la liste
-    setLoading(true);
-    setSearchSuccess(null);
-    setTimeout(() => {
-      if (users.some((user) => user.username === username)) {
-        handleUserName(username);
-        setSearchSuccess(true);
-        setSearchTerm("");
-        setTimeout(() => setShowForm(true), 300); // Pour simuler l'animation
-      } else {
-        setSearchSuccess(false);
+    axios.post("http://localhost:3000/users/search",{username})
+    .then((res)=>{
+      if(res.status === 200){
+        setTimeout(() => {
+          handleUserName(username);
+          setSearchSuccess(true);
+          setSearchTerm("");
+          setTimeout(() => setShowForm(true), 300); // Pour simuler l'animation
+          setLoading(false);
+        }, 1000);
       }
-      setLoading(false);
-    }, 1000);
+    }).catch((error)=>{
+      if(error.response){
+        if(error.response.status === 401){
+          setTimeout(() => {
+            setSearchSuccess(false);
+            setLoading(false);
+          }, 1000);
+        }else if(error.response.status === 500){
+          alert("erreur de recherche de l'utilisateur à cause du server ldap");
+          navigate("/creation-compte");
+        }
+      } else{
+        console.log(error);
+        alert("Unknown Error",error);
+      }
+    });
   };
 
   const handleInputChange = (e) => {
@@ -148,7 +166,10 @@ export default function SearchLdapBar({ handleUserName,searchTerm,setSearchTerm,
                 <img
                   src="/../../src/assets/save_name.svg"
                   alt="valider"
-                  onClick={() => handleSearch(searchTerm)}
+                  onClick={() => {
+                    setLoading(true);
+                    setSearchSuccess(null);
+                    handleSearch(searchTerm)}}
                   style={{ cursor: "pointer" }}
                 />
               ) : (

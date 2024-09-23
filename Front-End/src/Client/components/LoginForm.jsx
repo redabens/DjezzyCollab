@@ -15,7 +15,6 @@ export default function LoginForm() {
     formState: { errors },
   } = useForm();
   const navigate = useNavigate();
-  const [loginError, setLoginError] = useState({ value: false, message: "" });
   const onSubmit = (data) => console.log(data);
   const handleError = (errors) => {};
   const handleLogin = () => {
@@ -28,21 +27,19 @@ export default function LoginForm() {
         if (result.status === 200) {
           setToken(result.data.token);
           navigate("/");
-        } else {
-          setLoginError({ value: true, message: "Unexpected error occurred" });
         }
       })
       .catch((error) => {
         if (error.response) {
           if (error.response.status === 401) {
             setCredentialsErr(true);
+            navigate('/login');
           } else if (error.response.status === 404) {
-            setLoginError({ value: true, message: "Utilisateur non trouvé" });
+            setCredentialsErr(true);
+            navigate('/login');
           } else if (error.response.status === 500) {
-            setLoginError({
-              value: true,
-              message: "Erreur serveur, réessayez plus tard",
-            });
+            alert("Erreur connexion de l'utilisateur à cause du serveur LDAP");
+            navigate("/login");
           }
         } else {
           console.log(error);
@@ -97,9 +94,6 @@ export default function LoginForm() {
           />
           <small className="text-danger">
             {errors?.password && errors.password.message}
-          </small>
-          <small className="text-danger">
-            {!errors?.password && loginError.value && loginError.message}
           </small>
           <div className="mdps-oublie">
             <p>Mot de passe oublié?</p>

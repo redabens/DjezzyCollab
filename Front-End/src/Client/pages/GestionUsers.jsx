@@ -67,8 +67,22 @@ export default function GestionUsers() {
   // Handle delete user
   const handleDeleteUser = async (id) => {
     try {
-      await axios.delete(`http://localhost:3000/users/${id}`);
-      setUsers(Users.filter((user) => user._id !== id));
+      axios.delete(`http://localhost:3000/users/${id}`)
+      .then((res)=>{
+        if(res.status === 200){
+          setUsers(Users.filter((user) => user._id !== id));
+          alert(res.data);
+        }
+      }).catch((error)=>{
+        if(error.response){
+          if(error.response.status === 404) return alert("User not found");
+          else if(error.response.status === 409) return alert("Failed to delete user from db");
+          else if(error.response.status === 500) return alert("Failed to delete user due to the server");
+        } else{
+          console.log(error);
+          alert("An unexpected error occurred. Please try again.");
+        }
+      });
     } catch (err) {
       console.error("Failed to delete user:", err);
       alert("Failed to delete user",err);
