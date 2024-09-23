@@ -54,9 +54,9 @@ export default function LoginForm() {
   //------ validations -------
   const registerOptions = {
     username: {
-      required: "Entrer une adresse email",
+      required: "Entrer votre nom d'utilisateur",
       pattern: {
-        value: /^[^\s@]+@[^\s@]+.[^\s@]+$/,
+        // value: /^[^\s@]+@[^\s@]+.[^\s@]+$/,
         message: "Adresse email invalide",
       },
     },

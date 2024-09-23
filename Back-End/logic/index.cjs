@@ -135,7 +135,7 @@ app.post("/creation-compte", async (req, res) => {
     }
 
     let DirPath = TabSite.map((item) => ({
-      serveurSFTP: {
+      serveurSFTP:{
         host: item.host,
         port: item.port,
         username: item.username,

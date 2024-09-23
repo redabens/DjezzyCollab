@@ -10,7 +10,6 @@ import DownloadPage from "./Client/pages/DownloadPage";
 import GestionSites from "./Client/pages/GestionSites";
 import NotificationsPage from "./Client/pages/NotificationsPage";
 import UploadPage from "./Client/pages/UploadPage";
-import CreationUser from "./Client/pages/CreationUser";
 import GestionRepertoires from "./Client/pages/GestionRepertoires";
 import GestionUsers from "./Client/pages/GestionUsers";
 import LoginPage from "./Client/pages/LoginPage";
@@ -18,6 +17,7 @@ import LoginPage from "./Client/pages/LoginPage";
 import { AuthProvider } from "./Client/components/AuthContext"; // Importez le fournisseur de contexte
 import RootLayout from "./Client/pages/RootLayout";
 import NotFound from "./Client/pages/NotFound";
+import PsdCreationUser from "./Client/pages/PsdCreationUser";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -30,7 +30,7 @@ const router = createBrowserRouter(
         <Route path="/gestion-repertoires" element={<GestionRepertoires />} />
         <Route path="/gestion-utilisateurs" element={<GestionUsers />} />
         <Route path="/gestion-sites" element={<GestionSites />} />
-        <Route path="/creation-comptes" element={<CreationUser />} />
+        <Route path="/creation-comptes" element={<PsdCreationUser />} />
       </Route>
       <Route path="*" element={<NotFound />} />
     </Route>

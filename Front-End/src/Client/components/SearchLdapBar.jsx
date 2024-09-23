@@ -59,7 +59,7 @@ const StatusWrapper = styled("div")(({ theme }) => ({
   alignItems: "center",
 }));
 
-export default function SearchLdapBar({ handleUserName }) {
+export default function SearchLdapBar({ handleUserName,searchTerm,setSearchTerm,setShowForm }) {
   const initusers = [
     { username: "iratni.sara", role: "admin" },
     { username: "bensalem.reda", role: "user" },
@@ -86,7 +86,6 @@ export default function SearchLdapBar({ handleUserName }) {
   ];
 
   const [users] = useState(initusers);
-  const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(false);
   const [searchSuccess, setSearchSuccess] = useState(null);
 
@@ -99,6 +98,7 @@ export default function SearchLdapBar({ handleUserName }) {
         handleUserName(username);
         setSearchSuccess(true);
         setSearchTerm("");
+        setTimeout(() => setShowForm(true), 300); // Pour simuler l'animation
       } else {
         setSearchSuccess(false);
       }
@@ -113,19 +113,19 @@ export default function SearchLdapBar({ handleUserName }) {
   };
 
   return (
-    <Box sx={{ width: "100%" }}>
+    <Box sx={{ width: "100%"}}>
       <AppBar
         position="static"
-        sx={{ borderRadius: "6px", backgroundColor: "#BB5D5D" }}
+        sx={{ borderRadius: "6px", backgroundColor: "#BB5D5D",height:"100px" }}
       >
-        <Toolbar>
+        <Toolbar sx={{flexDirection:'column',gap:"10px"}}>
           <Typography
             variant="h6"
             noWrap
             component="div"
             sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
           >
-            LDAP
+            Rechercher l'utilisateur dans LDAP
           </Typography>
           <Search>
             <SearchIconWrapper>

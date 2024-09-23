@@ -20,8 +20,8 @@ export default function CreationUser() {
   const [pathList, setPathList] = useState([]);
   const [userExistError, setUserExistError] = useState("");
   const [ableToDelete, setAbleToDelete] = useState(true);
-
-  const [usernamee, setUsername] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [username, setUsername] = useState("");
 
   const handleUserName = (u) => {
     setUsername(u);
@@ -56,10 +56,7 @@ export default function CreationUser() {
   const handleError = (errors) => {};
   const handleSignUp = async () => {
     const userData = {
-      // firstName: watch("nom"),
-      // lastName: watch("prenom"),
-      // password: watch("password"),
-      username: usernamee,
+      username: username,
       userPath: watch("path"),
       role: watch("role"),
       ableToDelete: ableToDelete,
@@ -132,7 +129,10 @@ export default function CreationUser() {
         <div className="sections">
           <div className="section-one">
             <div className="search-area">
-              <SearchLdapBar handleUserName={handleUserName} />
+              <SearchLdapBar 
+                handleUserName={handleUserName} 
+                searchTerm={searchTerm}
+                setSearchTerm={setSearchTerm}/>
               <small className="text-danger">{userExistError}</small>
             </div>
 
@@ -142,7 +142,7 @@ export default function CreationUser() {
                 readOnly
                 className="username-input"
                 name="username"
-                value={usernamee}
+                value={username}
                 type="text"
                 placeholder="username..."
                 {...register("username", registerOptions.username)}
@@ -197,22 +197,9 @@ export default function CreationUser() {
             </div> */}
           </div>
           <div className="section-two">
-            {/* <div className="formElt">
-              <label htmlFor="password">Mot de passe:</label>
-              <input
-                name="password"
-                type="password"
-                placeholder="saisir un mot de passe..."
-                {...register("password", registerOptions.password)}
-              />
-              <small className="text-danger">
-                {errors?.password && errors.password.message}
-              </small>
-            </div> */}
             <div className="formElt">
               <label htmlFor="path">Path des fichiers:</label>
               <select name="path" id="path" {...register("path")}>
-                {/* <option value="">select a path</option> */}
                 {pathList.map((path, index) => (
                   <option value={path.path} key={index}>
                     {path.path}
@@ -223,7 +210,6 @@ export default function CreationUser() {
             <div className="formElt">
               <label htmlFor="role">Role du user:</label>
               <select name="role" id="role" {...register("role")}>
-                {/* <option value="">select a role</option> */}
                 {roleList.map((role, index) => (
                   <option value={role} key={index}>
                     {role}

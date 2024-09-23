@@ -29,7 +29,7 @@ async function authenticate(username, password) {
   try {
     const dn = process.env.LDAP_USERS_DN;
     searchOptions = {
-      filter: `(&(uid=${username}))`,
+      filter: `(uid=${username})`,
       scope: "sub", // We only need to check the base entry itself
       attributes: ["sn", "userPassword"], // We only care about the DN
     };
