@@ -75,7 +75,7 @@ app.post("/login", async (req, res) => {
 
     if (credentials) {
       const user = await User.findOne({
-        email: username,
+        username: username,
       });
       console.log(
         "FFFFFFFFFFFFFFFFFFFFF ",
@@ -84,10 +84,7 @@ app.post("/login", async (req, res) => {
         user.password
       );
       if (!user) return res.status(404).send("user not found");
-      const validPassword = await bcrypt.compare(
-        req.body.password,
-        user.password
-      );
+      const validPassword =  await bcrypt.compare(password, user.password);
       if (!validPassword)
         return res.status(401).send("the password is incorrect");
       const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET, {
@@ -127,6 +124,7 @@ app.get("/creation-compte", async (req, res) => {
     res.status(500).send("serveur error");
   }
 });
+
 // creation de l'utilisateur
 app.post("/creation-compte", async (req, res) => {
   try {
@@ -171,6 +169,7 @@ app.post("/creation-compte", async (req, res) => {
       username: req.body.userData.username,
       DirPath: DirPath,
       role: req.body.userData.role,
+      ableToDelete: req.body.userData.ableToDelete,
     };
 
     const newUser = new User(utilisateur);
@@ -186,16 +185,6 @@ app.post("/creation-compte", async (req, res) => {
     return res.status(500).send({ error: "Internal server error" });
   }
 });
-// addUser(utilisateur, (success, err) => {
-//   if (success) {
-//     return res.status(200).send("User added successfully");
-//   } else {
-//     console.error("Error adding user to LDAP:", err);
-//     return res
-//       .status(401)
-//       .send("Error adding user to LDAP: " + err.message);
-//   }
-// });
 //endpoint to get the user role
 app.get("/user", verifyToken, async (req, res) => {
   try {

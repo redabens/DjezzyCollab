@@ -31,7 +31,7 @@ async function authenticate(username, password) {
     searchOptions = {
       filter: `(&(uid=${username}))`,
       scope: "sub", // We only need to check the base entry itself
-      attributes: ["uid", "userPassword"], // We only care about the DN
+      attributes: ["sn", "userPassword"], // We only care about the DN
     };
 
     const result = await client.search(dn, searchOptions);
