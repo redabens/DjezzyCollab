@@ -3,42 +3,6 @@ const bcrypt = require("bcryptjs");
 const User = require("../models/users.cjs");
 const SiteSFTP = require("../models/sitesftp.cjs");
 
-const { deleteUserFromLDAP, client } = require("./ldap.cjs");
-
-///LDAP functions
-const Ldap = require("../models/ldapModel.cjs");
-var LdapClient = require("ldapjs-client");
-async function getLdapConfig() {
-  try {
-    const ldapConfig = await Ldap.findOne();
-    if (!ldapConfig) {
-      throw new Error("LDAP configuration not found in the database.");
-    }
-    return ldapConfig;
-  } catch (error) {
-    console.error("Error fetching LDAP configuration:", error);
-    throw error;
-  }
-}
-async function connectLDAP() {
-  try {
-    // const ldapConfig = await getLdapConfig();
-    // const ldapUrl = `${ldapConfig.url}:${ldapConfig.port}`;
-    // client = new LdapClient({ url: ldapUrl });
-    // console.log(client);
-    // Bind to the LDAP server
-    await client.bind(
-      process.env.LDAP_ADMIN_DN,
-      process.env.LDAP_ADMIN_PASSWORD
-    );
-    console.log("Connected to LDAP server");
-  } catch (err) {
-    console.error("LDAP connection error:", err);
-  }
-}
-connectLDAP();
-/////////////////////////////////////////////////////////////////////////////////////////////////
-
 const getAllUsers = async (req, res) => {
   try {
     const users = await User.find();

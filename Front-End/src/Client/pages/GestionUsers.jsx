@@ -139,7 +139,7 @@ export default function GestionUsers() {
 
   return (
     <div className="gestion-users-page">
-      <h2>Gestion des utilisateurs</h2>
+      <h1>Gestion des utilisateurs</h1>
       <div className="area2">
         <div className="search-bar">
           <img

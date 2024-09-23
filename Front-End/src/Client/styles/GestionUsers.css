@@ -12,11 +12,11 @@
   gap: 1vh;
   font-family: "Mulish", sans-serif;
 }
-.gestion-users-page h2 {
+.gestion-users-page h1 {
   text-align: center;
   align-items: center;
-  font-family: "Mulish", sans-serif !important;
-  font-size: 1.4em;
+  /* font-family: "Mulish", sans-serif !important; */
+  font-size: 1.9em;
   font-weight: 700;
 }
 
