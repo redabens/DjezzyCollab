@@ -30,7 +30,7 @@ async function search(username){
 
     // Recherchez l'utilisateur pour obtenir le DN
     const opts = {
-      filter: `(uid=${username})`, // Filtrez selon l'attribut utilisateur (uid, cn, sAMAccountName, etc.)
+      filter: `(sAMAccountName=${username})`, // Filtrez selon l'attribut utilisateur (uid, cn, sAMAccountName, etc.)
       scope: 'sub',
       attributes: ['dn'] // On cherche juste le DN 
     };
@@ -95,7 +95,7 @@ async function authenticate(username, password) {
 
     // Recherchez l'utilisateur pour obtenir le DN
     const opts = {
-      filter: `(uid=${username})`, // Filtrez selon l'attribut utilisateur (uid, cn, sAMAccountName, etc.)
+      filter: `(sAMAccountName=${username})`, // Filtrez selon l'attribut utilisateur (uid, cn, sAMAccountName, etc.)
       scope: 'sub',
       attributes: ['dn'] // On cherche juste le DN 
     };
